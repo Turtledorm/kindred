@@ -1,0 +1,5 @@
+### Arquivos ignorados pelo git
+
+# Outros
+*~
+*.dropbox.attr
