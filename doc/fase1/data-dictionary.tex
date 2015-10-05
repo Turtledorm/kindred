@@ -1,0 +1,34 @@
+\section{Dicionário de Dados}
+
+% bold and with colon
+\newcommand{\itemm}[1]{\item\textbf{#1: }}
+
+\begin{itemise}
+    \itemm{Range} Alcance. O alcance do ataque que uma \emph{unidade} tem. Varia de
+        acordo com a \emph{arma} equipada.
+    \itemm{Att} Representação numérica do dano total que uma \emph{unidade} pode
+        infligir.
+    \itemm{Def} Representação numérica da redução do dano sofrido de uma
+        \emph{unidade}.
+    \itemm{Agi} Representação numérica da agilidade de uma \emph{unidade}. Afeta a
+        chance ede desviar de um ataque.
+    \itemm{Mov} Representa o número de \emph{tiles} de que uma unidade pode se
+        deslocar a cada turno.
+    \itemm{Classe} Classe de uma \emph{unidade}. Afeta seu \emph{mov}, \emph{att},
+        \emph{def}, \emph{agi} e limita as armas usadas por uma \emph{unidade}.
+        Também afeta o \emph{HP}.
+    \itemm{Arma} Arma que uma unidade pode equipar. Cada tipo de arma tem seu alcance.
+        Afeta o \emph{att} da unidade de acordo com a distância do ataque.
+    \itemm{HP} Hit Points. A quantidade de dano que uma \emph{unidade} pode receber
+        antes de ser destruída.
+    \itemm{Unidade} Uma personagem do exército do jogador. Possui \emph{hp}, 
+        \emph{att}, \emph{def}, \emph{agi}, \emph{mov} e uma \emph{classe}, e pode
+        equipar uma \emph{arma}. O jogador que perder todas as \emph{unidades} perde.
+    \itemm{Tile} Unidade de divisão do \emph{mapa}. Cada \emph{tile} tem seu próprio
+        \emph{terrain}.
+    \itemm{Terrain} Terreno. Pode afetar o \emph{mov} de uma \emph{unidade} que está
+        ou entra em um \emph{tile} com terrain prejudicial. Também pode dar bônus
+        de \emph{def} ou \emph{agi}.
+    \itemm{Mapa} Um conjunto de \emph{tiles} no qual os jogadores controlam seus
+        exércitos e se enfrentam.
+\end{itemise}

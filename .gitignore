@@ -3,3 +3,8 @@
 # Outros
 *~
 *.dropbox.attr
+doc/fase1/aux/*
+*.log
+*.fls
+*.aux
+*.fdb_latexmk
