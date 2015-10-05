@@ -1,15 +1,19 @@
 SHELL    =bash
+MP       =$(wildcard *.mp)
+DIAGRAMS =$(MP:.mp=.1)
 TARGET   =main.pdf
-PREAMBLE =preamble-vbm
-TEX      =*.tex
 
 all: $(TARGET)
 
-$(TARGET): .FORCE
+$(TARGET): $(DIAGRAMS) .FORCE
 	@[ -d aux/ ] || mkdir aux ||:
 	@cd aux && mv * .. &>/dev/null ||:
 	latexmk -pdf $(TARGET:.pdf=)
 	@mv *.aux *.fls *.log *.fdb_latexmk *.toc aux &>/dev/null ||:
+
+$(DIAGRAMS): %.1 : %.mp
+	echo teste
+	mpost $<
 
 .FORCE:
 

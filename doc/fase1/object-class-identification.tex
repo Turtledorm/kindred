@@ -1,2 +1,34 @@
 \section{Identificação dos objetos/classes necessários ao projeto
      (apenas um esboço inicial).}
+
+\let\itemm\undefined
+% bold and with colon
+\newcommand{\itemm}[1]{\item\textbf{#1: }}
+
+
+\includegraphics{class-diagram.1}
+
+
+
+
+\begin{itemise}
+    \itemm{Classe} Contém a classe à qual a \emph{unidade} pertence e muda seus
+        atributos de acordo.
+    \itemm{Arma} Contém a arma que a unidade está usando. Muda a range da unidade
+        e o dano dela.
+    \itemm{Unidade} Contém os atributos (\emph{HP}, \emph{att}, \emph{def},
+        \emph{agi}, \emph{mov}) de uma \emph{unidade} do exército do jogador, bem
+        como a \emph{arma} que ela está usando e a \emph{classe} à qual pertence.
+    \itemm{Tile} Guarda até uma \emph{unidade} e o \emph{terrain} daquela parte do
+        \emph{mapa}, e afeta a performance da \emph{unidade} (se houver uma) de
+        acordo.
+    \itemm{Mapa} Vai guardar todas as \emph{tiles} e suas posições.
+    \itemm{Online} Responsável por cuidar da conexão, enviando e recebendo os dados
+        dos jogadores.
+    \itemm{Jogador} Cuida de todas as ações que o jogador pode exercer, como mover
+        unidade, atacar, etc.
+    \itemm{Jogo} A classe central do sistema. Cuidará das atualizações das
+        demais classes, manter o loop do jogo, inicializar as demais classes e
+        encerrar o jogo se o jogador o fechar. Também guarda o turno atual.
+ 
+\end{itemise}
