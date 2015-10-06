@@ -1,10 +1,12 @@
 ### Arquivos ignorados pelo git
 
-# Outros
-*~
-*.dropbox.attr
+# Arquivos e diretórios gerados pelo TeX
 doc/fase1/aux/*
 *.log
 *.fls
 *.aux
 *.fdb_latexmk
+
+# Outros
+*~
+*.dropbox.attr
