@@ -11,18 +11,18 @@ beginfig(1);
     Class.Terrain("Terreno")()();
     
     leftToRight(40)(Map, Tile, Unit, Class_);
-    topToBottom(40)(Tile, Terreno);
+    topToBottom(40)(Tile, Terrain);
     topToBottom(80)(Map, Game);
     leftToRight(40)(Online, Game, Player);
     topToBottom(40)(Class_, Weapon);
 
-    drawObjects(Map, Tile, Unit, Class_, Weapon, Game, Player, Online, Terreno);
+    drawObjects(Map, Tile, Unit, Class_, Weapon, Game, Player, Online, Terrain);
     
     clink(aggregationUni)(Map,     Game);
     clink(compositionUni)(Online,  Game);
     clink(compositionUni)(Player,  Game);
     clink(aggregation   )(Tile,    Map );
-    clink(aggregationUni)(Terreno, Tile);
+    clink(aggregationUni)(Terrain, Tile);
     clink(aggregationUni)(Unit,    Tile);
     clink(aggregationUni)(Class_,  Unit);
     

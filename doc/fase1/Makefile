@@ -21,7 +21,7 @@ $(DIAGRAMS): %.1 : %.mp
 .PHONY:
 clean:
 	latexmk -c
-	rm -rf $(TARGET)
+	rm -rf $(TARGET) $(DIAGRAMS)
 
 .PHONY:
 view:
