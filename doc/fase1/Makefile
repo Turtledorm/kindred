@@ -12,7 +12,6 @@ $(TARGET): $(DIAGRAMS) .FORCE
 	@mv *.aux *.fls *.log *.fdb_latexmk *.toc aux &>/dev/null ||:
 
 $(DIAGRAMS): %.1 : %.mp
-	echo teste
 	mpost -interaction=nonstopmode $< 
 
 .FORCE:
