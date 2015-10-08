@@ -8,12 +8,12 @@ all: $(TARGET)
 $(TARGET): $(DIAGRAMS) .FORCE
 	@[ -d aux/ ] || mkdir aux ||:
 	@cd aux && mv * .. &>/dev/null ||:
-	latexmk -pdf $(TARGET:.pdf=)
+	latexmk -interaction=nonstopmode -pdf $(TARGET:.pdf=)
 	@mv *.aux *.fls *.log *.fdb_latexmk *.toc aux &>/dev/null ||:
 
 $(DIAGRAMS): %.1 : %.mp
 	echo teste
-	mpost $<
+	mpost -interaction=nonstopmode $< 
 
 .FORCE:
 
