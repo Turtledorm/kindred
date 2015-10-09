@@ -36,7 +36,7 @@ beginfig(1);
     Activity.unitAttacks("Unidade aliada", "ataca");
     Activity.startOpponentTurn("Início do", "turno do", "jogdador B");
     Activity.opponentActions("Ações do", "jogador B");
-    Activity.closeRoomAndDisconnectPlayer("Fecha sala e", "desconecta jogador");
+    Activity.closeRoomAndDisconnectPlayer("Fecha sala e", "desconecta jogadores");
     Activity.declarePlayerWinner("Declara", "vencedor");
     Activity.gameOver("Fim de", "jogo");
     
