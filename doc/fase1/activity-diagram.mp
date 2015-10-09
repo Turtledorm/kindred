@@ -78,9 +78,9 @@ beginfig(1);
     bottomToTop(huge_vsep)(wantsToMove, wantsToAttack);
     bottomToTop(big_vsep)(wantsToAttack, wantsToEndTurn);
     bottomToTop(big_vsep)(wantsToEndTurn, startOpponentTurn);
-    leftToRight(hsep)(wantsToMove, chooseUnit);
-    leftToRight(hsep)(wantsToAttack, choosePlayerUnit, chooseOpponentUnit,
-                      analyseDamage);
+    leftToRight(big_hsep)(wantsToMove, chooseUnit);
+    leftToRight(big_hsep)(wantsToAttack, choosePlayerUnit);
+    leftToRight(hsep)(choosePlayerUnit, chooseOpponentUnit, analyseDamage);
     rightToLeft(hsep)(confirmsAttack, unitAttacks, playerDestroyedAll);
     topToBottom(vsep)(choosePlayerUnit, playerDestroyedAll);
     leftToRight(hsep)(declarePlayerWinner, gameOver);
@@ -155,6 +155,12 @@ beginfig(1);
     clink(transition)(opponentActions, opponentDestroyedAll);
     clink(transition)(gameOver, declarePlayerWinner);
     clink(transition)(declarePlayerWinner, closeRoomAndDisconnectPlayer);
+    
+    draw (playerDestroyedAll.s) -- (playerDestroyedAll.s + (0, -vsep)) 
+                                -- (xpart gameOver.c, ypart playerDestroyedAll.s
+                                                        - vsep)
+                                -- (gameOver.s) withcolor .6white;
+    
     link(transition)(pathStepX(closeRoomAndDisconnectPlayer.w, mainMenu.e,
                                -hsep/2));
     
@@ -162,17 +168,70 @@ beginfig(1);
     % labels
     item(iGuard)("quer jogar")
                 (obj.w = userWantsToPlay.e + (0, -vsep/2));
+                
     item(iGuard)("não quer jogar")
                 (obj.c = (closeTheGame.se + mainMenu.sw)/2 + (0, -vsep));
+                
     item(iGuard)("não quer hospedar partida")
                 (obj.w = userWantsToHost.e + (-0.1*hsep, -0.7*vsep));
+                
     item(iGuard)("quer hospedar partida")
                 (obj.c = (clientMenu.nw + serverMenu.ne)/2 + (0, vsep));
+                
     item(iGuard)("ambos aceitam")
                 (obj.s = (usersAcceptMatch.c + transitionToChosenMap.w) / 2);
     item(iGuard)("a partida")
                 (obj.n = (usersAcceptMatch.c + transitionToChosenMap.w) / 2);
+                
     item(iGuard)("algum jogador não aceita a partida")
                 (obj.w = usersAcceptMatch.ne + (0, 4 * vsep));
+                
+    item(iGuard)("quer mover")
+                (obj.s = (wantsToMove.e + chooseUnit.w) / 2);
+    item(iGuard)("alguma unidade")
+                (obj.n = (wantsToMove.e + chooseUnit.w) / 2);
+    
+    item(iGuard)("não quer mover unidade")
+                (obj.w = wantsToMove.n + (0, 0.7 * vsep));
+    
+    item(iGuard)("confirma")
+                (obj.s = 0.6 * confirmsMove.e + 0.4 * moveUnit.w);
+    item(iGuard)("movimento")
+                (obj.n = 0.6 * confirmsMove.e + 0.4 * moveUnit.w);
+    
+    item(iGuard)("cancela")
+                (obj.e = confirmsMove.s - (0, 0.7 * vsep));
+    item(iGuard)("movimento")
+                (obj.w = confirmsMove.s - (0, 0.7 * vsep));
+    
+    item(iGuard)("confirma")
+                (obj.s = 0.6 * confirmsAttack.w + 0.4 * unitAttacks.e);
+    item(iGuard)("ataque")
+                (obj.n = 0.6 * confirmsAttack.w + 0.4 * unitAttacks.e);
+    
+    item(iGuard)("cancela ataque")
+                (obj.w = confirmsAttack.s - (0, vsep));
+                
+    item(iGuard)("não destruiu todas as")
+                (obj.s = 0.5 * (xpart wantsToAttack.c, ypart playerDestroyedAll.w)
+                       + 0.5 * playerDestroyedAll.w);
+    item(iGuard)("unidades do oponente")
+                (obj.n = 0.5 * (xpart wantsToAttack.c, ypart playerDestroyedAll.w)
+                       + 0.5 * playerDestroyedAll.w);
+    
+    item(iGuard)("destruiu todas as")
+                (obj.s = 0.5 * (xpart wantsToAttack.c, ypart playerDestroyedAll.sw)
+                       + 0.5 * playerDestroyedAll.w + (0, -vsep));
+    item(iGuard)("unidades do oponente")
+                (obj.n = 0.5 * (xpart wantsToAttack.c, ypart playerDestroyedAll.sw)
+                       + 0.5 * playerDestroyedAll.w + (0, -vsep));
+                       
+    item(iGuard)("quer")
+                (obj.s = (wantsToAttack.e + choosePlayerUnit.w) / 2);
+    item(iGuard)("atacar")
+                (obj.n = (wantsToAttack.e + choosePlayerUnit.w) / 2);
+    
+    item(iGuard)("não quer atacar")
+                (obj.w = wantsToAttack.n + (0, 0.7 * vsep));
 endfig;
 end
