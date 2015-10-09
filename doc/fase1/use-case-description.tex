@@ -1,1 +1,62 @@
 \section{Descrição dos Use-Cases}
+
+
+\subsection{Nome do Use-Case}
+    Criação e realização de uma partida do jogo Kindred.
+
+
+\subsection{Resumo}
+    Entrada do usuário numa sala para jogar uma partida de Kindred
+    e a realização da mesma.
+
+
+\subsection{Atores}
+        Jogador cliente e hospedeiro (primários).
+
+
+\subsection{Precondição}
+    Jogo já está aberto no menu principal.
+
+
+\subsection{Fluxo Normal dos Eventos}
+    \begin{enumerate}
+        \item \label{escolhePartida} O usuário escolhe jogar uma partida.
+        \item \label{decideHospedar} O usuário decide hospedar uma partida.
+        \item O usuário escolhe as opções da partida (mapa, etc.).
+        \item O usuário hospedeiro aguarda um outro jogador cliente se conectar.
+        \item \label{salaConfirmada} Os usuários hospedeiro e conectado confirmam a partida.
+        \item Os jogadores posicionam suas unidades no mapa para a batalha começar.
+        \item \label{turnoJogadorA} Turno do jogador A. Este pode mover e atacar com suas unidades.
+        \item O jogador A encerra seu turno.
+        \item Turno do jogador B. Este pode mover e atacar com suas unidades.
+        \item O jogador B encerra seu turno.
+        \item Turno do jogador A novamente (retorna-se ao passo \ref{turnoJogadorA}).
+        \item \label{exercitoDestruido} Eventualmente, um jogador destruirá todas as unidades do oponente.
+    \end{enumerate}
+
+
+\subsection{Fluxos Alternativos}
+
+    \subsubsection{Fechamento do Jogo}
+        No passo \ref{escolhePartida}, o usuário pode decidir sair do jogo, o que encerra o
+        programa.
+
+    \subsubsection{Fechamento do Jogo}
+        Em vez de hospedar uma partida, o jogador pode optar, no passo \ref{decideHospedar},
+        por se juntar a uma sala existente:
+        \begin{enumerate}
+            \item O usuário procura alguma sala pela qual tenha interessante nas existentes.
+            \item O usuário conecta-se à sala.
+            \item Retorno ao passo \ref{salaConfirmada} do fluxo normal.
+        \end{enumerate}
+
+    \subsubsection{Cancelamento da Partida}
+        No passo 5, se algum dos jogadores (hospedeiro ou conectado) recusar
+        a partida, retorna-se ao passo \ref{escolhePartida} do fluxo normal.
+
+
+\subsection{Condições Posteriores}
+    \subsubsection{Fim do Jogo}
+        Quando o passo \ref{exercitoDestruido} ocorrer, a declaração do jogador vencedor é feita
+        e a partida é finalizada, retornando os usuários ao passo \ref{escolhePartida}
+        do fluxo normal.
