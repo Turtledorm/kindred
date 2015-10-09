@@ -1,14 +1,24 @@
 \section{Documento de Especificação dos Requisitos do Sistema}
 
-\subsection{Requisitos de Sistema}
+\subsection{Requisitos Funcionais}
 
 \begin{itemise}
     \item Programa escrito em Java.
     \item Jogo de estratégia.
     \item Ambiente medieval.
     \item Voltado totalmente para multiplayer.
-    \item Cada jogador controla um exército.
-    \item O jogo é dividido em turnos.
+    \item Servidor contendo salas sendo hospedadas.
     \item Um dos jogadores hospeda a partida, atuando como servidor, e espera outro cliente conectar-se a ele.
     \item O jogador pode escolher um oponente para se conectar e jogar uma partida.
+    \item Cada jogador controla um exército.
+    \item O jogo é dividido em turnos.
+\end{itemise}
+
+\subsection{Requisitos Não-Funcionais}
+
+\begin{itemise}
+    \item Segurança na troca de dados com outros jogadores.
+    \item Estabilidade nas conexões.
+    \item Servidor estável, com produção de um log contendo ações realizadas.
+    \item Tentativa de reenvio de dados ou reconexão em caso de falha de conexão.
 \end{itemise}
