@@ -135,7 +135,7 @@ beginfig(1);
                                -vsep + ypart moveUnit.s - ypart wantsToMove.s));
     link(transition)(pathStepY(moveUnit.s, wantsToMove.s, -vsep));
     clink(transition)(wantsToMove, wantsToAttack);
-    link(transition)(pathStepX(wantsToAttack.sw, wantsToMove.w, -hsep));
+    link(transition)(pathStepX(wantsToAttack.sw, wantsToMove.w, - 1.2 * hsep));
     clink(transition)(wantsToAttack, wantsToEndTurn);
     clink(transition)(wantsToEndTurn, startOpponentTurn);
     link(transition)(pathStepX(wantsToEndTurn.w, wantsToAttack.nw, -hsep));
@@ -219,19 +219,41 @@ beginfig(1);
                 (obj.n = 0.5 * (xpart wantsToAttack.c, ypart playerDestroyedAll.w)
                        + 0.5 * playerDestroyedAll.w);
     
+    offset := ypart playerDestroyedAll.c - ypart playerDestroyedAll.s;
     item(iGuard)("destruiu todas as")
-                (obj.s = 0.5 * (xpart wantsToAttack.c, ypart playerDestroyedAll.sw)
-                       + 0.5 * playerDestroyedAll.w + (0, -vsep));
+                (obj.s = 0.5 * (xpart wantsToAttack.c, ypart playerDestroyedAll.w)
+                       + 0.5 * playerDestroyedAll.w + (0, -vsep - offset));
     item(iGuard)("unidades do oponente")
-                (obj.n = 0.5 * (xpart wantsToAttack.c, ypart playerDestroyedAll.sw)
-                       + 0.5 * playerDestroyedAll.w + (0, -vsep));
+                (obj.n = 0.5 * (xpart wantsToAttack.c, ypart playerDestroyedAll.w)
+                       + 0.5 * playerDestroyedAll.w + (0, -vsep - offset));
                        
     item(iGuard)("quer")
                 (obj.s = (wantsToAttack.e + choosePlayerUnit.w) / 2);
     item(iGuard)("atacar")
                 (obj.n = (wantsToAttack.e + choosePlayerUnit.w) / 2);
     
-    item(iGuard)("não quer atacar")
+    item(iGuard)("não quer atacar nem mover")
                 (obj.w = wantsToAttack.n + (0, 0.7 * vsep));
+
+    item(iGuard)("quer voltar a")
+                (obj.w = wantsToAttack.nw - (1.2 * hsep, 1.05 * vsep));
+    item(iGuard)("mover unidades")
+                (obj.w = wantsToAttack.nw - (1.2 * hsep, 1.40 * vsep));
+
+    item(iGuard)("encerra turno")
+                (obj.w = wantsToEndTurn.n + (0, 0.7 * vsep));
+    
+    item(iGuard)("não encerra")
+                (obj.w = wantsToEndTurn.nw - (hsep, 0.85 * vsep));
+    item(iGuard)("turno")
+                (obj.w = wantsToEndTurn.nw - (hsep, 1.20 * vsep));
+    
+    item(iGuard)("não destruiu todas as")
+                (obj.sw = opponentDestroyedAll.e + (0.1 * hsep, 0));
+    item(iGuard)("unidades adversárias")
+                (obj.nw = opponentDestroyedAll.e + (0.1 * hsep, 0));
+    
+    item(iGuard)("destruiu todas as unidades adversárias")
+                (obj.w = opponentDestroyedAll.ne + (0, vsep));
 endfig;
 end
