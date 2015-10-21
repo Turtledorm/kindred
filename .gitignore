@@ -1,8 +1,10 @@
 ### Arquivos ignorados pelo git
 
 # Arquivos e diretórios gerados pelo TeX
-doc/fase1/aux/*
+doc/fase1/aux/
+doc/fase1/main.pdf
 *.log
+*.1
 *.fls
 *.aux
 *.fdb_latexmk
