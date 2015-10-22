@@ -9,6 +9,12 @@ doc/fase1/main.pdf
 *.aux
 *.fdb_latexmk
 
+# Arquivos e diretórios gerados pelo virtualenv
+bin/
+include/
+lib/
+pip-selfcheck.json
+
 # Outros
 *~
 *.dropbox.attr
