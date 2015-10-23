@@ -10,7 +10,7 @@ set -e  # Finaliza script no primeiro caso de erro
 DIR=`cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd`
 
 # Diretório contendo arquivos relacionados a jython
-JYTHON="$DIR/jython"
+JYTHONDIR="$DIR/jython"
 
 # Arquivo com as dependências
 REQ="$DIR/doc/requisitos/pip.txt"
@@ -47,10 +47,10 @@ function uso {
 for arg in "$@"; do
     if [ "$arg" == "-h" ]; then uso; fi
     if [ "$arg" == "-r" ]; then
-        echo -e $CYAN"Desfazendo configurações do Pygame..."$NORMAL
-        pip3 uninstall -yr $REQ
-        rm -rf $JYTHON/pyj2d
-        echo -e $CYAN"Pygame desinstalado! :)"$NORMAL
+        echo -e $CYAN"Removendo Pygame..."$NORMAL
+        rm -rvf $JYTHONDIR/pyj2d
+        pip3 uninstall -vyr $REQ
+        echo -e $CYAN"Pygame e dependências foram desinstalados com sucesso! :)"$NORMAL
         exit 0
     fi
 done
@@ -59,9 +59,9 @@ if [ -f "$REQ" ]; then
     echo -e $CYAN"Instalando requisitos contidos em \"$REQ\"..."$NORMAL
     # Precisa dar um Enter imperceptível no pip3 abaixo, por isso o 'echo'
     echo | pip3 install --user -r $REQ --allow-external pygame --allow-unverified pygame
-
-    echo -e $CYAN"Configurando pacotes para compatibilidade de Java com Python..."$NORMAL
-    unzip $JYTHON/PyJ2D*.zip
 fi
+
+echo -e $CYAN"Configurando pacotes para compatibilidade de Java com Python..."$NORMAL
+unzip $JYTHONDIR/PyJ2D*.zip -d $JYTHONDIR
 
 echo -e $CYAN"Pacotes instalados com sucesso! :)"$NORMAL
