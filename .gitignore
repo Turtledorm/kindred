@@ -11,7 +11,13 @@ doc/fase1/main.pdf
 
 # Arquivos e diretórios gerados na instalação do Pygame
 pyj2d/
+pygame/
+doc/requisitos/pygame.txt*
+
+# Arquivos gerados pelo Python
+__pycache__/
 
 # Outros
 *~
 *.dropbox.attr
+.nfs*
