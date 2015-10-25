@@ -54,15 +54,23 @@ for arg in "$@"; do
         -r)
             echo -e $CYAN"Removendo Pygame e dependências..."$NORMAL
 
-            rm -rvf $JYDIR/pyj2d/
+            # Remove pacotes de Python ligados ao Pygame
+            while read -r linha; do
+                # Verifica se a dependência está instalada antes de removê-la
+                if pip3 freeze | grep -q $linha; then
+                    pip3 uninstall -vy $linha
+                fi
+            done < $REQ
 
-            if [ -f $PYGAME_FILES ]; then
-                # Remove arquivos do Pygame em si
+            # Remove arquivos do Pygame em si
+            rm -rf pygame/
+            if [[ -f $PYGAME_FILES ]]; then
                 cat $PYGAME_FILES | xargs rm -rvf
                 rm -f $PYGAME_FILES*
             fi
 
-            pip3 uninstall -vyr $REQ;
+            # Remove arquivos de compatibilidade Java-Python
+            rm -rvf $JYDIR/pyj2d/
 
             echo -e $CYAN"Desinstalação feita com sucesso! :)"$NORMAL
             exit 0
@@ -73,29 +81,45 @@ done
 
 # Pacotes de Python locais são, geralmente, instalados em '~/.local/'
 echo -e $CYAN"Instalando requisitos contidos em \"$REQ\"..."$NORMAL
-pip3 install --user -r $REQ
 
-echo -e $CYAN"Instalando Pygame..."$NORMAL
-rm -rf pygame/
-hg clone https://bitbucket.org/pygame/pygame
-
-# Grava arquivos instalados do Pygame em si em $PYGAME_FILES.
-# O uso de 'echo' pula automaticamente uma pergunta [y/n].
-echo | python3 pygame/setup.py install --user --record $PYGAME_FILES.temp
-rm -rf pygame/
-
-# Generaliza os arquivos onde o Pygame está instalado para diretórios
-touch $PYGAME_FILES
 while read -r linha; do
-    nome=${linha%pygame/*}  # Nome recebe path antes de 'pygame/'
-    if ! grep -Fxq ${nome}pygame/ $PYGAME_FILES; then
-        echo ${nome}pygame/ >> $PYGAME_FILES
+    # Verifica se cada dependência já está instalada
+    if ! pip3 freeze | grep -q $linha; then
+        pip3 install --user $linha
     fi
-    echo $linha >> $PYGAME_FILES
-done < $PYGAME_FILES.temp
-rm -f $PYGAME_FILES.temp
+done < $REQ
 
-echo -e $CYAN"Configurando pacotes para compatibilidade de Java com Python..."$NORMAL
-unzip $JYDIR/PyJ2D*.zip -d $JYDIR
+# Verifica se Pygame já está instalado
+if ! pip3 freeze | grep -q "pygame"; then
+    echo -e $CYAN"Instalando Pygame..."$NORMAL
+    rm -rf pygame/
+    hg clone https://bitbucket.org/pygame/pygame
+
+    # Grava arquivos instalados do Pygame em si em $PYGAME_FILES.
+    # O uso de 'echo' pula automaticamente uma pergunta [y/n].
+    echo | python3 pygame/setup.py install --user --record $PYGAME_FILES.temp
+    rm -rf pygame/
+
+    # Generaliza os arquivos onde o Pygame está instalado para diretórios
+    touch $PYGAME_FILES
+    while read -r linha; do
+        nome=${linha%pygame/*}  # Nome recebe path antes de 'pygame/'
+        if ! grep -Fxq ${nome}pygame/ $PYGAME_FILES; then
+            echo ${nome}pygame/ >> $PYGAME_FILES
+        fi
+        echo $linha >> $PYGAME_FILES
+    done < $PYGAME_FILES.temp
+    rm -f $PYGAME_FILES.temp
+else
+    echo -e $CYAN"Pygame já está instalado!"$NORMAL
+fi
+
+# Verifica se a compatibilidade já foi feita
+if [[ ! -d $JYDIR/pyj2d ]]; then
+    echo -e $CYAN"Configurando pacotes para compatibilidade de Java com Python..."$NORMAL
+    unzip $JYDIR/PyJ2D*.zip -d $JYDIR
+else
+    echo -e $CYAN"Compatibilidade de Java com Python já foi feita!"$NORMAL
+fi
 
 echo -e $CYAN"Pacotes instalados com sucesso! :)"$NORMAL

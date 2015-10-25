@@ -17,6 +17,9 @@ doc/requisitos/pygame.txt*
 # Arquivos gerados pelo Python
 __pycache__/
 
+# Arquivos gerados pelo Java
+*.class
+
 # Outros
 *~
 *.dropbox.attr
