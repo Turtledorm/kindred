@@ -8,8 +8,9 @@ estar conectado à Internet para baixar alguns pacotes.
 
 1. Instale, em seu sistema, os pacotes especificados em [doc/requisitos/sistema.txt]
    (doc/requisitos/sistema.txt "Link para arquivo"). Este comando provavelmente requer
-   que o usuário consiga usar **sudo**. Se quiser instalar rapidamente todos os pacotes
-   de uma vez, rode o seguinte comando no *root* deste projeto:
+   que o usuário consiga rodar comandos de administrador. Se quiser instalar rapidamente
+   todos os pacotes de uma vez, rode o seguinte comando no *root* deste projeto (usou-se
+   **apt-get install** abaixo; troque pelo equivalente no seu sistema):
 
         $ cat doc/requisitos/sistema.txt | xargs sudo apt-get install -y
 

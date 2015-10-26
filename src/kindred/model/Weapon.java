@@ -23,5 +23,4 @@ public class Weapon {
     public int getRange() {
         return range;
     }
-
 }
