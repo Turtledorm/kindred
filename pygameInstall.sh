@@ -12,6 +12,9 @@ DIR=`cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd`
 # Diretório contendo arquivos para relacionar Java com Python
 JYDIR="$DIR/jython"
 
+# URL para baixar Jython
+JYTHON_URL="search.maven.org/remotecontent?filepath=org/python/jython-standalone/2.7.0/jython-standalone-2.7.0.jar"
+
 # Arquivo com as dependências a serem instaladas pelo Pip
 REQ="$DIR/doc/requisitos/pip.txt"
 
@@ -69,8 +72,8 @@ for arg in "$@"; do
                 rm -f $PYGAME_FILES*
             fi
 
-            # Remove arquivos de compatibilidade Java-Python
-            rm -rvf $JYDIR/pyj2d/
+            # Remove Jython e arquivos de compatibilidade Java-Python
+            rm -rvf $JYDIR/jython.jar $JYDIR/pyj2d/
 
             echo -e $CYAN"Desinstalação feita com sucesso! :)"$NORMAL
             exit 0
@@ -114,7 +117,11 @@ else
     echo -e $CYAN"Pygame já está instalado!"$NORMAL
 fi
 
-# Verifica se a compatibilidade já foi feita
+# Baixa o Jython
+echo -e $CYAN"Baixando Jython..."$NORMAL
+wget $JYTHON_URL -O $JYDIR/jython.jar
+
+# Verifica se pacotes de compatibilidade Python-Java já foram configurados
 if [[ ! -d $JYDIR/pyj2d ]]; then
     echo -e $CYAN"Configurando pacotes para compatibilidade de Java com Python..."$NORMAL
     unzip $JYDIR/PyJ2D*.zip -d $JYDIR
