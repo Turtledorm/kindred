@@ -23,7 +23,7 @@ public class Map {
 
     /*
      *  Adds a unit to Tile (x, y) on the Map.
-     *  Returns 'true' if placement was sucessful or 'false' otherwise.
+     *  Returns 'true' if placement was successful or 'false' otherwise.
      */
     public boolean placeUnit(Unit unit, int x, int y) {
         // Tile already occupied

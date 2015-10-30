@@ -6,7 +6,7 @@ package kindred.model;
  */
 public class Tile {
 
-    private final Terrain terrain; // Fixed Terrain ocurring in the Tile
+    private final Terrain terrain; // Fixed Terrain occurring in the Tile
     private Unit unit;             // Unit currently occupying the Tile
 
     // Creates a Tile with the specified Terrain
