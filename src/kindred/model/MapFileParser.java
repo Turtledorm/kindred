@@ -6,13 +6,19 @@ import java.util.HashMap;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
+// Parses a file to read and create a Map in the game
 public class MapFileParser {
 
-    private MapFileParser() {
-        // Can't be instantiated
-    }
-
-    public static Map parseFile(String filename, HashMap<Character, TileInfo> hashMap)
+    /*
+     *  Parses a given filename containing information about a Map.
+     *
+     *  Also uses a char->Terrain hashmap to understands types of
+     *  Terrain valid for the Map.
+     *
+     *  Creates and returns a Map, according to the info contained
+     *  in the file.
+     */
+    public static Map parseFile(String filename, HashMap<Character, Terrain> hashMap)
             throws FileNotFoundException {
         File f = new File(filename);
         Scanner scanner = new Scanner(f);
@@ -28,14 +34,16 @@ public class MapFileParser {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 if (!scanner.hasNext(p)) {
+                    // Sudden end of file
                     System.err.format("Linha inválida em '%s'\n", filename);
                     scanner.close();
                     return null;
                 }
                 char c = scanner.next(p).trim().charAt(0);
                 if (hashMap.containsKey(c))
-                    tiles[i][j] = new Tile("tile-name", 'f', 1, 1);
+                    tiles[i][j] = new Tile(hashMap.get(c));
                 else {
+                    // Invalid type of Terrain
                     System.err.format("Linha inválida em '%s'\n", filename);
                     scanner.close();
                     return null;

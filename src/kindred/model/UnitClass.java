@@ -3,7 +3,6 @@ package kindred.model;
 public class UnitClass {
 
     private final String name;
-
     private final Attribute attribute;
 
     public UnitClass(String name, Attribute attribute) {

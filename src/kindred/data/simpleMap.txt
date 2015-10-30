@@ -1,0 +1,7 @@
+5 5
+100 100
+R R F F F
+P R R P P
+P M R M P
+P P R R P
+F F F R R
