@@ -1,5 +1,7 @@
 package kindred.model;
 
+import java.lang.Math;
+
 /*
  *  Handles events related to a Map in the Game.
  *  A Map is divided in many Tiles.
@@ -15,5 +17,79 @@ public class Map {
         this.tiles = tiles;
         this.tileHeight = tileHeight;
         this.tileWidth = tileWidth;
+    }
+
+    /*
+     *  Adds a unit to Tile (x, y) on the Map.
+     *  Returns 'true' if placement was sucessful or 'false' otherwise.
+     */
+    public boolean placeUnit(Unit unit, int x, int y) {
+        // Tile already occupied
+        if (tiles[x][y].getUnit() != null) return false;
+
+        tiles[x][y].setUnit(unit);
+        return true;
+    }
+
+    /*
+     *  Moves Unit on Tile (xi, yi) to Tile (xf, yf) on the Map.
+     *  Returns 'true' if movement was successful or 'false' otherwise.
+     */
+    public boolean move(int xi, int yi, int xf, int yf) {
+        // Tile already occupied
+        if (tiles[xf][yf].getUnit() != null) return false;
+
+        Unit unit = tiles[xi][yi].getUnit();
+        if (unit == null) return false;
+
+        // TODO: Check Player the unit belongs to        
+
+        // TODO: If necessary, change name of Unit method
+        int move = unit.getMove();
+
+        // Calculate x/y distance from starting Tile to destination Tile
+        int dx = Math.abs(xf - xi);
+        int dy = Math.abs(yf - yi);
+
+        // Disallow movement to a tile further than Unit's 'move'
+        if (dx + dy > move) return false;
+
+        // Successfully moves unit
+        tiles[xi][yi].removeUnit();
+        tiles[xf][yf].setUnit(unit);
+
+        return true;
+    }
+
+    /*
+     *  Makes the Unit on Tile (xi, yi) attack the Unit on Tile (xf, yf).
+     *  Returns 'true' if attack was possible or 'false' otherwise.
+     */
+    public boolean attack(int xi, int yi, int xf, int yf) {
+        Unit attacker = tiles[xi][yi].getUnit();
+        Unit defender = tiles[xf][yf].getUnit();
+        if (attacker == null || defender == null) return false;
+
+        // TODO: Check Players the units belongs to
+
+        // TODO: If necessary, change name of Unit/Weapon methods
+        int range = unit.getWeapon().getRange();
+
+        // Calculate x/y distance between Units
+        int dx = Math.abs(xf - xi);
+        int dy = Math.abs(yf - yi);
+
+        // Disallow attack if distance in greater than range
+        if (dx + dy > range) return false;
+
+        // Do battle and check consequences
+        battle(attacker, defender);
+        if (defender.getHp() <= 0) tiles[xf][yf].removeUnit();
+
+        return true;
+    }
+
+    private void battle(Unit attacker, Unit defender) {
+        // TODO: Define how battle works
     }
 }
