@@ -11,12 +11,14 @@ public class Map {
     private final Tile[][] tiles; // Map is represented as a Tile matrix
     private final int tileHeight; // Graphical height representation for each tile
     private final int tileWidth;  // Graphical width representation for each tile
+    private final Battle battle;  // Calculates result of battle between Units
 
     // Creates a Map with the specified parameters
     public Map(Tile[][] tiles, int tileHeight, int tileWidth) {
         this.tiles = tiles;
         this.tileHeight = tileHeight;
         this.tileWidth = tileWidth;
+        this.battle = new Battle();
     }
 
     /*
@@ -83,13 +85,9 @@ public class Map {
         if (dx + dy > range) return false;
 
         // Do battle and check consequences
-        battle(attacker, defender);
+        battle.execute(tiles[xi][yi], tiles[xf][yf]);
         if (defender.getHp() <= 0) tiles[xf][yf].removeUnit();
 
         return true;
-    }
-
-    private void battle(Unit attacker, Unit defender) {
-        // TODO: Define how battle works
     }
 }
