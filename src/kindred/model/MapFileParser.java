@@ -9,6 +9,10 @@ import java.util.regex.Pattern;
 // Parses a file to read and create a Map in the game
 public class MapFileParser {
 
+    private MapFileParser() {
+        // do not instantiate!
+    }
+    
     /*
      *  Parses a given filename containing information about a Map.
      *

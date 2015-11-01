@@ -75,7 +75,7 @@ public class Map {
         // TODO: Check Players the units belongs to
 
         // TODO: If necessary, change name of Unit/Weapon methods
-        int range = unit.getWeapon().getRange();
+        int range = attacker.getWeapon().getRange();
 
         // Calculate x/y distance between Units
         int dx = Math.abs(xf - xi);

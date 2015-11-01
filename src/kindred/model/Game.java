@@ -9,14 +9,10 @@ public class Game {
         String terrainFile = "kindred/data/terrain.txt";
         String mapFile = "kindred/data/simpleMap.txt";
 
-        TerrainFileParser terrainParser = new TerrainFileParser();
-        MapFileParser mapParser = new MapFileParser();
-
         try {
-            Map map = mapParser.parseFile(mapFile,
-                                          terrainParser.parseFile(terrainFile));
-        }
-        catch (FileNotFoundException e) {
+            Map map = MapFileParser.parseFile(mapFile,
+                    TerrainFileParser.parseFile(terrainFile));
+        } catch (FileNotFoundException e) {
             System.err.format("Arquivo não encontrado!\n");
         }
     }

@@ -7,6 +7,11 @@ import java.util.Scanner;
 
 // Parses a file to get information regarding valid Terrain types
 public class TerrainFileParser {
+    
+    private TerrainFileParser() {
+        // do not instantiate!
+    }
+    
 
     /*
      *  Parses a given filename containing information about Terrains.
