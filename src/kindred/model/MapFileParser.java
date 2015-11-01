@@ -10,9 +10,9 @@ import java.util.regex.Pattern;
 public class MapFileParser {
 
     private MapFileParser() {
-        // do not instantiate!
+        // Do not instantiate!
     }
-    
+
     /*
      *  Parses a given filename containing information about a Map.
      *

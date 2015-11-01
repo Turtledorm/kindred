@@ -9,9 +9,8 @@ import java.util.Scanner;
 public class TerrainFileParser {
     
     private TerrainFileParser() {
-        // do not instantiate!
+        // Do not instantiate!
     }
-    
 
     /*
      *  Parses a given filename containing information about Terrains.
