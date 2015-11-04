@@ -15,8 +15,8 @@ public class Battle {
     }
 
     /*
-     * Checks if the attacker will hit the defender and, if so, calculates
-     * damage caused to defender, reducing its HP.
+     * Checks if the attacker will hit the defender and, if so, returns damage
+     * caused to defender.
      */
     public int execute(Tile attacker, Tile defender) {
         Unit attackUnit = attacker.getUnit();
