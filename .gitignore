@@ -13,6 +13,7 @@ doc/fase1/main.pdf
 pyj2d/
 pygame/
 doc/requisitos/pygame.txt*
+jython.jar
 
 # Arquivos gerados pelo Python
 __pycache__/
