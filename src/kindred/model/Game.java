@@ -4,6 +4,12 @@ import java.io.FileNotFoundException;
 
 public class Game {
 
+    private int localPlayerUnits, remotePlayerUnits;
+
+    public Game() {
+
+    }
+
     // Currently used for testing Map generation
     public void start() {
         String terrainFile = "kindred/data/terrain.txt";
