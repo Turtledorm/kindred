@@ -7,6 +7,7 @@ public class Game {
     private int localPlayerUnits, remotePlayerUnits;
 
     public Game() {
+        localPlayerUnits = remotePlayerUnits = 0;
 
     }
 
