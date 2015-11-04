@@ -57,8 +57,7 @@ public class ColourTest {
         public final char character;
         public final Colour backgroundColour, foregroundColour;
 
-        public Atom(char character, Colour backgroundColour,
-                Colour foregroundColour) {
+        public Atom(char character, Colour backgroundColour, Colour foregroundColour) {
             this.character = character;
             this.backgroundColour = backgroundColour;
             this.foregroundColour = foregroundColour;
@@ -103,8 +102,7 @@ public class ColourTest {
     }
 
     public static void main(String[] args) {
-        int width = Integer.parseInt(args[1]), height = Integer
-                .parseInt(args[0]);
+        int width = Integer.parseInt(args[1]), height = Integer.parseInt(args[0]);
         Atom[][] matrix = new Atom[height][width];
         Random r = new Random();
         String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-+-*/.,";
