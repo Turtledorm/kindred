@@ -5,11 +5,13 @@ public class Unit {
     private final String name;
     private final UnitClass unitClass;
     private final Attribute attribute;
+    private final Weapon weapon;
 
-    public Unit(String name, UnitClass unitClass, Attribute attribute) {
+    public Unit(String name, UnitClass unitClass, Attribute attribute, Weapon weapon) {
         this.name = name;
         this.unitClass = unitClass;
         this.attribute = attribute;
+        this.weapon = weapon;
     }
 
     public double getAtk() {
@@ -31,10 +33,13 @@ public class Unit {
     public double getDef() {
         return attribute.getDefense();
     }
-
+    
+    public int getRange(){
+        return weapon.getRange();
+    }
+    
     public Weapon getWeapon() {
-        return null;
-        // TODO: implement this
+        return Weapon;
     }
 
     public void loseHp(double floor) {
