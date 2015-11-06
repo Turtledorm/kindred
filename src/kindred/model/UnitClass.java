@@ -18,33 +18,33 @@ public class UnitClass {
         return attribute;
     }
     
-    public void set_attributes(){
+    public void set_mods(){
         if(name.equals('Lancer')){
-            attribute.hitPoints *= 1.1;
-            attribute.attack *= 1.1;
-            attribute.defense *= 0.9;
-            attribute.agility *= 0.8;
+            attribute.hitPoints = 3;
+            attribute.attack = 4;
+            attribute.defense = 1;
+            attribute.agility = -5;
         }
         
         if(name.equals('Archer')){
-            attribute.hitPoints *= 0.8;
-            attribute.attack *= 1.1;
-            attribute.defense *= 0.7;
-            attribute.agility *= 1.3;
+            attribute.hitPoints = -8;
+            attribute.attack = 5;
+            attribute.defense = -7;
+            attribute.agility = 10;
         }
         
         if(name.equals('Knight')){
-            attribute.hitPoints *= 1.2;
-            attribute.attack *= 1.05;
-            attribute.defense *= 1.2;
-            attribute.agility *= 0.7;
+            attribute.hitPoints = 7;
+            attribute.attack = 2;
+            attribute.defense = 7;
+            attribute.agility = -8;
         }
         
         if(name.equals('Swordsman')){
-            attribute.hitPoints *= 0.9;
-            attribute.attack *= 1.2;
-            attribute.defense *= 0.8;
-            attribute.agility *= 1.2;
+            attribute.hitPoints = -2;
+            attribute.attack = 6;
+            attribute.defense = -4;
+            attribute.agility = 7;
         }
     }
 }

@@ -41,6 +41,14 @@ public class Unit {
     public Weapon getWeapon() {
         return Weapon;
     }
+    
+    public void set_attributes(){
+            
+        attribute.hitPoints += unitClass.attribute.hitPoints;
+        attribute.attack += unitClass.attribute.attack;
+        attribute.defense += unitClass.attribute.defense;
+        attribute.agility += unitClass.attribute.agility;
+    }
 
     public void loseHp(double floor) {
         // TODO: implement this
