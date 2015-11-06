@@ -14,16 +14,15 @@ public class MapFileParser {
     }
 
     /*
-     *  Parses a given filename containing information about a Map.
+     * Parses a given filename containing information about a Map.
      *
-     *  Also uses a char->Terrain hashmap to understands types of
-     *  Terrain valid for the Map.
+     * Also uses a char->Terrain hashmap to understands types of Terrain valid
+     * for the Map.
      *
-     *  Creates and returns a Map, according to the info contained
-     *  in the file.
+     * Creates and returns a Map, according to the info contained in the file.
      */
-    public static Map parseFile(String filename, HashMap<Character, Terrain> hashMap)
-            throws FileNotFoundException {
+    public static Map parseFile(String filename,
+            HashMap<Character, Terrain> hashMap) throws FileNotFoundException {
         File f = new File(filename);
         Scanner scanner = new Scanner(f);
 
@@ -39,7 +38,7 @@ public class MapFileParser {
             for (int j = 0; j < cols; j++) {
                 if (!scanner.hasNext(p)) {
                     // Sudden end of file
-                    System.err.format("Linha inválida em '%s'\n", filename);
+                    System.err.format("Invalid line in '%s'\n", filename);
                     scanner.close();
                     return null;
                 }
@@ -48,7 +47,7 @@ public class MapFileParser {
                     tiles[i][j] = new Tile(hashMap.get(c));
                 else {
                     // Invalid type of Terrain
-                    System.err.format("Linha inválida em '%s'\n", filename);
+                    System.err.format("Invalid line in '%s'\n", filename);
                     scanner.close();
                     return null;
                 }
@@ -56,7 +55,7 @@ public class MapFileParser {
         }
 
         if (scanner.hasNext(p)) {
-            System.err.format("Informação restando no final de '%s'\n", filename);
+            System.err.format("Extra information in '%s'\n", filename);
         }
         scanner.close();
         Map map = new Map(tiles, tileHeight, tileWidth);
