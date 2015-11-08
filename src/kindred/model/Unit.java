@@ -44,10 +44,11 @@ public class Unit {
     
     public void set_attributes(){
             
-        attribute.hitPoints += unitClass.attribute.hitPoints;
-        attribute.attack += unitClass.attribute.attack;
-        attribute.defense += unitClass.attribute.defense;
-        attribute.agility += unitClass.attribute.agility;
+        attribute.hitPoints += unitClass.attribute.getAttribute().getHitPoints();
+        attribute.attack += unitClass.attribute.getAttribute().getAttack();
+        attribute.attack += weapon.getPower();
+        attribute.defense += unitClass.attribute.getAttribute().getDefense();
+        attribute.agility += unitClass.attribute.getAttribute().getAgility();
     }
 
     public void loseHp(double floor) {
