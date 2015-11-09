@@ -96,11 +96,41 @@ public class Map {
         return damage;
     }
 
+    public boolean validPosition(int i, int j) {
+        return i >= 0 && i < getHeight() && j >= 0 && j < getWidth();
+    }
+
     public int getHeight() {
         return tiles.length;
     }
 
     public int getWidth() {
         return tiles[0].length;
+    }
+
+    public String getTileInfo(int i, int j) {
+        String message = "";
+        Tile tile = tiles[i][j];
+        Unit unit;
+
+        if ((unit = tile.getUnit()) == null)
+            message += "[No unit]";
+        else {
+            Weapon weapon = unit.getWeapon();
+            message += unit.getName() + " the " + unit.getUnitClass().getName();
+            message += unit.getCurrentHp() + "/" + unit.getTotalHp() + " HP";
+            message += "\n Mov: " + unit.getMove();
+            message += "\n Atk: " + unit.getAtk();
+            message += "\n Def: " + unit.getDef();
+            message += "\n Agi: " + unit.getAtk();
+            message += "\n Weapon: " + weapon.getName();
+            message += "\n   (Power = " + weapon.getPower() + ", Range = "
+                    + weapon.getRange() + ")";
+        }
+        message += "\n\n>> " + tile.getTerrain().getName();
+        message += String.format("(%+d def, %+d agi)", tile.getTerrain()
+                .getDefenseModifier(), tile.getTerrain().getAgilityModifier());
+
+        return message;
     }
 }

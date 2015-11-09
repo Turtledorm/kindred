@@ -14,44 +14,59 @@ public class Unit {
         this.weapon = weapon;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public int getTotalHp() {
+        return attribute.getHitPoints();
+    }
+
+    public int getCurrentHp() {
+        return attribute.getCurrentHp();
+    }
+
     public double getAtk() {
         return attribute.getAttack();
     }
 
-    public int getMove() {
-        return attribute.getMovement();
+    public double getDef() {
+        return attribute.getDefense();
     }
 
     public double getAgi() {
         return attribute.getAgility();
     }
 
-    public int getHp() {
-        return attribute.getHitPoints();
+    public int getMove() {
+        return attribute.getMovement();
     }
 
-    public double getDef() {
-        return attribute.getDefense();
-    }
-    
-    public int getRange(){
+    public int getRange() {
         return weapon.getRange();
     }
-    
+
     public Weapon getWeapon() {
         return weapon;
     }
-    
-    public void set_attributes(){
-            
-        attribute.setHitPoints(attribute.getHitPoints() + unitClass.getAttribute().getHitPoints());
-        attribute.setAttack(attribute.getAttack() + unitClass.getAttribute().getAttack());
+
+    public void set_attributes() {
+        attribute.setHitPoints(attribute.getHitPoints()
+                + unitClass.getAttribute().getHitPoints());
+        attribute.setAttack(attribute.getAttack()
+                + unitClass.getAttribute().getAttack());
         attribute.setAttack(attribute.getAttack() + weapon.getPower());
-        attribute.setDefense(attribute.getDefense() + unitClass.getAttribute().getDefense());
-        attribute.setAgility(attribute.getAgility() + unitClass.getAttribute().getAgility());
+        attribute.setDefense(attribute.getDefense()
+                + unitClass.getAttribute().getDefense());
+        attribute.setAgility(attribute.getAgility()
+                + unitClass.getAttribute().getAgility());
     }
 
-    public void loseHp(double floor) {
-        // TODO: implement this
+    public void loseHp(int damage) {
+        attribute.loseHp(damage);
+    }
+
+    public UnitClass getUnitClass() {
+        return unitClass;
     }
 }

@@ -8,7 +8,7 @@ import java.net.Socket;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class ServerThread extends Thread {
+class ServerThread extends Thread {
 
     private Socket socket; // Socket connected to client
     private final String addr; // Client's 'IP:Port' address
