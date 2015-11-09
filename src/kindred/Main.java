@@ -22,5 +22,6 @@ public class Main {
         Game game = new Game(nameA, nameB, "kindred/data/terrain.txt",
                 "kindred/data/simpleMap.txt");
         game.run();
+        input.close();
     }
 }

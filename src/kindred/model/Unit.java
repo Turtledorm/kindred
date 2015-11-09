@@ -39,16 +39,16 @@ public class Unit {
     }
     
     public Weapon getWeapon() {
-        return Weapon;
+        return weapon;
     }
     
     public void set_attributes(){
             
-        attribute.hitPoints += unitClass.attribute.getAttribute().getHitPoints();
-        attribute.attack += unitClass.attribute.getAttribute().getAttack();
-        attribute.attack += weapon.getPower();
-        attribute.defense += unitClass.attribute.getAttribute().getDefense();
-        attribute.agility += unitClass.attribute.getAttribute().getAgility();
+        attribute.setHitPoints(attribute.getHitPoints() + unitClass.getAttribute().getHitPoints());
+        attribute.setAttack(attribute.getAttack() + unitClass.getAttribute().getAttack());
+        attribute.setAttack(attribute.getAttack() + weapon.getPower());
+        attribute.setDefense(attribute.getDefense() + unitClass.getAttribute().getDefense());
+        attribute.setAgility(attribute.getAgility() + unitClass.getAttribute().getAgility());
     }
 
     public void loseHp(double floor) {

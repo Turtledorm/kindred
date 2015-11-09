@@ -24,10 +24,9 @@ public class ServerThread extends Thread {
         this.socket = socket;
 
         // Adds client to hashMap (queue initially empty -> null)
-        clientQueue.put(socket, ConcurrentLinkedQueue<String>);
+        clientQueue.put(socket, new ConcurrentLinkedQueue<String>());
 
-        addr = socket.getInetAddress().getHostAddress() + ":" + socket
-                .getPort();
+        addr = socket.getInetAddress().getHostAddress() + ":" + socket.getPort();
         System.out.println("New connection: '" + addr + "'");
     }
 
@@ -39,8 +38,7 @@ public class ServerThread extends Thread {
 
         try {
             out = new PrintWriter(socket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(socket
-                    .getInputStream()));
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         } catch (IOException e) {
             System.out.println("'" + addr + "' error: Socket I/O definiton");
             e.printStackTrace();

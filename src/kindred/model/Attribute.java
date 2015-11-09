@@ -23,5 +23,25 @@ public class Attribute {
         return movement;
     }
 
+	public void setHitPoints(int hitPoints) {
+		this.hitPoints = hitPoints;
+	}
+
+	public void setAttack(int attack) {
+		this.attack = attack;
+	}
+
+	public void setDefense(int defense) {
+		this.defense = defense;
+	}
+
+	public void setAgility(int agility) {
+		this.agility = agility;
+	}
+
+	public void setMovement(int movement) {
+		this.movement = movement;
+	}
+
     // TODO: Check how to implement this class
 }

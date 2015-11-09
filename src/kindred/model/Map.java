@@ -68,10 +68,9 @@ public class Map {
 
     /*
      * Makes the Unit on Tile (xi, yi) attack the Unit on Tile (xf, yf). Returns
-     * an integer representing damage:
-     * - If damage = -1, then the attacked missed.
-     * - If damage >= 0, then it represents the damage received by the
-     *   defending Unit.
+     * an integer representing damage: - If damage = -1, then the attacked
+     * missed. - If damage >= 0, then it represents the damage received by the
+     * defending Unit.
      */
     public int attack(int xi, int yi, int xf, int yf) {
         Unit attacker = tiles[xi][yi].getUnit();
@@ -95,5 +94,13 @@ public class Map {
         int damage = battle.execute(tiles[xi][yi], tiles[xf][yf]);
 
         return damage;
+    }
+
+    public int getHeight() {
+        return tiles.length;
+    }
+
+    public int getWidth() {
+        return tiles[0].length;
     }
 }

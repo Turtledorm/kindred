@@ -1,5 +1,5 @@
-Road     Light Gray
-Plains   Yellow
-Forest   Green
-Swamp    Blue
-Mountain Brown
+Road     LIGHT_GREY
+Plains   YELLOW
+Forest   GREEN
+Swamp    BLUE
+Mountain BROWN
