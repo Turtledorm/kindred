@@ -14,7 +14,8 @@ public class GUI extends AbstractView {
     }
 
     @Override
-    public void promptForAction() {
+    public boolean promptForAction() {
+        return false;
     }
 
 }

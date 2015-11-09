@@ -7,15 +7,14 @@ import java.util.Scanner;
 
 // Parses a file to get information regarding valid Terrain types
 public class TerrainFileParser {
-    
+
     private TerrainFileParser() {
         // Do not instantiate!
     }
 
     /*
-     *  Parses a given filename containing information about Terrains.
-     *  Returns a hashmap containing a char identifier and its
-     *  corresponding Terrain.
+     * Parses a given filename containing information about Terrains. Returns a
+     * hashmap containing a char identifier and its corresponding Terrain.
      */
     public static HashMap<Character, Terrain> parseFile(String filename)
             throws FileNotFoundException {
@@ -33,9 +32,8 @@ public class TerrainFileParser {
             String[] tokens = line.split("\\s+");
             if (tokens.length != 4) {
                 // Line contains more or less information than necessary
-                System.err.format("Linha inválida em '%s'\n", filename);
-            }
-            else {
+                System.err.format("Invalid line in '%s'\n", filename);
+            } else {
                 char id = tokens[0].charAt(0);
                 String name = tokens[1];
                 int defenseModifier, agilityModifier;
@@ -43,10 +41,9 @@ public class TerrainFileParser {
                 try {
                     defenseModifier = Integer.parseInt(tokens[2]);
                     agilityModifier = Integer.parseInt(tokens[3]);
-                }
-                catch (NumberFormatException e) {
+                } catch (NumberFormatException e) {
                     // Modifiers aren't integers
-                    System.err.format("Linha inválida em '%s'\n", filename);
+                    System.err.format("Invalid line in '%s'\n", filename);
                     continue;
                 }
 

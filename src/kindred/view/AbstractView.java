@@ -12,5 +12,5 @@ public abstract class AbstractView {
 
     public abstract void displayMap();
 
-    public abstract void promptForAction();
+    public abstract boolean promptForAction();
 }

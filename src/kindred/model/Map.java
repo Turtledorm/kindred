@@ -100,6 +100,10 @@ public class Map {
         return i >= 0 && i < getHeight() && j >= 0 && j < getWidth();
     }
 
+    public Tile getTile(int i, int j) {
+        return tiles[i][j];
+    }
+
     public int getHeight() {
         return tiles.length;
     }
@@ -125,10 +129,10 @@ public class Map {
             message += "\n Agi: " + unit.getAtk();
             message += "\n Weapon: " + weapon.getName();
             message += "\n   (Power = " + weapon.getPower() + ", Range = "
-                    + weapon.getRange() + ")";
+                    + weapon.getRange() + ")\n";
         }
-        message += "\n\n>> " + tile.getTerrain().getName();
-        message += String.format("(%+d def, %+d agi)", tile.getTerrain()
+        message += "\n" + tile.getTerrain().getName();
+        message += String.format(" (%+d%% Def, %+d%% Agi)", tile.getTerrain()
                 .getDefenseModifier(), tile.getTerrain().getAgilityModifier());
 
         return message;

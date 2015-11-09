@@ -1,5 +1,5 @@
 Road     LIGHT_GREY
-Plains   YELLOW
+Plains   BROWN
 Forest   GREEN
 Swamp    BLUE
-Mountain BROWN
+Mountain RED

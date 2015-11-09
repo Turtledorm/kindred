@@ -32,7 +32,7 @@ public class Game {
 
         playerA = new Player(nameA);
         playerB = new Player(nameB);
-        playerAUnits = playerBUnits = 0;
+        playerAUnits = playerBUnits = 3;
         turn = false;
 
         view = new CLI(map);
@@ -43,9 +43,9 @@ public class Game {
         // TODO: Place units on the Map
         while (playerAUnits > 0 && playerBUnits > 0) {
             Player current = (turn ? playerA : playerB);
-            view.promptForAction();
-            // TODO: Parse action!
-            // TODO: Only do below command if Player used an 'end' command
+            view.displayMap();
+            while (!view.promptForAction())
+                view.displayMap();
             turn = !turn;
         }
     }
