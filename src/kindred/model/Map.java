@@ -66,11 +66,22 @@ public class Map {
         return true;
     }
 
-    /*
+    /**
      * Makes the Unit on Tile (xi, yi) attack the Unit on Tile (xf, yf). Returns
-     * an integer representing damage: - If damage = -1, then the attacked
-     * missed. - If damage >= 0, then it represents the damage received by the
-     * defending Unit.
+     * an integer representing damage: - If damage = -1, then the attack missed.
+     * - If damage >= 0, then it represents the damage received by the defending
+     * Unit.
+     * 
+     * @param xi
+     *            coordinate x of the attacker
+     * @param yi
+     *            coordinate y of the attacker
+     * @param xf
+     *            coordinate x of the attacker
+     * @param yf
+     *            coordinate y of the attacker
+     * @return the damage received by the defending unit if the attack
+     *         succeeded, or -1 otherwise
      */
     public int attack(int xi, int yi, int xf, int yf) {
         Unit attacker = tiles[xi][yi].getUnit();
