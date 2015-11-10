@@ -49,7 +49,9 @@ public class Map {
         // TODO: Check Player the unit belongs to
 
         // TODO: If necessary, change name of Unit method
-        int move = unit.getMove();
+        int move = unit.getMove() - tiles[xi][yi].getTerrain().getMovePenalty();
+        if (move <= 0)
+            move = 1;
 
         // Calculate x/y distance from starting Tile to destination Tile
         int dx = Math.abs(xf - xi);
@@ -143,8 +145,9 @@ public class Map {
                     + weapon.getRange() + ")\n";
         }
         message += "\n" + tile.getTerrain().getName();
-        message += String.format(" (%+d%% Def, %+d%% Agi)", tile.getTerrain()
-                .getDefenseModifier(), tile.getTerrain().getAgilityModifier());
+        message += String.format(" (%+d%% Def, %+d%% Agi, -%d Move)", tile.getTerrain()
+                .getDefenseModifier(), tile.getTerrain().getAgilityModifier(),
+                tile.getTerrain().getMovePenalty());
 
         return message;
     }

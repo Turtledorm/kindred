@@ -1,5 +1,5 @@
-R Road       0   0
-P Plains     0  10
-F Forest    10   0
-S Swamp     20 -10
-M Mountain  30   0
+R Road       0   0  0
+P Plains     0  10  1
+F Forest    10   0  1
+S Swamp     20 -10  2
+M Mountain  30   0  3

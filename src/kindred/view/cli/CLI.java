@@ -26,9 +26,6 @@ public class CLI extends AbstractView {
             System.err.format("File '%s' not found!\n", colourFile);
             System.exit(1);
         }
-        for (String str : colourTypes.keySet()) {
-            System.out.println(str + " -> " + colourTypes.get(str));
-        }
     }
 
     @Override
@@ -46,8 +43,7 @@ public class CLI extends AbstractView {
                 Colour foregroundColour = Colour.CYAN;
                 Colour backgroundColour = colourTypes.get(map.getTile(i, j)
                         .getTerrain().getName());
-                System.out.println(backgroundColour.getValueAsBackground());
-                char character = 'X';
+                char character = 0x20;
                 atomMap[i][j] = new Atom(character, backgroundColour,
                         foregroundColour);
             }
@@ -59,9 +55,10 @@ public class CLI extends AbstractView {
     @Override
     public boolean promptForAction() {
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Type in your command.\n>> ");
+        System.out.println("Type in your command.");
+        printPrompt();
 
-        while (scanner.hasNextLine()) {
+        for (; scanner.hasNextLine(); printPrompt()) {
             int[] positions;
             String line = scanner.nextLine().trim();
             String[] separate = line.split("\\s+");
@@ -137,5 +134,9 @@ public class CLI extends AbstractView {
         }
 
         return positions;
+    }
+
+    private static void printPrompt() {
+        System.out.print(">> ");
     }
 }

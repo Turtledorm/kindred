@@ -30,17 +30,18 @@ public class TerrainFileParser {
                 continue;
 
             String[] tokens = line.split("\\s+");
-            if (tokens.length != 4) {
+            if (tokens.length != 5) {
                 // Line contains more or less information than necessary
                 System.err.format("Invalid line in '%s'\n", filename);
             } else {
                 char id = tokens[0].charAt(0);
                 String name = tokens[1];
-                int defenseModifier, agilityModifier;
+                int defenseModifier, agilityModifier, movePenalty;
 
                 try {
                     defenseModifier = Integer.parseInt(tokens[2]);
                     agilityModifier = Integer.parseInt(tokens[3]);
+                    movePenalty = Integer.parseInt(tokens[4]);
                 } catch (NumberFormatException e) {
                     // Modifiers aren't integers
                     System.err.format("Invalid line in '%s'\n", filename);
@@ -48,7 +49,7 @@ public class TerrainFileParser {
                 }
 
                 Terrain tileInfo = new Terrain(name, defenseModifier,
-                        agilityModifier);
+                        agilityModifier, movePenalty);
                 hashMap.put(id, tileInfo);
             }
         }
