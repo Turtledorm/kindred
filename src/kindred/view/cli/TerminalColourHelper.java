@@ -16,6 +16,11 @@ public class TerminalColourHelper {
         System.out.printf("\u001B[%sm", colour.getValueAsBackground());
     }
 
+    private static String getFormattedString(String text, Colour bg, Colour fg) {
+        return String.format("\u001B[%s;%sm%s", fg.getValueAsForeground(),
+                bg.getValueAsBackground(), text);
+    }
+
     private static void resetForegroundColour() {
         changeForegroundColour(Colour.RESET);
     }
@@ -51,9 +56,8 @@ public class TerminalColourHelper {
             System.out.printf(String.format(rowLabelFormat, 1 + i));
             for (int j = 0; j < w; j++) {
                 Atom atom = atoms[i][j];
-                changeBackgroundColour(atom.backgroundColour);
-                changeForegroundColour(atom.foregroundColour);
-                System.out.print(atom.character);
+                System.out.print(getFormattedString("" + atom.character,
+                        atom.backgroundColour, atom.foregroundColour));
             }
             resetBackgroundColour();
             resetForegroundColour();
@@ -61,16 +65,21 @@ public class TerminalColourHelper {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         // Only for testing
         int width = Integer.parseInt(args[1]), height = Integer.parseInt(args[0]);
         Atom[][] matrix = new Atom[height][width];
         Random r = new Random();
         String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-+-*/.,";
+        Colour lastBG = null;
         for (int i = 0; i < height; i++)
             for (int j = 0; j < width; j++) {
                 Colour fg = Colour.randomForegroundColour();
-                Colour bg = Colour.randomBackgroundColour();
+                Colour bg;
+                do {
+                    bg = Colour.randomBackgroundColour();
+                } while (bg == lastBG);
+                lastBG = bg;
                 char c = alphabet.charAt(r.nextInt(alphabet.length()));
                 matrix[i][j] = new Atom(c, bg, fg);
             }
@@ -78,5 +87,4 @@ public class TerminalColourHelper {
         resetBackgroundColour();
         resetForegroundColour();
     }
-
 }

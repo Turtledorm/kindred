@@ -43,7 +43,7 @@ public class CLI extends AbstractView {
                             + map.getTile(i, j).getTerrain().getName() + "'");
                     System.exit(1);
                 }
-                Colour foregroundColour = Colour.GREEN;
+                Colour foregroundColour = Colour.CYAN;
                 Colour backgroundColour = colourTypes.get(map.getTile(i, j)
                         .getTerrain().getName());
                 System.out.println(backgroundColour.getValueAsBackground());

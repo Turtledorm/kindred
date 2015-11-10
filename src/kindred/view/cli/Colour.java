@@ -42,6 +42,6 @@ enum Colour {
         if (parts[0].equals("1"))
             throw new IllegalArgumentException(
                     "This colour cannot be used as background.");
-        return parts[0] + ";" + (10 + Integer.parseInt(parts[1]));
+        return "" + (10 + Integer.parseInt(parts[1]));
     }
 }
