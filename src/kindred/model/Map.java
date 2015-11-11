@@ -1,18 +1,42 @@
 package kindred.model;
 
-/*
- *  Handles events related to a Map in the Game.
- *  A Map is divided in many Tiles.
+/**
+ * Handles events related to a Map in the Game. A Map is divided in many Tiles.
+ * 
+ * @author Kindred Team
  */
 public class Map {
 
-    private final Tile[][] tiles; // Map is represented as a Tile matrix
-    private final int tileHeight; // Graphical height representation for each
-                                  // tile
-    private final int tileWidth; // Graphical width representation for each tile
-    private final Battle battle; // Calculates result of battle between Units
+    /**
+     * Representation of the Map as a 2x2 Tile matrix.
+     */
+    private final Tile[][] tiles;
 
-    // Creates a Map with the specified parameters
+    /**
+     * Graphical measurement of the height of each Tile.
+     */
+    private final int tileHeight;
+
+    /**
+     * Graphical measurement of the width of each Tile.
+     */
+    private final int tileWidth;
+
+    /**
+     * Calculates results of battles between Units.
+     */
+    private final Battle battle;
+
+    /**
+     * Constructs a Map and initializes Battle module.
+     * 
+     * @param tiles
+     *            2x2 Tile matrix. All Tiles are supposed to hold no Unit
+     * @param tileHeight
+     *            Graphical height of each Tile
+     * @param tileWidth
+     *            Graphical width of each Tile
+     */
     public Map(Tile[][] tiles, int tileHeight, int tileWidth) {
         this.tiles = tiles;
         this.tileHeight = tileHeight;
@@ -20,9 +44,18 @@ public class Map {
         this.battle = new Battle();
     }
 
-    /*
-     * Adds a unit to Tile (x, y) on the Map. Returns 'true' if placement was
-     * successful or 'false' otherwise.
+    /**
+     * Adds a Unit to Tile (x, y) on the Map. Returns <true> if placement was
+     * successful or <false> otherwise.
+     * 
+     * @param unit
+     *            Unit to be inserted
+     * @param x
+     *            x coordinate of the Tile
+     * @param y
+     *            y coordinate of the Tile
+     * 
+     * @return <true>, if placement was successful, or <false> otherwise
      */
     public boolean placeUnit(Unit unit, int x, int y) {
         // Tile already occupied
@@ -33,9 +66,21 @@ public class Map {
         return true;
     }
 
-    /*
-     * Moves Unit on Tile (xi, yi) to Tile (xf, yf) on the Map. Returns 'true'
-     * if movement was successful or 'false' otherwise.
+    /**
+     * Moves Unit on Tile (xi, yi) to Tile (xf, yf) on the Map. Supposes that
+     * all given coordinates are valid, i.e., not outside borders of the Map.
+     * <p>
+     * Returns <true> if movement was successful or <false> otherwise.
+     * 
+     * @param xi
+     *            x coordinate of the Unit to be moved
+     * @param yi
+     *            y coordinate of the Unit to be moved
+     * @param xf
+     *            x coordinate of the destination Tile
+     * @param yf
+     *            y coordinate of the destination Tile
+     * @return <true>, if movement was successful, or <false> otherwise
      */
     public boolean move(int xi, int yi, int xf, int yf) {
         // Tile already occupied
@@ -70,20 +115,23 @@ public class Map {
 
     /**
      * Makes the Unit on Tile (xi, yi) attack the Unit on Tile (xf, yf). Returns
-     * an integer representing damage: - If damage = -1, then the attack missed.
-     * - If damage >= 0, then it represents the damage received by the defending
-     * Unit.
+     * an integer representing damage:
+     * <ul>
+     * <li>If damage = -1, then the attack missed.</li>
+     * <li>If damage &ge; 0, then it represents the damage received by the
+     * defending Unit.</li>
+     * </ul>
      * 
      * @param xi
-     *            coordinate x of the attacker
+     *            x coordinate of the attacker
      * @param yi
-     *            coordinate y of the attacker
+     *            y coordinate of the attacker
      * @param xf
-     *            coordinate x of the attacker
+     *            x coordinate of the defender
      * @param yf
-     *            coordinate y of the attacker
-     * @return the damage received by the defending unit if the attack
-     *         succeeded, or -1 otherwise
+     *            y coordinate of the defender
+     * @return damage received by the defending unit if the attack succeeded, or
+     *         -1 otherwise
      */
     public int attack(int xi, int yi, int xf, int yf) {
         Unit attacker = tiles[xi][yi].getUnit();
@@ -109,25 +157,64 @@ public class Map {
         return damage;
     }
 
-    public boolean validPosition(int i, int j) {
-        return i >= 0 && i < getHeight() && j >= 0 && j < getWidth();
+    /**
+     * Returns <true> if the given Tile (x, y) exists in the Map, or <false>
+     * otherwise.
+     * 
+     * @param x
+     *            x coordinate of the Tile to be verified
+     * @param y
+     *            y coordinate of the Tile to be verified
+     * 
+     * @return <true>, if the Tile is valid, or <false> otherwise
+     */
+    public boolean validPosition(int x, int y) {
+        return x >= 0 && x < getHeight() && y >= 0 && y < getWidth();
     }
 
-    public Tile getTile(int i, int j) {
-        return tiles[i][j];
+    /**
+     * Returns the Tile on position (x, y).
+     * 
+     * @param x
+     *            x coordinate of the desired Tile
+     * @param y
+     *            y coordinate of the desired Tile
+     * 
+     * @return Tile on position (x, y)
+     */
+    public Tile getTile(int x, int y) {
+        return tiles[x][y];
     }
 
+    /**
+     * Returns the height of the Map, i.e., the number of lines in the Tile
+     * matrix.
+     * 
+     * @return height of the Map
+     */
     public int getHeight() {
         return tiles.length;
     }
 
+    /**
+     * Returns the width of the Map, i.e., the number of columns in the Tile
+     * matrix.
+     * 
+     * @return width of the Map
+     */
     public int getWidth() {
         return tiles[0].length;
     }
 
-    public String getTileInfo(int i, int j) {
+    /**
+     * Returns a String containing information about the Unit and Terrain on
+     * Tile (x, y).
+     * 
+     * @return a String containing information about the specified Tile
+     */
+    public String getTileInfo(int x, int y) {
         String message = "";
-        Tile tile = tiles[i][j];
+        Tile tile = tiles[x][y];
         Unit unit;
 
         if ((unit = tile.getUnit()) == null)
@@ -145,9 +232,9 @@ public class Map {
                     + weapon.getRange() + ")\n";
         }
         message += "\n" + tile.getTerrain().getName();
-        message += String.format(" (%+d%% Def, %+d%% Agi, -%d Move)", tile.getTerrain()
-                .getDefenseModifier(), tile.getTerrain().getAgilityModifier(),
-                tile.getTerrain().getMovePenalty());
+        message += String.format(" (%+d%% Def, %+d%% Agi, -%d Move)", tile
+                .getTerrain().getDefenseModifier(), tile.getTerrain()
+                .getAgilityModifier(), tile.getTerrain().getMovePenalty());
 
         return message;
     }

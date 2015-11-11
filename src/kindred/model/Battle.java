@@ -2,21 +2,48 @@ package kindred.model;
 
 import java.util.Random;
 
-// Calculates damage caused by a Unit to another Unit
+/**
+ * Calculates damage caused by a Unit to another Unit.
+ * 
+ * @author Kindred Team
+ */
 public class Battle {
 
-    private final Random random; // Random number generator
-    private final double luck = 0.07; // Percentage added or subtracted to
-                                      // damage
+    /**
+     * Random number generator.
+     */
+    private final Random random;
 
-    // Initializes random number generator
+    /**
+     * Value added or subtracted to damage. Makes battles less predictable.
+     */
+    private final double luck = 0.07;
+
+    /**
+     * Initializes the random number generator.
+     */
     public Battle() {
         random = new Random(System.currentTimeMillis());
     }
 
-    /*
-     * Checks if the attacker will hit the defender and, if so, returns damage
-     * caused to defender.
+    /**
+     * Checks if the Unit in the attacker Tile will hit the Unit in the defender
+     * Tile. Supposes that both given Tiles have a Unit placed on them.
+     * <p>
+     * Returns an integer representing damage:
+     * <ul>
+     * <li>If damage = 0, then the attack missed.
+     * <li>If damage &gt; 0, then it represents the damage received by the
+     * defending Unit.</li>
+     * </ul>
+     * 
+     * @param attacker
+     *            Tile containing the attacking Unit
+     * @param defender
+     *            Tile containing the defending Unit
+     * 
+     * @return damage received by the defending unit if the attack succeeded, or
+     *         -1 otherwise
      */
     public int execute(Tile attacker, Tile defender) {
         Unit attackUnit = attacker.getUnit();
@@ -48,9 +75,18 @@ public class Battle {
         return (int) damage;
     }
 
-    /*
+    /**
      * Checks if an attack will hit by comparing the attacker's agility with the
-     * defender's. Returns 'true' if attack will happen or 'false' otherwise.
+     * defender's. Returns <true> if attack will happen or <false> otherwise.
+     * 
+     * @param attackerAgi
+     *            agility of the attacking Unit, already considering all
+     *            possible modifiers (Terrain, Class...)
+     * @param defenderAgi
+     *            agility of the defending Unit, already considering all
+     *            possible modifiers (Terrain, Class...)
+     * 
+     * @return <true> if the attack succeeded, or <false> otherwise
      */
     private boolean checkHit(double attackerAgi, double defenderAgi) {
         if (attackerAgi >= 2 * defenderAgi)
@@ -71,9 +107,16 @@ public class Battle {
         return (randomInteger(1, 100) <= (int) hitChance);
     }
 
-    /*
-     * Randomly generates an integer in the interval [min, max]. Supposes that
-     * min <= max.
+    /**
+     * Randomly generates and returns an integer in the interval [<min>, <max>].
+     * Supposes that <min> &le; <max>.
+     * 
+     * @param min
+     *            minimum possible integer that can be generated
+     * @param max
+     *            maximum possible integer that can be generated
+     * 
+     * @return an integer in range [<min>, <max>]
      */
     private int randomInteger(int min, int max) {
         return random.nextInt((max - min) + 1) + min;

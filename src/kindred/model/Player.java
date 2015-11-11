@@ -1,27 +1,34 @@
 package kindred.model;
 
-import java.util.Scanner;
 
-// Handles events related to user info and control over the game
+/**
+ * Handles events related to user info and control over the Game.
+ * 
+ * @author Kindred Team
+ */
 public class Player {
 
+    /**
+     * Player's name.
+     */
     private String name;
-    private Scanner input; // Reads data from stdin
 
-    // Creates a Player with the given name
+    /**
+     * Constructs a Player.
+     * 
+     * @param name
+     *            Player's name.
+     */
     public Player(String name) {
         this.name = name;
-        input = new Scanner(System.in);
     }
 
-    // Returns the Player's name
+    /**
+     * Returns the Player's name.
+     * 
+     * @return the Player's name.
+     */
     public String getName() {
-    	return name;
-    }
-
-    // Reads a command from the Player, returning it afterwards
-    public String readCommand() {
-        System.out.print("Digite a ação que gostaria de fazer: ");
-        return input.next();
+        return name;
     }
 }

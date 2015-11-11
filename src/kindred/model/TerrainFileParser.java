@@ -5,16 +5,32 @@ import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Scanner;
 
-// Parses a file to get information regarding valid Terrain types
+/**
+ * Parses a file to get information regarding valid Terrain types.
+ * 
+ * @author Kindred Team
+ */
 public class TerrainFileParser {
 
+    /**
+     * Not to be instantiated, since this class is purely <static>!
+     */
     private TerrainFileParser() {
         // Do not instantiate!
     }
 
-    /*
-     * Parses a given filename containing information about Terrains. Returns a
-     * hashmap containing a char identifier and its corresponding Terrain.
+    /**
+     * Parses a file containing information about Terrains. Returns a HashMap
+     * containing a char identifier and its corresponding Terrain.
+     * 
+     * @param filename
+     *            Name of the Terrain file
+     * 
+     * @return HashMap containing chars identifying the Terrain as keys and
+     *         Terrain objects themselves as values
+     * 
+     * @throws FileNotFoundException
+     *             if the specified file is not found
      */
     public static HashMap<Character, Terrain> parseFile(String filename)
             throws FileNotFoundException {

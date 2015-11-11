@@ -6,23 +6,40 @@ import java.util.HashMap;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
-// Parses a file to read and create a Map in the game
+/**
+ * Parses a file to read and create a Map in the game.
+ * 
+ * @author Kindred Team
+ */
 public class MapFileParser {
 
+    /**
+     * Not to be instantiated, since this class is purely <static>!
+     */
     private MapFileParser() {
         // Do not instantiate!
     }
 
-    /*
-     * Parses a given filename containing information about a Map.
-     *
-     * Also uses a char->Terrain hashmap to understands types of Terrain valid
-     * for the Map.
-     *
-     * Creates and returns a Map, according to the info contained in the file.
+    /**
+     * Parses a given file containing information about a Map. Also uses a
+     * char->Terrain HashMap to understand valid Terrains for the Map.
+     * <p>
+     * Creates and returns a Map, according to the information contained in the
+     * file.
+     * 
+     * @param filename
+     *            Name of the Map file
+     * @param hashMap
+     *            HashMap containing identifying chars as keys and Terrains as
+     *            values
+     * 
+     * @return Map object created based on information from the file
+     * 
+     * @throws FileNotFoundException
+     *             if the specified file is not found
      */
-    public static Map parseFile(String filename,
-            HashMap<Character, Terrain> hashMap) throws FileNotFoundException {
+    public static Map parseFile(String filename, HashMap<Character, Terrain> hashMap)
+            throws FileNotFoundException {
         File f = new File(filename);
         Scanner scanner = new Scanner(f);
 

@@ -1,5 +1,5 @@
 Road     LIGHT_GREY
 Plains   BROWN
 Forest   GREEN
-Swamp    BLUE
-Mountain RED
+Swamp    PURPLE
+Mountain BLACK

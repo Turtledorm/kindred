@@ -12,7 +12,7 @@ public class CLI extends AbstractView {
     private Atom[][] atomMap;
     private int height, width;
 
-    private final String colourFile = "src/kindred/data/terrainColors.txt";
+    private final String colourFile = "./kindred/data/terrain/terrainColors.txt";
     private HashMap<String, Colour> colourTypes;
 
     public CLI(Map map) {
@@ -40,10 +40,10 @@ public class CLI extends AbstractView {
                             + map.getTile(i, j).getTerrain().getName() + "'");
                     System.exit(1);
                 }
-                Colour foregroundColour = Colour.CYAN;
+                Colour foregroundColour = Colour.LIGHT_RED;
                 Colour backgroundColour = colourTypes.get(map.getTile(i, j)
                         .getTerrain().getName());
-                char character = 0x20;
+                char character = ' ';
                 atomMap[i][j] = new Atom(character, backgroundColour,
                         foregroundColour);
             }
@@ -60,9 +60,9 @@ public class CLI extends AbstractView {
 
         for (; scanner.hasNextLine(); printPrompt()) {
             int[] positions;
+
             String line = scanner.nextLine().trim();
             String[] separate = line.split("\\s+");
-
             switch (separate[0]) {
             case "move":
             case "mv":

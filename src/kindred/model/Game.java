@@ -5,21 +5,49 @@ import java.io.FileNotFoundException;
 import kindred.view.AbstractView;
 import kindred.view.cli.CLI;
 
-// Represents a game match where two Players battle against each other
+/**
+ * Represents a game match where two Players battle against each other.
+ * 
+ * @author Kindred Team
+ */
 public class Game {
 
+    /**
+     * Map played by both Players.
+     */
     private Map map;
+
+    /**
+     * First and second Players.
+     */
     private Player playerA, playerB;
-    private int playerAUnits, playerBUnits; // Number of units remaining
-                                            // for each Player
+
+    /**
+     * Number of Units remaining for each Player.
+     */
+    private int playerAUnits, playerBUnits;
+
+    /**
+     * Object representing the means of interaction a Player has with the game.
+     */
     private AbstractView view;
 
-    private boolean turn; // Controls which Player is playing at the moment
+    /**
+     * Controls which Player is playing at the moment.
+     */
+    private boolean turn;
 
-    /*
-     * Initializes a Game. - 'nameA' and 'nameB' are first and second Player's
-     * names. - 'terrainFile' contains valid Terrains for the Map. - 'mapFile'
-     * contains the Map itself.
+    /**
+     * Constructs a Game with an empty Map.
+     * 
+     * @param nameA
+     *            playerA's name
+     * @param nameB
+     *            playerB's name
+     * @param terrainFile
+     *            name of the file containing valid Terrains
+     * @param mapFile
+     *            name of the file containing Map to be played on
      */
     public Game(String nameA, String nameB, String terrainFile, String mapFile) {
         try {
@@ -38,7 +66,10 @@ public class Game {
         view = new CLI(map);
     }
 
-    // Main loop. Runs the game until a Player wins.
+    /**
+     * Main loop. Runs the Game until a Player wins, i.e., destroys all of the
+     * other Player's Units.
+     */
     public void run() {
         // TODO: Place units on the Map
         while (playerAUnits > 0 && playerBUnits > 0) {
