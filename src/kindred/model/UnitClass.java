@@ -1,23 +1,50 @@
 package kindred.model;
 
+/**
+ * Defines the UnitClass a Unit can belong to, as well as it's 
+ * attribute modifiers
+ * @author Kindred Team
+ */
 public class UnitClass {
 
+    /**
+     * The UnitClass' name
+     */
     private final String name;
+    
+    /**
+     * The UnitClass' attribute modifiers
+     */
     private final Attribute attribute;
 
+    /**
+     * Construct a UnitClass
+     * @param name
+     *          UnitClass' name
+     * @param attribute 
+     *          UnitClass' attribute modifiers
+     */
     public UnitClass(String name, Attribute attribute) {
         this.name = name;
         this.attribute = attribute;
     }
 
+    /**
+     * Returns the UnitClass' name
+     * @return name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Returns the UnitClass' attribute modifiers
+     * @return attribute
+     */
     public Attribute getAttribute() {
         return attribute;
     }
-
+/*  Modifiers to use in the txt files
     public void set_mods() {
         if (name.equals("Lancer")) {
             attribute.setHitPoints(3);
@@ -40,5 +67,5 @@ public class UnitClass {
             attribute.setDefense(-4);
             attribute.setAgility(7);
         }
-    }
+    } */
 }
