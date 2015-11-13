@@ -77,7 +77,7 @@ public class Battle {
 
     /**
      * Checks if an attack will hit by comparing the attacker's agility with the
-     * defender's. Returns <true> if attack will happen or <false> otherwise.
+     * defender's. Returns true if attack will happen or false otherwise.
      * 
      * @param attackerAgi
      *            agility of the attacking Unit, already considering all
@@ -86,7 +86,7 @@ public class Battle {
      *            agility of the defending Unit, already considering all
      *            possible modifiers (Terrain, Class...)
      * 
-     * @return <true> if the attack succeeded, or <false> otherwise
+     * @return true if the attack succeeded, or false otherwise
      */
     private boolean checkHit(double attackerAgi, double defenderAgi) {
         if (attackerAgi >= 2 * defenderAgi)
@@ -108,15 +108,15 @@ public class Battle {
     }
 
     /**
-     * Randomly generates and returns an integer in the interval [<min>, <max>].
-     * Supposes that <min> &le; <max>.
+     * Randomly generates and returns an integer in the interval [min, max].
+     * Supposes that min &le; max.
      * 
      * @param min
      *            minimum possible integer that can be generated
      * @param max
      *            maximum possible integer that can be generated
      * 
-     * @return an integer in range [<min>, <max>]
+     * @return an integer in range [min, max]
      */
     private int randomInteger(int min, int max) {
         return random.nextInt((max - min) + 1) + min;

@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 public class MapFileParser {
 
     /**
-     * Not to be instantiated, since this class is purely <static>!
+     * Not to be instantiated, since this class is purely static!
      */
     private MapFileParser() {
         // Do not instantiate!

@@ -15,7 +15,7 @@ public class Tile {
 
     /**
      * Unit currently occupying the Tile, if there is any. Otherwise, has value
-     * <null>.
+     * {@code null}.
      */
     private Unit unit;
 
@@ -41,9 +41,10 @@ public class Tile {
 
     /**
      * Returns the Unit contained in the Tile. If no Unit exists, returns
-     * <null>.
+     * {@code null}.
      * 
-     * @return the Unit contained in Tile, if it exists, or <null> otherwise
+     * @return the Unit contained in Tile, if it exists, or {@code null}
+     *         otherwise
      */
     public Unit getUnit() {
         return unit;
@@ -61,9 +62,10 @@ public class Tile {
 
     /**
      * Removes and returns the Unit contained in Tile. If no Unit exists,
-     * returns <null>.
+     * returns {@code null}.
      * 
-     * @return the Unit contained in Tile, if it exists, or <null> otherwise
+     * @return the Unit contained in Tile, if it exists, or {@code null}
+     *         otherwise
      */
     public Unit removeUnit() {
         Unit u = unit;
