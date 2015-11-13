@@ -20,8 +20,9 @@ public class Main {
         nameB = input.next();
 
         System.out.println("Available maps:");
-        File folder = new File("./kindred/data/map");
-        for (File file : folder.listFiles()) {
+        File directory = new File(Main.class.getResource("/kindred/data/map/")
+                .getPath());
+        for (File file : directory.listFiles()) {
             if (file.isFile()) {
                 String name = file.getName();
                 System.out.println("- " + name.substring(0, name.length() - 4));
@@ -32,15 +33,15 @@ public class Main {
         while (true) {
             System.out.print("Please choose an existing map: ");
             map = input.next() + ".txt";
-            File file = new File("./kindred/data/map/" + map);
+            File file = new File(directory + "/" + map);
             if (file.exists())
                 break;
         }
 
         // TODO: Add path to 'data/' directory?
         // TODO: Give option to select desired map (maybe list them?)
-        Game game = new Game(nameA, nameB, "./kindred/data/terrain/terrain.txt",
-                "./kindred/data/map/simpleMap.txt");
+        Game game = new Game(nameA, nameB, "/kindred/data/terrain/terrain.txt",
+                "/kindred/data/map/simpleMap.txt");
         game.run();
         input.close();
     }

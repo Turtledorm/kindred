@@ -12,7 +12,7 @@ public class CLI extends AbstractView {
     private Atom[][] atomMap;
     private int height, width;
 
-    private final String colourFile = "./kindred/data/terrain/terrainColors.txt";
+    private final String colourFile = "/kindred/data/terrain/terrainColors.txt";
     private HashMap<String, Colour> colourTypes;
 
     public CLI(Map map) {

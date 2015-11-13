@@ -34,7 +34,7 @@ public class TerrainFileParser {
      */
     public static HashMap<Character, Terrain> parseFile(String filename)
             throws FileNotFoundException {
-        File f = new File(filename);
+        File f = new File(TerrainFileParser.class.getResource(filename).getPath());
         Scanner scanner = new Scanner(f);
         HashMap<Character, Terrain> hashMap = new HashMap<Character, Terrain>();
 

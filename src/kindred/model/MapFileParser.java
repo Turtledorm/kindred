@@ -40,7 +40,7 @@ public class MapFileParser {
      */
     public static Map parseFile(String filename, HashMap<Character, Terrain> hashMap)
             throws FileNotFoundException {
-        File f = new File(filename);
+        File f = new File(Map.class.getResource(filename).getPath());
         Scanner scanner = new Scanner(f);
 
         int rows = scanner.nextInt();
