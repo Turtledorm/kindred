@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project default="javadoc">
     <target name="javadoc">
-        <javadoc access="package" additionalparam=" -noqualifier java.lang:java.io:java.util -link http://docs.oracle.com/javase/7/docs/api/" author="true" classpath="." destdir="doc" doctitle="Kindred" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="kindred.view.cli,kindred,kindred.view,kindred.model,kindred.network,kindred.view.gui" source="1.7" sourcepath="src" splitindex="true" use="true" version="true"/>
+        <javadoc access="private" additionalparam="-nohelp -noqualifier java.lang:java.io:java.util -link http://docs.oracle.com/javase/7/docs/api/" author="true" classpath="." destdir="doc" doctitle="Kindred" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="kindred.view.cli,kindred,kindred.view,kindred.model,kindred.network,kindred.view.gui" source="1.7" sourcepath="src" splitindex="true" use="true" version="true"/>
     </target>
 </project>

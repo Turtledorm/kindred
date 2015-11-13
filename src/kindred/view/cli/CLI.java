@@ -7,14 +7,47 @@ import java.util.Scanner;
 import kindred.model.Map;
 import kindred.view.AbstractView;
 
+/**
+ * 
+ * Provides a command-line user interface to interact with the user through a
+ * terminal.
+ * 
+ * @author Kindred Team
+ * 
+ */
 public class CLI extends AbstractView {
 
+    /**
+     * A map of atoms representing the tiles of the map.
+     */
     private Atom[][] atomMap;
-    private int height, width;
 
+    /**
+     * The number of rows of the map.
+     */
+    private int height;
+
+    /**
+     * The number of columns of the map.
+     */
+    private int width;
+
+    /**
+     * Name of the file containing the background colours of the terrains.
+     */
     private final String colourFile = "/kindred/data/terrain/terrainColors.txt";
+
+    /**
+     * Maps names of terrains to their corresponding background colours.
+     */
     private HashMap<String, Colour> colourTypes;
 
+    /**
+     * Creates a command-line user interface for the game.
+     * 
+     * @param map
+     *            the map of the current game
+     */
     public CLI(Map map) {
         super(map);
         height = map.getHeight();
@@ -28,10 +61,11 @@ public class CLI extends AbstractView {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void displayMap() {
-        // TODO: find correspondence between map and atomMap, i.e., fill autoMap
-        // with bg and fg colours and characters
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 if (!colourTypes.containsKey(map.getTile(i, j).getTerrain()
@@ -52,6 +86,9 @@ public class CLI extends AbstractView {
         TerminalColourHelper.drawMatrix(atomMap);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean promptForAction() {
         Scanner scanner = new Scanner(System.in);
@@ -114,6 +151,19 @@ public class CLI extends AbstractView {
         return false;
     }
 
+    /**
+     * Parses an array of strings containing numbers, except for the first
+     * element, which is supposedly a command (ignored by this method). As the
+     * numbers represent positions (row, column), there must be an even quantity
+     * of numbers. This method also checks if the position is valid (i.e., is
+     * inside the bounds of the map)
+     * 
+     * @param separate
+     *            an array of strings containing anything in the first position
+     *            and an even quantity of numbers in the rest of it
+     * @return an array of {@code int}s representing the positions given in the
+     *         strings of {@code separate}, or {@code null} in case of errors
+     */
     private int[] parsePosition(String[] separate) {
         // Convert positions to ints
         int[] positions = new int[separate.length - 1];
@@ -136,6 +186,9 @@ public class CLI extends AbstractView {
         return positions;
     }
 
+    /**
+     * Displays a prompt message to the user.
+     */
     private static void printPrompt() {
         System.out.print(">> ");
     }

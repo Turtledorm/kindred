@@ -15,13 +15,16 @@ public class TerminalColourHelper {
     }
 
     /**
-     * Returns an ANSI escape string that changes the colours in a terminal.
+     * Returns a formatted ANSI escape sequence to change background and
+     * foreground colours.
      * 
      * @param bg
+     *            the background colour
      * @param fg
-     * @return
+     *            the foreground colour
+     * @return an ANSI escape string that changes the colours in a terminal
      */
-    public static String getFormattedString(Colour bg, Colour fg) {
+    public static String getEscapeSequence(Colour bg, Colour fg) {
         return String.format("\u001B[%s;%sm", fg.getValueAsForeground(),
                 bg.getValueAsBackground());
     }
@@ -69,7 +72,7 @@ public class TerminalColourHelper {
             System.out.printf(String.format(rowLabelFormat, 1 + i));
             for (int j = 0; j < w; j++) {
                 Atom atom = atoms[i][j];
-                System.out.print(getFormattedString(atom.backgroundColour,
+                System.out.print(getEscapeSequence(atom.backgroundColour,
                         atom.foregroundColour) + atom.character);
             }
             resetColours();
