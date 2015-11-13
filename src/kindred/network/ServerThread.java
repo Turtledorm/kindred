@@ -2,32 +2,35 @@ package kindred.network;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Scanner;
+import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 class ServerThread extends Thread {
 
+    private final String helpFile = "/kindred/network/help.txt";
     private final int gamePort = 8000;
 
     private Socket socket; // Socket connected to client
     private final String addr; // Client's 'IP:Port' address
 
     private String nick = null;
-    private boolean registered = false;
     private boolean quitServer = false;
-
-    // Invitation to play in a room
-    private static ConcurrentHashMap<String, String> invitations = new ConcurrentHashMap<String, String>();
 
     // Name of each client and his socket
     private static ConcurrentHashMap<String, Socket> users = new ConcurrentHashMap<String, Socket>();
 
     // Map containing a client that created a game room and the map's name
     private static ConcurrentHashMap<String, String> rooms = new ConcurrentHashMap<String, String>();
+
+    // All occurring games
+    private static Vector<Room> currentGames = new Vector<Room>();
 
     // Queues containing messages to be sent to a Client
     private static ConcurrentHashMap<Socket, ConcurrentLinkedQueue<String>> clientQueue = new ConcurrentHashMap<Socket, ConcurrentLinkedQueue<String>>();
@@ -84,7 +87,20 @@ class ServerThread extends Thread {
         // Close connection
         try {
             System.out.println("'" + addr + "' disconnected");
+
+            // Remove all data related to client
+            if (nick != null) {
+                for (Room r : currentGames) {
+                    if (r.hasNick(nick)) {
+                        currentGames.remove(r);
+                        break;
+                    }
+                }
+                rooms.remove(nick);
+                users.remove(nick);
+            }
             clientQueue.remove(socket);
+
             socket.close();
         } catch (IOException e) {
             // TODO: Make a log file?
@@ -101,7 +117,7 @@ class ServerThread extends Thread {
         // NICK <nickname> : Sets client's nickname as the specified value
         case ("NICK"):
             if (splitStr.length != 2) {
-                queueMessage(socket, "Invalid argument for 'nick' command!");
+                queueMessage(socket, "Invalid argument for 'NICK' command!");
                 return;
             }
 
@@ -117,6 +133,10 @@ class ServerThread extends Thread {
                         + "' already in use!");
                 return;
             }
+
+            // Prevents error when changing nickname
+            if (nick != null && users.containsKey(nick))
+                users.remove(nick);
 
             // Sets client's nickname
             nick = splitStr[1];
@@ -150,11 +170,11 @@ class ServerThread extends Thread {
         // HOST <map> : Creates a room to play on the specified map
         case ("HOST"):
             if (nick == null) {
-                queueMessage(socket, "You must be registered to use 'host' command!");
+                queueMessage(socket, "You must be registered to use 'HOST' command!");
                 return;
             }
             if (splitStr.length != 2) {
-                queueMessage(socket, "Invalid argument for 'host' command!");
+                queueMessage(socket, "Invalid argument for 'HOST' command!");
                 return;
             }
 
@@ -174,7 +194,7 @@ class ServerThread extends Thread {
         case ("UNHOST"):
             if (nick == null) {
                 queueMessage(socket,
-                        "You must be registered to use 'unhost' command!");
+                        "You must be registered to use 'UNHOST' command!");
                 return;
             }
 
@@ -209,9 +229,19 @@ class ServerThread extends Thread {
             if (rooms.containsKey(nick))
                 queueMessage(socket, "You have left your hosted room.");
 
-            queueMessage(socket, "Entering room created by '" + splitStr[1] + "'...");
+            Room room = new Room(splitStr[1], nick);
+            rooms.remove(splitStr[1]);
+            currentGames.add(room);
+            queueMessage(socket, "Entered room created by '" + splitStr[1] + "'!");
             queueMessage(users.get(splitStr[1]), "'" + nick
                     + "' has entered the room!");
+            // TODO: Send map
+            break;
+
+        // HELP : Shows commands supported by server
+        case ("HELP"):
+            String helpStr = help();
+            queueMessage(socket, helpStr);
             break;
 
         // QUIT : Makes client leave the server
@@ -232,4 +262,18 @@ class ServerThread extends Thread {
         clientQueue.get(socket).add(message);
     }
 
+    private String help() {
+        File file = new File(ServerThread.class.getResource(helpFile).getPath());
+        Scanner scanner;
+
+        try {
+            scanner = new Scanner(file);
+        } catch (FileNotFoundException e) {
+            return "Help file not found!";
+        }
+
+        String msg = scanner.useDelimiter("\\Z").next();
+        scanner.close();
+        return msg;
+    }
 }
