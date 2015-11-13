@@ -41,7 +41,7 @@ public class Main {
         // TODO: Add path to 'data/' directory?
         // TODO: Give option to select desired map (maybe list them?)
         Game game = new Game(nameA, nameB, "/kindred/data/terrain/terrain.txt",
-                "/kindred/data/map/simpleMap.txt");
+                "/kindred/data/map/" + map + ".txt");
         game.run();
         input.close();
     }
