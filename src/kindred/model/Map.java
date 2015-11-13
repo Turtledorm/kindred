@@ -8,7 +8,7 @@ package kindred.model;
 public class Map {
 
     /**
-     * Representation of the Map as a 2x2 Tile matrix.
+     * Representation of this Map as a 2x2 Tile matrix.
      */
     private final Tile[][] tiles;
 
@@ -45,7 +45,7 @@ public class Map {
     }
 
     /**
-     * Adds a Unit to Tile (x, y) on the Map. Returns <true> if placement was
+     * Adds a Unit to Tile (x, y) on this Map. Returns <true> if placement was
      * successful or <false> otherwise.
      * 
      * @param unit
@@ -67,8 +67,8 @@ public class Map {
     }
 
     /**
-     * Moves Unit on Tile (xi, yi) to Tile (xf, yf) on the Map. Supposes that
-     * all given coordinates are valid, i.e., not outside borders of the Map.
+     * Moves Unit on Tile (xi, yi) to Tile (xf, yf) on this Map. Supposes that
+     * all given coordinates are valid, i.e., not outside borders of this Map.
      * <p>
      * Returns true if movement was successful or false otherwise.
      * 
@@ -158,7 +158,7 @@ public class Map {
     }
 
     /**
-     * Returns true if the given Tile (x, y) exists in the Map, or false
+     * Returns true if the given Tile (x, y) exists in this Map, or false
      * otherwise.
      * 
      * @param x
@@ -187,23 +187,43 @@ public class Map {
     }
 
     /**
-     * Returns the height of the Map, i.e., the number of lines in the Tile
+     * Returns the height of this Map, i.e., the number of lines in the Tile
      * matrix.
      * 
-     * @return height of the Map
+     * @return height of this Map
      */
     public int getHeight() {
         return tiles.length;
     }
 
     /**
-     * Returns the width of the Map, i.e., the number of columns in the Tile
+     * Returns the width of this Map, i.e., the number of columns in the Tile
      * matrix.
      * 
-     * @return width of the Map
+     * @return width of this Map
      */
     public int getWidth() {
         return tiles[0].length;
+    }
+
+    /**
+     * Returns the height of a tile in pixels (used by graphical user
+     * interfaces).
+     * 
+     * @return the height of a tile in pixels
+     */
+    public int tileHeight() {
+        return tileHeight;
+    }
+
+    /**
+     * Returns the height of a tile in pixels (used by graphical user
+     * interfaces).
+     * 
+     * @return the height of a tile in pixels
+     */
+    public int tileWidth() {
+        return tileWidth;
     }
 
     /**
