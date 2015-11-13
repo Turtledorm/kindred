@@ -11,6 +11,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 class ServerThread extends Thread {
 
+    private final int gamePort = 8000;
+
     private Socket socket; // Socket connected to client
     private final String addr; // Client's 'IP:Port' address
 
