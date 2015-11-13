@@ -1,34 +1,47 @@
 package kindred.view.cli;
 
-import java.util.Random;
-
+/**
+ * Provides methods to manage colours in a command-line interface.
+ * 
+ * @author Kindred Team
+ * 
+ */
 public class TerminalColourHelper {
 
+    /**
+     * Do not instantiate!
+     */
     private TerminalColourHelper() {
-        // Do not instantiate!
     }
 
-    private static void changeForegroundColour(Colour colour) {
-        System.out.printf("\u001B[%sm", colour.getValueAsForeground());
+    /**
+     * Returns an ANSI escape string that changes the colours in a terminal.
+     * 
+     * @param bg
+     * @param fg
+     * @return
+     */
+    public static String getFormattedString(Colour bg, Colour fg) {
+        return String.format("\u001B[%s;%sm", fg.getValueAsForeground(),
+                bg.getValueAsBackground());
     }
 
-    private static void changeBackgroundColour(Colour colour) {
-        System.out.printf("\u001B[%sm", colour.getValueAsBackground());
+    /**
+     * Resets the terminal background and foreground colours to their default
+     * values.
+     */
+    public static void resetColours() {
+        System.out.printf("\u001B[%sm", Colour.RESET.getValueAsForeground());
     }
 
-    private static String getFormattedString(String text, Colour bg, Colour fg) {
-        return String.format("\u001B[%s;%sm%s", fg.getValueAsForeground(),
-                bg.getValueAsBackground(), text);
-    }
-
-    private static void resetForegroundColour() {
-        changeForegroundColour(Colour.RESET);
-    }
-
-    private static void resetBackgroundColour() {
-        changeBackgroundColour(Colour.RESET);
-    }
-
+    /**
+     * Prints a matrix of atoms. Each atom is printed with its corresponding
+     * character using their background and foreground colours. Additionally,
+     * column and row headers are printed to show their coordinates to the user.
+     * 
+     * @param atoms
+     *            a matrix of atoms to be printed
+     */
     public static void drawMatrix(Atom[][] atoms) {
         Integer h = atoms.length;
         Integer w = atoms[0].length;
@@ -56,35 +69,11 @@ public class TerminalColourHelper {
             System.out.printf(String.format(rowLabelFormat, 1 + i));
             for (int j = 0; j < w; j++) {
                 Atom atom = atoms[i][j];
-                System.out.print(getFormattedString("" + atom.character,
-                        atom.backgroundColour, atom.foregroundColour));
+                System.out.print(getFormattedString(atom.backgroundColour,
+                        atom.foregroundColour) + atom.character);
             }
-            resetBackgroundColour();
-            resetForegroundColour();
+            resetColours();
             System.out.println();
         }
-    }
-
-    public static void main(String[] args) throws InterruptedException {
-        // Only for testing
-        int width = Integer.parseInt(args[1]), height = Integer.parseInt(args[0]);
-        Atom[][] matrix = new Atom[height][width];
-        Random r = new Random();
-        String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-+-*/.,";
-        Colour lastBG = null;
-        for (int i = 0; i < height; i++)
-            for (int j = 0; j < width; j++) {
-                Colour fg = Colour.randomForegroundColour();
-                Colour bg;
-                do {
-                    bg = Colour.randomBackgroundColour();
-                } while (bg == lastBG);
-                lastBG = bg;
-                char c = alphabet.charAt(r.nextInt(alphabet.length()));
-                matrix[i][j] = new Atom(c, bg, fg);
-            }
-        drawMatrix(matrix);
-        resetBackgroundColour();
-        resetForegroundColour();
     }
 }

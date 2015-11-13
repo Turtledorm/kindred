@@ -2,8 +2,16 @@ package kindred.view.cli;
 
 import java.util.Random;
 
+/**
+ * Represents one of the possible colours in the terminal using ANSI escape
+ * sequences.
+ * 
+ * @see <a href="http://www.tldp.org/HOWTO/Bash-Prompt-HOWTO/x329.html">ANSI
+ *      Escape Sequences: Colours and Cursor Movement</a>
+ * @author Kindred Team
+ */
+
 enum Colour {
-    // Reference: http://www.tldp.org/HOWTO/Bash-Prompt-HOWTO/x329.html
     RESET("0"),
     // Colours available to both background and foreground
     BLACK("0;30"), RED("0;31"), GREEN("0;32"), BROWN("0;33"), BLUE("0;34"), PURPLE(
@@ -15,26 +23,56 @@ enum Colour {
     private final String value;
     private static final Colour[] VALUES = values();
 
+    /**
+     * Initialises a new colour from its value.
+     * 
+     * @param the
+     *            inner part of the ANSI escape sequence of this colour
+     */
     Colour(String value) {
         this.value = value;
     }
 
-    // does not generate RESET
+    /**
+     * Creates a random colour that can serve as the foreground of an
+     * {@link Atom}. Does not generate {@link Colour#RESET}.
+     * 
+     * @return a random colour that can be used as foreground
+     */
     public static Colour randomForegroundColour() {
         int index = 1 + new Random().nextInt(VALUES.length - 1);
         return VALUES[index];
     }
 
-    // does not generate RESET
+    /**
+     * Creates a random colour that can serve as the background of an
+     * {@link Atom}. Does not generate {@link Colour#RESET}.
+     * 
+     * @return a random colour that can be used as background
+     */
     public static Colour randomBackgroundColour() {
         int index = 1 + new Random().nextInt((VALUES.length - 1) / 2);
         return VALUES[index];
     }
 
+    /**
+     * Gives the number that can be used in an ANSI escape sequence to use the
+     * colour as foreground.
+     * 
+     * @return the inner part of the ANSI escape sequence of this colour to be
+     *         used as foreground
+     */
     public String getValueAsForeground() {
         return value;
     }
 
+    /**
+     * Gives the number that can be used in an ANSI escape sequence to use the
+     * colour as background.
+     * 
+     * @return the inner part of the ANSI escape sequence of this colour to be
+     *         used as background
+     */
     public String getValueAsBackground() {
         String[] parts = value.split(";");
         if (parts.length == 1)
