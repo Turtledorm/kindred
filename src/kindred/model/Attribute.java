@@ -23,7 +23,8 @@ public class Attribute {
      * @param agi
      *          The Unit's agility
      * @param mov 
-     *          The Unit's movement
+     *          The Unit's movement, in other words, 
+     * the maximum ammount of tiles it can move past during a turn
      */
     public Attribute(int hp, int att, int def, int agi, int mov) {
         this.hitPoints = hp;
