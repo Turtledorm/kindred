@@ -3,6 +3,14 @@ package kindred.model;
 public class Attribute {
     private int currentHp, hitPoints, attack, defense, agility, movement;
 
+    public Attribute(int hp, int att, int def, int agi, int mov){
+        this.hitPoints = hp;
+        this.attack = att;
+        this.defense = def;
+        this.agility = agi;
+        this.movement = mov;
+    }
+    
     public int getCurrentHp() {
         return currentHp;
     }
