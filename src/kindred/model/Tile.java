@@ -9,12 +9,12 @@ package kindred.model;
 public class Tile {
 
     /**
-     * Unchanging Terrain occurring in the Tile.
+     * Unchanging Terrain occurring in this Tile.
      */
     private final Terrain terrain;
 
     /**
-     * Unit currently occupying the Tile, if there is any. Otherwise, has value
+     * Unit currently occupying this Tile, if there is any. Otherwise, has value
      * {@code null}.
      */
     private Unit unit;
@@ -23,7 +23,7 @@ public class Tile {
      * Constructs a Tile.
      * 
      * @param terrain
-     *            Terrain object occurring in the Tile
+     *            Terrain object occurring in this Tile
      */
     public Tile(Terrain terrain) {
         this.terrain = terrain;
@@ -31,16 +31,16 @@ public class Tile {
     }
 
     /**
-     * Returns the Terrain used in the Tile.
+     * Returns the Terrain used in this Tile.
      * 
-     * @return the Terrain used in the Tile
+     * @return the Terrain used in this Tile
      */
     public Terrain getTerrain() {
         return terrain;
     }
 
     /**
-     * Returns the Unit contained in the Tile. If no Unit exists, returns
+     * Returns the Unit contained in this Tile. If no Unit exists, returns
      * {@code null}.
      * 
      * @return the Unit contained in Tile, if it exists, or {@code null}
@@ -51,10 +51,10 @@ public class Tile {
     }
 
     /**
-     * Sets the Unit standing on the Tile.
+     * Sets the Unit standing on this Tile.
      * 
      * @param unit
-     *            Unit to be inserted on the Tile
+     *            Unit to be inserted on this Tile
      */
     public void setUnit(Unit unit) {
         this.unit = unit;

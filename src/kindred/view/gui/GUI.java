@@ -1,12 +1,16 @@
 package kindred.view.gui;
 
-import kindred.model.Map;
 import kindred.view.AbstractView;
 
 public class GUI extends AbstractView {
 
-    public GUI(Map map) {
-        super(map);
+    public GUI() {
+        super();
+    }
+
+    @Override
+    public String askForString(String message) {
+        return "";
     }
 
     @Override
@@ -16,6 +20,10 @@ public class GUI extends AbstractView {
     @Override
     public boolean promptForAction() {
         return false;
+    }
+
+    @Override
+    public void close() {
     }
 
 }

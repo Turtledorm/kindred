@@ -3,7 +3,6 @@ package kindred.model;
 import java.io.FileNotFoundException;
 
 import kindred.view.AbstractView;
-import kindred.view.cli.CLI;
 
 /**
  * Represents a game match where two Players battle against each other.
@@ -48,8 +47,11 @@ public class Game {
      *            name of the file containing valid Terrains
      * @param mapFile
      *            name of the file containing Map to be played on
+     * @param view
+     *            the user interface
      */
-    public Game(String nameA, String nameB, String terrainFile, String mapFile) {
+    public Game(String nameA, String nameB, String terrainFile, String mapFile,
+            AbstractView view) {
         try {
             map = MapFileParser.parseFile(mapFile,
                     TerrainFileParser.parseFile(terrainFile));
@@ -57,13 +59,12 @@ public class Game {
             e.printStackTrace();
             System.exit(1);
         }
-
+        view.setMap(map);
         playerA = new Player(nameA);
         playerB = new Player(nameB);
         playerAUnits = playerBUnits = 3;
         turn = false;
-
-        view = new CLI(map);
+        this.view = view;
     }
 
     /**

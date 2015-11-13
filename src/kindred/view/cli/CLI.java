@@ -2,6 +2,7 @@ package kindred.view.cli;
 
 import java.io.FileNotFoundException;
 import java.util.HashMap;
+import java.util.ResourceBundle;
 import java.util.Scanner;
 
 import kindred.model.Map;
@@ -23,16 +24,6 @@ public class CLI extends AbstractView {
     private Atom[][] atomMap;
 
     /**
-     * The number of rows of the map.
-     */
-    private int height;
-
-    /**
-     * The number of columns of the map.
-     */
-    private int width;
-
-    /**
      * Name of the file containing the background colours of the terrains.
      */
     private final String colourFile = "/kindred/data/terrain/terrainColors.txt";
@@ -43,15 +34,32 @@ public class CLI extends AbstractView {
     private HashMap<String, Colour> colourTypes;
 
     /**
-     * Creates a command-line user interface for the game.
-     * 
-     * @param map
-     *            the map of the current game
+     * The scanner object to get user's input from the command-line interface.
      */
-    public CLI(Map map) {
-        super(map);
-        height = map.getHeight();
-        width = map.getWidth();
+    private final Scanner scanner;
+
+    /**
+     * Creates a command-line user interface for the game.
+     */
+    public CLI() {
+        super();
+        scanner = new Scanner(System.in);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String askForString(String message) {
+        System.out.print(message + ": ");
+        return scanner.next().trim();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void setMap(Map map) {
+        super.setMap(map);
         atomMap = new Atom[height][width];
         try {
             colourTypes = CLITerrainParser.parseFile(colourFile);
@@ -59,6 +67,8 @@ public class CLI extends AbstractView {
             System.err.format("File '%s' not found!\n", colourFile);
             System.exit(1);
         }
+        msgBundle = ResourceBundle.getBundle("kindred.lang.CLI-MessageBundle",
+                locale);
     }
 
     /**
@@ -72,6 +82,8 @@ public class CLI extends AbstractView {
                         .getName())) {
                     System.err.println("Terrain not found in CLI colour file '"
                             + map.getTile(i, j).getTerrain().getName() + "'");
+                    // new MessageFormat(
+                    // msgBundle.getString("terrain_colour_not_found"), locale);
                     System.exit(1);
                 }
                 Colour foregroundColour = Colour.LIGHT_RED;
@@ -91,8 +103,8 @@ public class CLI extends AbstractView {
      */
     @Override
     public boolean promptForAction() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Type in your command.");
+
+        System.out.println(msgBundle.getString("type_in_your_command"));
         printPrompt();
 
         for (; scanner.hasNextLine(); printPrompt()) {
@@ -104,8 +116,8 @@ public class CLI extends AbstractView {
             case "move":
             case "mv":
                 if (separate.length != 5) {
-                    System.out
-                            .println("Invalid argument for the specified command!");
+                    System.out.println(msgBundle
+                            .getString("invalid_argument_for_command"));
                     continue;
                 }
                 positions = parsePosition(separate);
@@ -115,8 +127,8 @@ public class CLI extends AbstractView {
             case "attack":
             case "atk":
                 if (separate.length != 5) {
-                    System.out
-                            .println("Invalid argument for the specified command!");
+                    System.out.println(msgBundle
+                            .getString("invalid_argument_for_command"));
                     continue;
                 }
                 positions = parsePosition(separate);
@@ -126,8 +138,8 @@ public class CLI extends AbstractView {
                 break;
             case "info":
                 if (separate.length != 3) {
-                    System.out
-                            .println("Invalid argument for the specified command!");
+                    System.out.println(msgBundle
+                            .getString("invalid_argument_for_command"));
                     continue;
                 }
                 positions = parsePosition(separate);
@@ -138,13 +150,13 @@ public class CLI extends AbstractView {
                 break;
             case "end":
                 if (separate.length != 1) {
-                    System.out
-                            .println("Invalid argument for the specified command!");
+                    System.out.println(msgBundle
+                            .getString("invalid_argument_for_command"));
                     continue;
                 }
                 return true;
             default:
-                System.out.println("Command not recognized!");
+                System.out.println(msgBundle.getString("unrecognised_command"));
             }
         }
         scanner.close();
@@ -172,13 +184,13 @@ public class CLI extends AbstractView {
                 positions[i - 1] = Integer.parseInt(separate[i]) - 1;
             }
         } catch (NumberFormatException ex) {
-            System.out.println("Position specified is not a number!");
+            System.out.println(msgBundle.getString("position_not_a_number"));
             return null;
         }
 
         for (int i = 1; i < separate.length; i += 2) {
             if (!map.validPosition(positions[i - 1], positions[i])) {
-                System.out.println("Specified position is out of bounds!");
+                System.out.println(msgBundle.getString("position_out_of_bounds"));
                 return null;
             }
         }
@@ -191,5 +203,10 @@ public class CLI extends AbstractView {
      */
     private static void printPrompt() {
         System.out.print(">> ");
+    }
+
+    @Override
+    public void close() {
+        scanner.close();
     }
 }
