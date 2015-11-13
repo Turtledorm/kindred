@@ -55,7 +55,7 @@ public class Map {
      * @param y
      *            y coordinate of the Tile
      * 
-     * @return <true>, if placement was successful, or <false> otherwise
+     * @return true, if placement was successful, or false otherwise
      */
     public boolean placeUnit(Unit unit, int x, int y) {
         // Tile already occupied
@@ -70,7 +70,7 @@ public class Map {
      * Moves Unit on Tile (xi, yi) to Tile (xf, yf) on the Map. Supposes that
      * all given coordinates are valid, i.e., not outside borders of the Map.
      * <p>
-     * Returns <true> if movement was successful or <false> otherwise.
+     * Returns true if movement was successful or false otherwise.
      * 
      * @param xi
      *            x coordinate of the Unit to be moved
@@ -80,7 +80,7 @@ public class Map {
      *            x coordinate of the destination Tile
      * @param yf
      *            y coordinate of the destination Tile
-     * @return <true>, if movement was successful, or <false> otherwise
+     * @return true, if movement was successful, or false otherwise
      */
     public boolean move(int xi, int yi, int xf, int yf) {
         // Tile already occupied
@@ -158,7 +158,7 @@ public class Map {
     }
 
     /**
-     * Returns <true> if the given Tile (x, y) exists in the Map, or <false>
+     * Returns true if the given Tile (x, y) exists in the Map, or false
      * otherwise.
      * 
      * @param x
@@ -166,7 +166,7 @@ public class Map {
      * @param y
      *            y coordinate of the Tile to be verified
      * 
-     * @return <true>, if the Tile is valid, or <false> otherwise
+     * @return true, if the Tile is valid, or false otherwise
      */
     public boolean validPosition(int x, int y) {
         return x >= 0 && x < getHeight() && y >= 0 && y < getWidth();

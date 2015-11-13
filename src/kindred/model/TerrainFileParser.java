@@ -13,7 +13,7 @@ import java.util.Scanner;
 public class TerrainFileParser {
 
     /**
-     * Not to be instantiated, since this class is purely <static>!
+     * Not to be instantiated, since this class is purely static!
      */
     private TerrainFileParser() {
         // Do not instantiate!
