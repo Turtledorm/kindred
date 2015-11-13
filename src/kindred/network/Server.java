@@ -2,25 +2,59 @@ package kindred.network;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.Scanner;
 
-public class Server {
+public class Server implements Runnable {
 
-    public void start(int port) throws IOException {
-        ServerSocket serverSocket = new ServerSocket(port);
+    private ServerSocket serverSocket;
+
+    public void loop(int port) {
+        try {
+            serverSocket = new ServerSocket(port);
+        } catch (IOException e) {
+            System.err.println("Couldn't bind server to port " + port + "!");
+            System.exit(1);
+        }
+
         System.out.println("Server successfully opened on port " + port);
-        while (true) {
-            new ServerThread(serverSocket.accept()).start();
+        while (!serverSocket.isClosed()) {
+            try {
+                new ServerThread(serverSocket.accept()).start();
+            } catch (IOException e) {
+                if (!serverSocket.isClosed()) {
+                    System.err.println("Error when treating client I/O!");
+                    System.exit(1);
+                }
+            }
         }
     }
 
+    public void run() {
+        Scanner input = new Scanner(System.in);
+
+        if (input.next().toUpperCase().equals("CLOSE"))
+            try {
+                serverSocket.close();
+                System.exit(0);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        input.close();
+    }
+
     public static void main(String[] args) {
-        Server server = new Server();
+        if (args.length < 1) {
+            System.out.println("Must specify port as argument!");
+            System.exit(1);
+        }
+
         try {
-            server.start(Integer.parseInt(args[0]));
+            Server server = new Server();
+            (new Thread(server)).start();
+            server.loop(Integer.parseInt(args[0]));
         } catch (NumberFormatException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Specified port is invalid!");
         }
     }
 }

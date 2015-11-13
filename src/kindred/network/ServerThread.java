@@ -15,7 +15,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 class ServerThread extends Thread {
 
     private final String helpFile = "/kindred/network/help.txt";
-    private final int gamePort = 8000;
 
     private Socket socket; // Socket connected to client
     private final String addr; // Client's 'IP:Port' address
@@ -44,7 +43,7 @@ class ServerThread extends Thread {
 
         this.addr = socket.getInetAddress().getHostAddress() + ":"
                 + socket.getPort();
-        System.out.println("New connection: '" + this.addr + "'");
+        System.out.println("New connection: " + this.addr);
     }
 
     @Override
@@ -73,7 +72,6 @@ class ServerThread extends Thread {
                 parse(inputLine);
                 while (!clientQueue.get(socket).isEmpty()) {
                     String msg = clientQueue.get(socket).remove();
-                    System.out.println(msg);
                     out.println(msg);
                 }
             }
@@ -86,7 +84,7 @@ class ServerThread extends Thread {
 
         // Close connection
         try {
-            System.out.println("'" + addr + "' disconnected");
+            System.out.println("Disconnected: " + addr);
 
             // Remove all data related to client
             if (nick != null) {
@@ -232,9 +230,10 @@ class ServerThread extends Thread {
             Room room = new Room(splitStr[1], nick);
             rooms.remove(splitStr[1]);
             currentGames.add(room);
-            queueMessage(socket, "Entered room created by '" + splitStr[1] + "'!");
-            queueMessage(users.get(splitStr[1]), "'" + nick
-                    + "' has entered the room!");
+            queueMessage(socket, NetworkConstants.PREF_OPPONENT + splitStr[1],
+                    "Entered room created by '" + splitStr[1] + "'!");
+            queueMessage(users.get(splitStr[1]), NetworkConstants.PREF_OPPONENT
+                    + users.get(splitStr[1]), "'" + nick + "' has entered the room!");
             // TODO: Send map
             break;
 
@@ -259,7 +258,12 @@ class ServerThread extends Thread {
     }
 
     private void queueMessage(Socket socket, String message) {
-        clientQueue.get(socket).add(message);
+        message = message.replaceAll("\\\\", "\\\\\\\\").replaceAll("\n", "\\\\n");
+        queueMessage(socket, "", message);
+    }
+
+    private void queueMessage(Socket socket, String prefix, String message) {
+        clientQueue.get(socket).add(prefix + NetworkConstants.PREFIX_CHAR + message);
     }
 
     private String help() {
