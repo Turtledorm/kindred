@@ -51,8 +51,8 @@ public class CLI extends AbstractView {
      */
     @Override
     public String askForString(String message) {
-        System.out.print(message + ": ");
-        return scanner.next().trim();
+        System.out.print(message);
+        return scanner.nextLine().trim();
     }
 
     /**
@@ -78,8 +78,8 @@ public class CLI extends AbstractView {
     public void displayMap() {
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                if (!colourTypes.containsKey(map.getTile(i, j).getTerrain()
-                        .getName())) {
+                if (!colourTypes
+                        .containsKey(map.getTile(i, j).getTerrain().getName())) {
                     System.err.println("Terrain not found in CLI colour file '"
                             + map.getTile(i, j).getTerrain().getName() + "'");
                     // new MessageFormat(
@@ -87,8 +87,8 @@ public class CLI extends AbstractView {
                     System.exit(1);
                 }
                 Colour foregroundColour = Colour.LIGHT_RED;
-                Colour backgroundColour = colourTypes.get(map.getTile(i, j)
-                        .getTerrain().getName());
+                Colour backgroundColour = colourTypes
+                        .get(map.getTile(i, j).getTerrain().getName());
                 char character = ' ';
                 atomMap[i][j] = new Atom(character, backgroundColour,
                         foregroundColour);
@@ -116,8 +116,8 @@ public class CLI extends AbstractView {
             case "move":
             case "mv":
                 if (separate.length != 5) {
-                    System.out.println(msgBundle
-                            .getString("invalid_argument_for_command"));
+                    System.out.println(
+                            msgBundle.getString("invalid_argument_for_command"));
                     continue;
                 }
                 positions = parsePosition(separate);
@@ -127,8 +127,8 @@ public class CLI extends AbstractView {
             case "attack":
             case "atk":
                 if (separate.length != 5) {
-                    System.out.println(msgBundle
-                            .getString("invalid_argument_for_command"));
+                    System.out.println(
+                            msgBundle.getString("invalid_argument_for_command"));
                     continue;
                 }
                 positions = parsePosition(separate);
@@ -138,8 +138,8 @@ public class CLI extends AbstractView {
                 break;
             case "info":
                 if (separate.length != 3) {
-                    System.out.println(msgBundle
-                            .getString("invalid_argument_for_command"));
+                    System.out.println(
+                            msgBundle.getString("invalid_argument_for_command"));
                     continue;
                 }
                 positions = parsePosition(separate);
@@ -150,8 +150,8 @@ public class CLI extends AbstractView {
                 break;
             case "end":
                 if (separate.length != 1) {
-                    System.out.println(msgBundle
-                            .getString("invalid_argument_for_command"));
+                    System.out.println(
+                            msgBundle.getString("invalid_argument_for_command"));
                     continue;
                 }
                 return true;

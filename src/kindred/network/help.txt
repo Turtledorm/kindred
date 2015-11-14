@@ -1,8 +1,9 @@
 << KINDRED SERVER >>
 Supported commands:
 
-NICK <nickname>
- - Changes the client's nickname as specified.
+NICK [nickname]
+ - Changes the client's nickname, if argument is specified.
+ - If no argument is specified, shows client's nickname.
  - Nickname must contain 3 to 10 alphanumeric characters,
    where the first character must strictly be a letter.
  - Also returns error if nickname is already in use.
@@ -11,7 +12,7 @@ MAPS
  - Shows a list of existing maps to play on.
 
 ROOMS
- - Shows a list of existing room, composed of host's nickname
+ - Shows a list of existing rooms, composed of host's nickname
    and the chosen map to play on.
 
 HOST <map name>
@@ -24,7 +25,7 @@ UNHOST
  - Deletes the user's created room, if it exists.
  - Client must register nickname first to use this command!
 
-CONNECT <nickname>
+JOIN <nickname>
  - Connect's to the room created by the client whose nickname
    is specified.
  - Client must register nickname first to use this command!

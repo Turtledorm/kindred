@@ -8,7 +8,8 @@ public class Server implements Runnable {
 
     private ServerSocket serverSocket;
 
-    public void loop(int port) {
+    public void loop() {
+        int port = NetworkConstants.KINDRED_PORT;
         try {
             serverSocket = new ServerSocket(port);
         } catch (IOException e) {
@@ -32,27 +33,26 @@ public class Server implements Runnable {
     public void run() {
         Scanner input = new Scanner(System.in);
 
-        if (input.next().toUpperCase().equals("CLOSE"))
-            try {
-                serverSocket.close();
-                System.exit(0);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        input.close();
-    }
-
-    public static void main(String[] args) {
-        if (args.length < 1) {
-            System.out.println("Must specify port as argument!");
-            System.exit(1);
+        while (!input.nextLine().trim().toUpperCase().equals("CLOSE")) {
+            ; // Do nothing!
         }
 
         try {
+            serverSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        input.close();
+        System.out.println("Until next time!");
+        System.exit(0);
+    }
+
+    public static void main(String[] args) {
+        try {
             Server server = new Server();
             (new Thread(server)).start();
-            server.loop(Integer.parseInt(args[0]));
+            server.loop();
         } catch (NumberFormatException e) {
             System.out.println("Specified port is invalid!");
         }

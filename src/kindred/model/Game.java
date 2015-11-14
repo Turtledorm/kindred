@@ -62,8 +62,8 @@ public class Game {
         view.setMap(map);
         playerA = new Player(nameA);
         playerB = new Player(nameB);
-        playerAUnits = playerBUnits = 3;
-        turn = false;
+        playerAUnits = playerBUnits = 3; // This is temporary!
+        turn = true;
         this.view = view;
     }
 
