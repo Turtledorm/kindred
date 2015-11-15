@@ -19,6 +19,11 @@ public class Unit {
     private final Attribute attribute;
 
     /**
+     * Number representing the unit's team
+     */
+    private final int team;
+
+    /**
      * Constructs a Unit.
      * 
      * @param name
@@ -26,9 +31,10 @@ public class Unit {
      * @param attribute
      *            The Unit's attribute
      */
-    public Unit(String name, Attribute attribute) {
+    public Unit(String name, Attribute attribute, int team) {
         this.name = name;
         this.attribute = attribute;
+        this.team = team;
     }
 
     /**
@@ -38,6 +44,15 @@ public class Unit {
      */
     public String getName() {
         return name;
+    }
+
+    /**
+     * Returns the Unit's team identifier
+     * 
+     * @return team identifier
+     */
+    public int getTeam() {
+        return team;
     }
 
     /**

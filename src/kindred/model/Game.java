@@ -19,17 +19,42 @@ public class Game {
     /**
      * First and second Players.
      */
-    private Player playerA, playerB;
+    private final String playerA, playerB;
+
+    /**
+     * Name of the file containing valid Terrain types.
+     */
+    private final String terrainFile = "/kindred/data/terrain/terrainColors.txt";
+
+    /**
+     * ID for the Player's Units
+     */
+    private final int team;
+
+    /**
+     * Number of Units each Player begins with.
+     */
+    private final int initUnits = 12;
 
     /**
      * Number of Units remaining for each Player.
      */
-    private int playerAUnits, playerBUnits;
+    private int playerAUnits = initUnits, playerBUnits = initUnits;
+
+    /**
+     * Creates Units for the Players to use during the game.
+     */
+    private UnitFactory unitFactory;
 
     /**
      * Object representing the means of interaction a Player has with the game.
      */
     private AbstractView view;
+
+    /**
+     * 
+     */
+    private boolean readyA = false, readyB = false;
 
     /**
      * Controls which Player is playing at the moment.
@@ -50,7 +75,7 @@ public class Game {
      * @param view
      *            the user interface
      */
-    public Game(String nameA, String nameB, String terrainFile, String mapFile,
+    public Game(String nameA, String nameB, String mapFile, int team,
             AbstractView view) {
         try {
             map = MapFileParser.parseFile(mapFile,
@@ -59,26 +84,28 @@ public class Game {
             e.printStackTrace();
             System.exit(1);
         }
-        view.setMap(map);
-        playerA = new Player(nameA);
-        playerB = new Player(nameB);
-        playerAUnits = playerBUnits = 3; // This is temporary!
-        turn = true;
+        playerA = nameA;
+        playerB = nameB;
+
+        this.unitFactory = new UnitFactory();
         this.view = view;
+        this.team = team;
+        turn = true;
     }
 
-    /**
-     * Main loop. Runs the Game until a Player wins, i.e., destroys all of the
-     * other Player's Units.
-     */
-    public void run() {
-        // TODO: Place units on the Map
-        while (playerAUnits > 0 && playerBUnits > 0) {
-            Player current = (turn ? playerA : playerB);
-            view.displayMap();
-            while (!view.promptForAction())
-                view.displayMap();
-            turn = !turn;
-        }
+    public boolean placeUnit(String unitName, int team, int x, int y) {
+        return map.placeUnit(unitFactory.getNewUnit(unitName, team), x, y);
+    }
+
+    public boolean move(int xi, int yi, int xf, int yf) {
+        return map.move(team, xi, yi, xf, yf);
+    }
+
+    public int attack(int xi, int yi, int xf, int yf) {
+        return map.attack(team, xi, yi, xf, yf);
+    }
+
+    public Map getMap() {
+        return map;
     }
 }

@@ -17,8 +17,8 @@ public class UnitFactory {
         }
     }
 
-    public Unit getNewUnit(String name) {
-        Unit unit = new Unit(name, unitTypes.get(name));
+    public Unit getNewUnit(String name, int team) {
+        Unit unit = new Unit(name, unitTypes.get(name), team);
         return unit;
     }
 }

@@ -82,13 +82,13 @@ public class Map {
      *            y coordinate of the destination Tile
      * @return true, if movement was successful, or false otherwise
      */
-    public boolean move(int xi, int yi, int xf, int yf) {
+    public boolean move(int team, int xi, int yi, int xf, int yf) {
         // Tile already occupied
         if (tiles[xf][yf].getUnit() != null)
             return false;
 
         Unit unit = tiles[xi][yi].getUnit();
-        if (unit == null)
+        if (unit == null || unit.getTeam() != team)
             return false;
 
         // TODO: Check Player the unit belongs to
@@ -133,10 +133,11 @@ public class Map {
      * @return damage received by the defending unit if the attack succeeded, or
      *         -1 otherwise
      */
-    public int attack(int xi, int yi, int xf, int yf) {
+    public int attack(int team, int xi, int yi, int xf, int yf) {
         Unit attacker = tiles[xi][yi].getUnit();
         Unit defender = tiles[xf][yf].getUnit();
-        if (attacker == null || defender == null)
+        if (attacker == null || defender == null || attacker.getTeam() != team
+                || defender.getTeam() == team)
             return -1;
 
         // TODO: Check Players the units belongs to

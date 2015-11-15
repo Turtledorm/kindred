@@ -24,7 +24,7 @@ public class Client implements Runnable {
 
     private String nickname, opponent;
     private Game game; // TODO: Create game if CONNECT worked
-    private boolean player1;
+    private int team;
 
     public Client(String ipServer, AbstractView view) {
         // Create socket and connect to server
@@ -49,6 +49,8 @@ public class Client implements Runnable {
     }
 
     public void send(String message) {
+        if (game != null) {
+        }
         serverOut.println(message);
     }
 
@@ -75,16 +77,16 @@ public class Client implements Runnable {
                     opponent = prefix.substring(prefixPos - 1);
                     break;
                 case NetworkConstants.PREF_P1:
-                    player1 = true;
+                    team = 1;
                     break;
                 case NetworkConstants.PREF_P2:
-                    player1 = false;
+                    team = 2;
                     break;
                 case NetworkConstants.PREF_MAP:
                     String mapFilename = prefix.substring(prefixPos - 1);
                     game = new Game(nickname, opponent,
-                            "/kindred/data/maps/" + mapFilename + ".txt",
-                            "/kindred/data/terrain/terrainColors.txt", view);
+                            "/kindred/data/maps/" + mapFilename + ".txt", team,
+                            view);
                     break;
                 case NetworkConstants.PREF_BYE:
                     socket.close();
