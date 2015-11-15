@@ -142,7 +142,7 @@ public class Map {
         // TODO: Check Players the units belongs to
 
         // TODO: If necessary, change name of Unit/Weapon methods
-        int range = attacker.getWeapon().getRange();
+        int range = attacker.getRange();
 
         // Calculate x/y distance between Units
         int dx = Math.abs(xf - xi);
@@ -240,21 +240,19 @@ public class Map {
         if ((unit = tile.getUnit()) == null)
             message += "[No unit]";
         else {
-            Weapon weapon = unit.getWeapon();
-            message += unit.getName() + " the " + unit.getUnitClass().getName();
-            message += unit.getCurrentHp() + "/" + unit.getTotalHp() + " HP";
+            message += unit.getName() + " [" + unit.getCurrentHp() + "/"
+                    + unit.getTotalHp() + " HP]";
             message += "\n Mov: " + unit.getMove();
+            message += "\n Rng: " + unit.getRange();
             message += "\n Atk: " + unit.getAtk();
             message += "\n Def: " + unit.getDef();
             message += "\n Agi: " + unit.getAtk();
-            message += "\n Weapon: " + weapon.getName();
-            message += "\n   (Power = " + weapon.getPower() + ", Range = "
-                    + weapon.getRange() + ")\n";
         }
         message += "\n" + tile.getTerrain().getName();
-        message += String.format(" (%+d%% Def, %+d%% Agi, -%d Move)", tile
-                .getTerrain().getDefenseModifier(), tile.getTerrain()
-                .getAgilityModifier(), tile.getTerrain().getMovePenalty());
+        message += String.format(" (%+d%% Def, %+d%% Agi, -%d Move)",
+                tile.getTerrain().getDefenseModifier(),
+                tile.getTerrain().getAgilityModifier(),
+                tile.getTerrain().getMovePenalty());
 
         return message;
     }

@@ -61,10 +61,9 @@ public class Battle {
         double atk = attackUnit.getAtk();
         double def = defendUnit.getDef();
         def *= defender.getTerrain().getDefenseModifier() / 100.0;
-        double weaponPower = attackUnit.getWeapon().getPower();
 
         // Damage formula
-        double damage = (0.75 * atk + 0.5 * weaponPower) - def;
+        double damage = (0.8 * atk + 0.2 * attackerAgi) - def;
 
         if (damage < 1)
             return 1;
