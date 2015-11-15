@@ -12,28 +12,72 @@ import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+/**
+ * Runs as a thread for each connected client. Reads and sends data to the
+ * client.
+ * 
+ * @author Kindred Team
+ */
 class ServerThread extends Thread {
 
+    /**
+     * Name of the file containing information on how the client can interact
+     * with the server.
+     */
     private final String helpFile = "/kindred/network/help.txt";
 
-    private Socket socket; // Socket connected to client
-    private final String addr; // Client's 'IP:Port' address
+    /**
+     * Client's socket that is connected to the server.
+     */
+    private Socket socket;
 
+    /**
+     * Client's IP and port address, stored as "IP:Port".
+     */
+    private final String addr;
+
+    /**
+     * Client's nickname, is null if not yet defined.
+     */
     private String nick = null;
+
+    /**
+     * If true, then the socket connected to the client will close the
+     * connection to the server.
+     */
     private boolean quitServer = false;
 
-    // Name of each client and his socket
+    /**
+     * Thread-safe HashMap that stores client nicknames and their socket. Shared
+     * among all threads.
+     */
     private static ConcurrentHashMap<String, Socket> users = new ConcurrentHashMap<String, Socket>();
 
-    // Map containing a client that created a game room and the map's name
+    /**
+     * Thread-safe HashMap that stores nicknames of clients and the map on which
+     * they are hosting a room. Shared among all threads.
+     */
     private static ConcurrentHashMap<String, String> rooms = new ConcurrentHashMap<String, String>();
 
-    // All occurring games
+    /**
+     * Thread-safe, stores Rooms of all games currently being played. Shared
+     * among all threads.
+     */
     private static Vector<Room> currentGames = new Vector<Room>();
 
-    // Queues containing messages to be sent to a Client
+    /**
+     * Thread-safe HashMap that stores a thread-safe message queue for each
+     * client socket. The queue is used to send messages to client in a
+     * controlled fashion. Shared among all threads.
+     */
     private static ConcurrentHashMap<Socket, ConcurrentLinkedQueue<String>> clientQueue = new ConcurrentHashMap<Socket, ConcurrentLinkedQueue<String>>();
 
+    /**
+     * Constructs a ServerThread.
+     * 
+     * @param socket
+     *            socket connected to the client
+     */
     public ServerThread(Socket socket) {
         super("ServerThread");
         this.socket = socket;
@@ -46,6 +90,9 @@ class ServerThread extends Thread {
         System.out.println("New connection: " + this.addr);
     }
 
+    /**
+     * Reads data sent by the client and responds according the message queue. *
+     */
     @Override
     public void run() {
         // Initialize socket input/output objects
@@ -76,7 +123,6 @@ class ServerThread extends Thread {
                 }
             }
 
-            // TODO: Send message if there is any in queue
         } catch (IOException e) {
             System.out.println(
                     "'" + addr + "' error: Received null when reading socket");
@@ -101,12 +147,18 @@ class ServerThread extends Thread {
 
             socket.close();
         } catch (IOException e) {
-            // TODO: Make a log file?
             e.printStackTrace();
             return;
         }
     }
 
+    /**
+     * Parses a given message sent by the client, putting an answer to be sent
+     * to the client on their message queue.
+     * 
+     * @param message
+     *            message to be parsed, received from the client
+     */
     private void parse(String message) {
         String[] splitStr = message.trim().split("\\s+");
 
@@ -283,15 +335,43 @@ class ServerThread extends Thread {
         }
     }
 
+    /**
+     * Calls the real queueMessage method with the prefix parameter as a special
+     * "empty" value.
+     * 
+     * @param socket
+     *            socket whose message queue will receive the message to be
+     *            sent.
+     * @param message
+     *            message to be queued
+     */
     private void queueMessage(Socket socket, String message) {
         queueMessage(socket, NetworkConstants.PREF_NULL, message);
     }
 
+    /**
+     * Adds a special prefix to the given message. Afterwards, inserts it in the
+     * queue of the corresponding socket which will receive the message.
+     * 
+     * @param socket
+     *            socket whose message queue will receive the message to be
+     *            sent.
+     * @param prefix
+     *            prefix to be added to the message
+     * @param message
+     *            message to be queued
+     */
     private void queueMessage(Socket socket, String prefix, String message) {
         message = message.replaceAll("\\\\", "\\\\\\\\").replaceAll("\n", "\\\\n");
         clientQueue.get(socket).add(prefix + NetworkConstants.PREFIX_CHAR + message);
     }
 
+    /**
+     * Reads a file containing instructions to the client on how to interact
+     * with the server. Returns the whole file in a single String.
+     * 
+     * @return String containing instructions on how to interact with the server
+     */
     private String help() {
         File file = new File(ServerThread.class.getResource(helpFile).getPath());
         Scanner scanner;

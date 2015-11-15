@@ -24,7 +24,7 @@ public class TerrainFileParser {
      * containing a char identifier and its corresponding Terrain.
      * 
      * @param filename
-     *            Name of the Terrain file
+     *            name of the Terrain file
      * 
      * @return HashMap containing chars identifying the Terrain as keys and
      *         Terrain objects themselves as values

@@ -4,10 +4,22 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.Scanner;
 
+/**
+ * Implements the main loop of a TCP listening socket server.
+ * 
+ * @author Kindred Team
+ */
 public class Server implements Runnable {
 
+    /**
+     * Server's listening TCP socket.
+     */
     private ServerSocket serverSocket;
 
+    /**
+     * Initializes the server's socket and accepts connections from clients,
+     * creating a new socket and thread to treat each connected user.
+     */
     public void loop() {
         int port = NetworkConstants.KINDRED_PORT;
         try {
@@ -30,6 +42,10 @@ public class Server implements Runnable {
         }
     }
 
+    /**
+     * Thread used for verifying if server must be closed (this happens when
+     * "CLOSED" is typed).
+     */
     public void run() {
         Scanner input = new Scanner(System.in);
 
@@ -48,7 +64,10 @@ public class Server implements Runnable {
         System.exit(0);
     }
 
-    public static void main(String[] args) {
+    /**
+     * Starts the server.
+     */
+    public static void main() {
         try {
             Server server = new Server();
             (new Thread(server)).start();

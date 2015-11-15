@@ -27,13 +27,13 @@ public class UnitFileParser {
      * HashMap containing the name for each valid Unit and their attributes.
      * 
      * @param filename
-     *            Name of the Unit file
+     *            name of the Unit file
      * 
      * @return HashMap containing Strings identifying the Units as keys and
      *         their attributes as values
      * 
      * @throws FileNotFoundException
-     *             If the specified file is not found
+     *             if the specified file is not found
      */
     public static HashMap<String, Attribute> parseFile(String filename)
             throws FileNotFoundException {
