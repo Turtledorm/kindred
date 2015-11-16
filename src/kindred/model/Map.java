@@ -122,6 +122,8 @@ public class Map {
      * defending Unit.</li>
      * </ul>
      * 
+     * @param team
+     * 
      * @param xi
      *            x coordinate of the attacker
      * @param yi
@@ -250,10 +252,9 @@ public class Map {
             message += "\n Agi: " + unit.getAtk();
         }
         message += "\n" + tile.getTerrain().getName();
-        message += String.format(" (%+d%% Def, %+d%% Agi, -%d Move)",
-                tile.getTerrain().getDefenseModifier(),
-                tile.getTerrain().getAgilityModifier(),
-                tile.getTerrain().getMovePenalty());
+        message += String.format(" (%+d%% Def, %+d%% Agi, -%d Move)", tile
+                .getTerrain().getDefenseModifier(), tile.getTerrain()
+                .getAgilityModifier(), tile.getTerrain().getMovePenalty());
 
         return message;
     }

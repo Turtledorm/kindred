@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
+import kindred.model.Game;
 import kindred.model.Map;
 import kindred.view.AbstractView;
 
@@ -58,8 +59,8 @@ public class CLI extends AbstractView {
     /**
      * {@inheritDoc}
      */
-    public void setMap(Map map) {
-        super.setMap(map);
+    public void setGame(Game game) {
+        super.setGame(game);
         atomMap = new Atom[height][width];
         try {
             colourTypes = CLITerrainParser.parseFile(colourFile);
@@ -76,10 +77,11 @@ public class CLI extends AbstractView {
      */
     @Override
     public void displayMap() {
+        Map map = game.getMap();
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                if (!colourTypes
-                        .containsKey(map.getTile(i, j).getTerrain().getName())) {
+                if (!colourTypes.containsKey(map.getTile(i, j).getTerrain()
+                        .getName())) {
                     System.err.println("Terrain not found in CLI colour file '"
                             + map.getTile(i, j).getTerrain().getName() + "'");
                     // new MessageFormat(
@@ -87,8 +89,8 @@ public class CLI extends AbstractView {
                     System.exit(1);
                 }
                 Colour foregroundColour = Colour.LIGHT_RED;
-                Colour backgroundColour = colourTypes
-                        .get(map.getTile(i, j).getTerrain().getName());
+                Colour backgroundColour = colourTypes.get(map.getTile(i, j)
+                        .getTerrain().getName());
                 char character = ' ';
                 atomMap[i][j] = new Atom(character, backgroundColour,
                         foregroundColour);
@@ -96,6 +98,14 @@ public class CLI extends AbstractView {
         }
 
         TerminalColourHelper.drawMatrix(atomMap);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void promptForMenuAction() {
+        // TODO: parse the commands and their arguments, then build a
+        // ClientToServerMessage to send
     }
 
     /**
@@ -110,48 +120,49 @@ public class CLI extends AbstractView {
         for (; scanner.hasNextLine(); printPrompt()) {
             int[] positions;
 
-            String line = scanner.nextLine().trim();
+            String line = scanner.nextLine().trim().toLowerCase();
             String[] separate = line.split("\\s+");
             switch (separate[0]) {
             case "move":
             case "mv":
                 if (separate.length != 5) {
-                    System.out.println(
-                            msgBundle.getString("invalid_argument_for_command"));
+                    System.out.println(msgBundle
+                            .getString("invalid_argument_for_command"));
                     continue;
                 }
                 positions = parsePosition(separate);
                 if (positions != null)
-                    map.move(positions[0], positions[1], positions[2], positions[3]);
+                    game.move(positions[0], positions[1], positions[2], positions[3]);
                 break;
             case "attack":
             case "atk":
                 if (separate.length != 5) {
-                    System.out.println(
-                            msgBundle.getString("invalid_argument_for_command"));
+                    System.out.println(msgBundle
+                            .getString("invalid_argument_for_command"));
                     continue;
                 }
                 positions = parsePosition(separate);
                 if (positions != null)
-                    map.attack(positions[0], positions[1], positions[2],
+                    game.attack(positions[0], positions[1], positions[2],
                             positions[3]);
                 break;
             case "info":
                 if (separate.length != 3) {
-                    System.out.println(
-                            msgBundle.getString("invalid_argument_for_command"));
+                    System.out.println(msgBundle
+                            .getString("invalid_argument_for_command"));
                     continue;
                 }
                 positions = parsePosition(separate);
                 if (positions != null) {
-                    String message = map.getTileInfo(positions[0], positions[1]);
+                    String message = game.getMap().getTileInfo(positions[0],
+                            positions[1]);
                     System.out.println(message);
                 }
                 break;
             case "end":
                 if (separate.length != 1) {
-                    System.out.println(
-                            msgBundle.getString("invalid_argument_for_command"));
+                    System.out.println(msgBundle
+                            .getString("invalid_argument_for_command"));
                     continue;
                 }
                 return true;
@@ -177,7 +188,7 @@ public class CLI extends AbstractView {
      *         strings of {@code separate}, or {@code null} in case of errors
      */
     private int[] parsePosition(String[] separate) {
-        // Convert positions to ints
+        Map map = game.getMap();
         int[] positions = new int[separate.length - 1];
         try {
             for (int i = 1; i < separate.length; i++) {

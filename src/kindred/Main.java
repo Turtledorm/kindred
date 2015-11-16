@@ -17,7 +17,7 @@ public class Main {
         AbstractView view = new CLI();
         Client client = new Client(args[0], view);
         System.out.println("Connection established with server! IP = " + args[0]);
-        System.out.println("Type in commands below (use HELP if necessary)");
+        System.out.println("Type in commands below");
         Thread thread = new Thread(client);
         thread.start();
 

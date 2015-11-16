@@ -1,7 +1,7 @@
 package kindred.model;
 
 /**
- * Defines a Unit that a User can command, as well as it's UnitClass, Weapon and
+ * Defines a Unit that a User can command, as well as its UnitClass, Weapon and
  * attributes.
  * 
  * @author Kindred Team

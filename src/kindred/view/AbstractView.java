@@ -3,14 +3,14 @@ package kindred.view;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import kindred.model.Game;
 import kindred.model.Map;
 
 public abstract class AbstractView {
-
     /**
-     * The Map of the game.
+     * The game itself.
      */
-    protected Map map;
+    protected Game game;
 
     /**
      * The number of rows of the map.
@@ -58,8 +58,9 @@ public abstract class AbstractView {
      * @param map
      *            the map of the game
      */
-    public void setMap(Map map) {
-        this.map = map;
+    public void setGame(Game game) {
+        this.game = game;
+        Map map = game.getMap();
         height = map.getHeight();
         width = map.getWidth();
     }
@@ -70,6 +71,13 @@ public abstract class AbstractView {
     public abstract void displayMap();
 
     /**
+     * Prompts the user for an action in the menu (i.e. not while in a room).
+     * 
+     */
+
+    public abstract void promptForMenuAction();
+
+    /**
      * Prompts the user for an action in the game and (if the user chooses a
      * valid action) calls the corresponding method of {@code map}.
      * 
@@ -78,7 +86,7 @@ public abstract class AbstractView {
     public abstract boolean promptForAction();
 
     /**
-     * Closes the user inteface.
+     * Closes the user interface.
      */
     public abstract void close();
 
