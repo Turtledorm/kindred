@@ -1,26 +1,35 @@
 \documentclass{article}
+% uncomment to set the page format to A4 instead of A5
+\def\RELEASEDOCUMENT{}
 
 % preamble
 \input{preamble-vbm.tex}
-\DeclareGraphicsRule{*}{mps}{*}{}
-
 
 \title{
     Engenharia de Software - Profª Ana C. V. de Melo\\
-    Projeto Kindred - Fase 1
+    Projeto Kindred - Fase 2
 }
 
 \author{
     Bruno Guilherme Ricci Lucas (4460596)\\
-    Gustavo Chicato Wandeur (7557797)\\
     Leonardo Pereira Macedo (8536065)\\
     Vinícius Bitencourt Matos (8536221)
 }
 
-
 \begin{document}
-    
 \maketitle
+
+\input{statecharts}
+
+\input{projeto-arquitetonico}
+
+\input{projeto-da-interface}
+
+\input{projeto-de-classes}
+
+\input{manual-de-uso}
+
+\input{relatorio-de-modificacoes}
 
 
 \end{document}
