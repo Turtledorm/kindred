@@ -14,9 +14,18 @@ public enum ServerToClientMessage {
     SUCC_NICKNAME_CHANGED,
     SUCC_HOST,
     SUCC_UNHOST,
+    /**
+     * Confirmation that the player has successfully joined the room. The
+     * argument is a pipe-separated string containing:
+     * <ul>
+     * <li>opponent's name</li>
+     * <li>order of turns (1 if the player starts, or 2 otherwise)</li>
+     * <li>map name</li>
+     * </ul>
+     */
     SUCC_JOIN,
     /**
-     * Confirmation prefix command to indicate that the Client can safely close.
+     * Indicates that the Client can safely close.
      */
     SUCC_LEAVE,
     /**
@@ -25,17 +34,21 @@ public enum ServerToClientMessage {
     INFO_NICKNAME,
     INFO_AVAILABLE_MAPS,
     INFO_AVAILABLE_ROOMS,
+    /**
+     * Tells the user that they are no longer hosting a room after joining
+     * another user's room.
+     */
     INFO_LEAVE_HOSTED_ROOM,
-    INFO_SOMEONE_ENTERED_ROOM,
     /**
-     * Indicates that the Client will be the first player during the game.
+     * Confirmation that someone has successfully entered the room that the user
+     * hosts. The argument is a pipe-separated string containing:
+     * <ul>
+     * <li>opponent's name</li>
+     * <li>order of turns (1 if the player starts, or 2 otherwise)</li>
+     * <li>map name</li>
+     * </ul>
      */
-    INFO_FIRST_PLAYER,
-    /**
-     * Indicates that the Client will be the second player during the game.
-     */
-    INFO_SECOND_PLAYER,
-    INFO_MAP, ;
+    INFO_SOMEONE_ENTERED_ROOM, ;
 
     private final static ServerToClientMessage[] values = values();
     private String argument;
@@ -57,7 +70,7 @@ public enum ServerToClientMessage {
     }
 
     public static ServerToClientMessage fromEncodedString(String s) {
-        String[] parts = s.split("|");
+        String[] parts = s.split("\\|", 2);
         ServerToClientMessage msg = values[Integer.parseInt(parts[0])];
         msg.setArgument(parts[1]);
         return msg;

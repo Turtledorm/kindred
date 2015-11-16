@@ -87,7 +87,7 @@ class ServerThread extends Thread {
     }
 
     /**
-     * Reads data sent by the client and responds according the message queue. *
+     * Reads data sent by the client and responds according the message queue.
      */
     @Override
     public void run() {
@@ -166,6 +166,7 @@ class ServerThread extends Thread {
         // NICK [nickname] : Sets client's nickname as the specified value.
         // If no argument is given, returns client's nickname.
         case NICK:
+            System.out.println("{" + arg + "}");
             if (arg.isEmpty()) {
                 if (nick == null) {
                     sentMsg = ServerToClientMessage.ERR_NICKNAME_IS_UNDEFINED;
@@ -202,6 +203,7 @@ class ServerThread extends Thread {
             nick = newNickname;
             users.put(nick, socket);
             sentMsg = ServerToClientMessage.SUCC_NICKNAME_CHANGED;
+            sentMsg.setArgument(newNickname);
             queueMessage(socket, sentMsg);
             break;
 
@@ -308,26 +310,17 @@ class ServerThread extends Thread {
                 queueMessage(socket, ServerToClientMessage.INFO_LEAVE_HOSTED_ROOM);
 
             // Lets the guest user know that they have successfully entered a
-            // room
+            // room, that they will be the second player, and inform the map
+            // name
             sentMsg = ServerToClientMessage.SUCC_JOIN;
-            sentMsg.setArgument(host);
+            mapName = rooms.get(host);
+            sentMsg.setArgument(host + "|2|" + mapName);
             queueMessage(socket, sentMsg);
 
-            // Let the host user know that someone has entered their room
+            // Let the host user know that someone has entered their room, that
+            // they will be the first player, and inform the map name
             sentMsg = ServerToClientMessage.INFO_SOMEONE_ENTERED_ROOM;
-            sentMsg.setArgument(nick);
-            queueMessage(users.get(host), sentMsg);
-
-            // Let the host client know that they will be the second player
-            queueMessage(socket, ServerToClientMessage.INFO_SECOND_PLAYER);
-
-            // Let the guest client know that they will be the first player
-            queueMessage(users.get(host), ServerToClientMessage.INFO_FIRST_PLAYER);
-
-            // Let both players know which map will be used
-            sentMsg = ServerToClientMessage.INFO_MAP;
-            sentMsg.setArgument(rooms.get(host));
-            queueMessage(socket, sentMsg);
+            sentMsg.setArgument(nick + "|1|" + mapName);
             queueMessage(users.get(host), sentMsg);
 
             // Create the room
@@ -342,8 +335,8 @@ class ServerThread extends Thread {
 
         // QUIT : Makes client leave the server
         case QUIT:
-            quitServer = true;
             queueMessage(socket, ServerToClientMessage.SUCC_LEAVE);
+            quitServer = true;
             break;
 
         // Something not understood

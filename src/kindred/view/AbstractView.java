@@ -1,11 +1,14 @@
 package kindred.view;
 
+import java.text.MessageFormat;
 import java.util.Locale;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import kindred.model.Game;
 import kindred.model.Map;
 import kindred.network.Client;
+import kindred.network.messages.ServerToClientMessage;
 
 public abstract class AbstractView {
     /**
@@ -46,7 +49,30 @@ public abstract class AbstractView {
      */
     public AbstractView() {
         this.locale = new Locale("pt", "BR");
+        try {
+            readLanguageData();
+            return;
+        } catch (MissingResourceException e) {
+            System.err.println("Could not find language data for the locale: "
+                    + locale.toString());
+        }
+        this.locale = new Locale("en", "GB");
+        try {
+            readLanguageData();
+            return;
+        } catch (MissingResourceException e) {
+            System.err
+                    .println("Also, the default language ("
+                            + locale.toString()
+                            + ") could not be found. I'm sorry! :'(\nPlease reinstall this program and be happy!");
+            System.exit(1);
+        }
     }
+
+    /**
+     * Reads the files containing the messages in the specified language.
+     */
+    protected abstract void readLanguageData();
 
     /**
      * Asks the user to enter a string.
@@ -77,14 +103,19 @@ public abstract class AbstractView {
     public abstract void displayMap();
 
     /**
+     * Prompts the user for an IP.
+     */
+    public abstract String promptForIP();
+
+    /**
      * Prompts the user for an action in the menu (i.e. not while in a room).
      * 
      * @param client
      *            the user's client object whose methods will be called
-     * 
+     * @return false if the action is quit, or true otherwise
      */
 
-    public abstract void promptForMenuAction(Client client);
+    public abstract boolean promptForMenuAction(Client client);
 
     /**
      * Prompts the user for an action in the game and (if the user chooses a
@@ -99,4 +130,19 @@ public abstract class AbstractView {
      */
     public abstract void close();
 
+    /**
+     * 
+     * @param key
+     * @param arg
+     * @return
+     */
+    protected String format(ResourceBundle rb, String key, Object[] arg) {
+        String pattern = rb.getString(key);
+        MessageFormat formatter = new MessageFormat(pattern, locale);
+        return formatter.format(arg);
+    }
+
+    public abstract void connectionResult(boolean success, String serverIP);
+
+    public abstract void menuEvent(ServerToClientMessage msg);
 }

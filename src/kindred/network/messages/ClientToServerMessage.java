@@ -30,7 +30,7 @@ public enum ClientToServerMessage {
     }
 
     public static ClientToServerMessage fromEncodedString(String s) {
-        String[] parts = s.split("|");
+        String[] parts = s.split("\\|", 2);
         ClientToServerMessage msg = values[Integer.parseInt(parts[0])];
         msg.setArgument(parts[1]);
         return msg;

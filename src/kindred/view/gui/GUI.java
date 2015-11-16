@@ -1,12 +1,18 @@
 package kindred.view.gui;
 
 import kindred.network.Client;
+import kindred.network.messages.ServerToClientMessage;
 import kindred.view.AbstractView;
 
 public class GUI extends AbstractView {
 
     public GUI() {
         super();
+    }
+
+    @Override
+    protected void readLanguageData() {
+
     }
 
     @Override
@@ -19,8 +25,13 @@ public class GUI extends AbstractView {
     }
 
     @Override
-    public void promptForMenuAction(Client client) {
+    public String promptForIP() {
+        return "";
+    }
 
+    @Override
+    public boolean promptForMenuAction(Client client) {
+        return false;
     }
 
     @Override
@@ -30,6 +41,17 @@ public class GUI extends AbstractView {
 
     @Override
     public void close() {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void connectionResult(boolean success, String serverIP) {
+    }
+
+    public void menuEvent(ServerToClientMessage msg) {
+
     }
 
 }

@@ -27,16 +27,22 @@ public class Client implements Runnable {
     private String nickname, opponent;
     private Game game; // TODO: Create game if CONNECT worked
     private int team;
+    private boolean quit;
 
-    public Client(String ipServer, AbstractView view) {
+    public Client(String serverIP, AbstractView view) {
+        quit = false;
+        this.view = view;
+        if (serverIP == null) {
+            serverIP = view.promptForIP();
+        }
         // Create socket and connect to server
         try {
-            socket = new Socket(ipServer, port);
+            socket = new Socket(serverIP, port);
         } catch (IOException e) {
-            System.err
-                    .println("Couldn't connect to server (IP = " + ipServer + ")!");
+            view.connectionResult(false, serverIP);
             System.exit(1);
         }
+        view.connectionResult(true, serverIP);
 
         // Define socket I/O
         try {
@@ -54,9 +60,25 @@ public class Client implements Runnable {
         serverOut.println(msg.toEncodedString());
     }
 
+    public void mainLoop() {
+        while (!quit) {
+            if (game == null) {
+                view.promptForMenuAction(this);
+                try {
+                    synchronized (view) {
+                        view.wait();
+                    }
+                } catch (InterruptedException e) {
+                }
+            } else if (!game.isOver())
+                view.promptForGameAction();
+            else
+                game = null;
+        }
+    }
+
     public void run() {
         String response;
-
         try {
             while ((response = serverIn.readLine()) != null) {
                 response = response.replaceAll("\\\\n", "\n").replaceAll("\\\\\\\\",
@@ -70,25 +92,18 @@ public class Client implements Runnable {
                     nickname = arg;
                     break;
                 case SUCC_JOIN:
-                    opponent = arg;
-                    break;
                 case INFO_SOMEONE_ENTERED_ROOM:
-                    opponent = arg;
-                    break;
-                case INFO_FIRST_PLAYER:
-                    team = 1;
-                    break;
-                case INFO_SECOND_PLAYER:
-                    team = 2;
-                    break;
-                case INFO_MAP:
-                    String mapFilename = arg;
+                    String[] parts = arg.split("|");
+                    opponent = parts[0];
+                    team = Integer.parseInt(parts[1]);
+                    String mapFilename = parts[2];
                     game = new Game(nickname, opponent, "/kindred/data/maps/"
                             + mapFilename + ".txt", team, view);
                     break;
                 case SUCC_LEAVE:
+                    System.exit(0);
                     socket.close();
-                    break;
+                    return;
                 case SUCC_NICKNAME_CHANGED:
                     nickname = arg;
                     break;
@@ -108,9 +123,14 @@ public class Client implements Runnable {
                 case ERR_UNREGISTERED_USER:
                     break;
                 }
+                view.menuEvent(msg);
+                synchronized (view) {
+                    view.notify();
+                }
             }
         } catch (IOException e) {
             System.out.println("Error when connecting to server!");
+            quit = true;
             System.exit(1);
         }
 
@@ -118,7 +138,9 @@ public class Client implements Runnable {
         if (!socket.isClosed()) {
             try {
                 socket.close();
+                System.out.println(".......!");
                 System.out.println("Connection with server has been lost!");
+                quit = true;
                 System.exit(1);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -127,7 +149,9 @@ public class Client implements Runnable {
     }
 
     public void nick() {
-        send(ClientToServerMessage.NICK);
+        ClientToServerMessage msg = ClientToServerMessage.NICK;
+        msg.setArgument("");
+        send(msg);
     }
 
     public void nick(String nickname) {
@@ -161,6 +185,7 @@ public class Client implements Runnable {
     }
 
     public void quit() {
+        quit = true;
         send(ClientToServerMessage.QUIT);
     }
 }

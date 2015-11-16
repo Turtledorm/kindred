@@ -59,7 +59,12 @@ public class Game {
     /**
      * Controls which Player is playing at the moment.
      */
-    private boolean turn;
+    private int turn;
+
+    /**
+     * 
+     */
+    private boolean isOver;
 
     /**
      * Constructs a Game with an empty Map.
@@ -90,7 +95,8 @@ public class Game {
         this.unitFactory = new UnitFactory();
         this.view = view;
         this.team = team;
-        turn = true;
+        turn = 1;
+        isOver = false;
     }
 
     public boolean placeUnit(String unitName, int team, int x, int y) {
@@ -103,9 +109,18 @@ public class Game {
 
     public int attack(int xi, int yi, int xf, int yf) {
         return map.attack(team, xi, yi, xf, yf);
+        // TODO: cause damage to units and check if it is dead
     }
 
     public Map getMap() {
         return map;
+    }
+
+    public void surrender() {
+        isOver = true;
+    }
+
+    public boolean isOver() {
+        return isOver;
     }
 }

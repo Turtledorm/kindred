@@ -8,22 +8,12 @@ public class Main {
 
     // Currently used for testing Game
     public static void main(String[] args) {
-        if (args.length < 1) {
-            // TODO: Create an output method on view
-            System.out.println("Must call with server IP as first argument!");
-            System.exit(1);
-        }
-
+        String IP = args.length < 1 ? null : args[0];
         AbstractView view = new CLI();
-        Client client = new Client(args[0], view);
-        System.out.println("Connection established with server! IP = " + args[0]);
-        System.out.println("Type in commands below");
+        Client client = new Client(IP, view);
         Thread thread = new Thread(client);
         thread.start();
+        client.mainLoop();
 
-        while (thread.isAlive()) {
-            String msg = view.askForString("");
-            // client.send(msg);
-        }
     }
 }
