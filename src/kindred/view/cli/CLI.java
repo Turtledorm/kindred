@@ -504,4 +504,11 @@ public class CLI extends AbstractView {
         Object[] arg = new Object[] { playerNo, mapName };
         return format(menuMsgBundle, "game_start", arg);
     }
+
+    @Override
+    public void connectionLost() {
+        System.out
+                .println(format(menuMsgBundle, "connection_lost", new Object[] {}));
+
+    }
 }

@@ -54,4 +54,9 @@ public class GUI extends AbstractView {
 
     }
 
+    @Override
+    public void connectionLost() {
+
+    }
+
 }

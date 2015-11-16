@@ -145,4 +145,6 @@ public abstract class AbstractView {
     public abstract void connectionResult(boolean success, String serverIP);
 
     public abstract void menuEvent(ServerToClientMessage msg);
+
+    public abstract void connectionLost();
 }

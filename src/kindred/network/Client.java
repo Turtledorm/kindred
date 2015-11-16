@@ -29,10 +29,12 @@ public class Client implements Runnable {
     private Game game; // TODO: Create game if CONNECT worked
     private int team;
     private boolean quit;
+    private String serverIP;
 
     public Client(String serverIP, AbstractView view) {
         quit = false;
         this.view = view;
+        this.serverIP = serverIP;
 
         if (serverIP == null)
             serverIP = view.promptForIP();
@@ -54,7 +56,7 @@ public class Client implements Runnable {
             serverIn = new BufferedReader(new InputStreamReader(
                     socket.getInputStream()));
         } catch (IOException e) {
-            System.err.println("Error when defining I/O with server!");
+            view.connectionResult(false, serverIP);
             System.exit(1);
         }
 
@@ -133,7 +135,7 @@ public class Client implements Runnable {
                 }
             }
         } catch (IOException e) {
-            System.out.println("Error when connecting to server!");
+            view.connectionResult(false, serverIP);
             quit = true;
             System.exit(1);
         }
@@ -142,7 +144,7 @@ public class Client implements Runnable {
         if (!socket.isClosed()) {
             try {
                 socket.close();
-                System.out.println("Connection with server has been lost!");
+                view.connectionLost();
                 quit = true;
                 System.exit(1);
             } catch (IOException e) {
