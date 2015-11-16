@@ -10,7 +10,7 @@ public enum ClientToServerMessage {
     JOIN,
     QUIT;
 
-    private final static ClientToServerMessage[] values = values();
+    private static final ClientToServerMessage[] values = values();
     private String argument;
 
     ClientToServerMessage() {
