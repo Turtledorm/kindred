@@ -116,7 +116,16 @@ public class Game {
         if (unit == null)
             return false;
         unit.loseHp(damage);
-        return unit.getCurrentHp() <= 0;
+        boolean isDead = unit.getCurrentHp() <= 0;
+        if (isDead) {
+            if (unit.getTeam() == 1)
+                playerAUnits--;
+            else
+                playerBUnits--;
+            if (Math.min(playerAUnits, playerBUnits) <= 0)
+                isOver = true;
+        }
+        return isDead;
     }
 
     public Map getMap() {
@@ -125,6 +134,10 @@ public class Game {
 
     public void surrender() {
         isOver = true;
+    }
+
+    public void endTurn() {
+        turn ^= 0x03; // 1 <-> 2
     }
 
     public boolean isOver() {

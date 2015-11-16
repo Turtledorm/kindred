@@ -233,7 +233,7 @@ public class Map {
         String message = "";
         Tile tile = tiles[x][y];
         Unit unit;
-
+        // TODO: change this to a syntax
         if ((unit = tile.getUnit()) == null)
             message += "[No unit]";
         else {

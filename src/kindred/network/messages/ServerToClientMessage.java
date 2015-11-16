@@ -48,7 +48,8 @@ public enum ServerToClientMessage {
      * <li>map name</li>
      * </ul>
      */
-    INFO_SOMEONE_ENTERED_ROOM;
+    INFO_SOMEONE_ENTERED_ROOM,
+    GAME_ACTION;
 
     private static final ServerToClientMessage[] values = values();
     private String argument;

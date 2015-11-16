@@ -113,6 +113,10 @@ public class Client implements Runnable {
                 case SUCC_NICKNAME_CHANGED:
                     nickname = arg;
                     break;
+                case GAME_ACTION:
+                    // TODO: handle this
+                    break;
+                // Nothing to do here in the following cases
                 case SUCC_HOST:
                 case SUCC_UNHOST:
                 case INFO_AVAILABLE_MAPS:
@@ -128,6 +132,7 @@ public class Client implements Runnable {
                 case ERR_ROOM_NOT_FOUND:
                 case ERR_UNREGISTERED_USER:
                     break;
+
                 }
                 view.menuEvent(msg);
                 synchronized (view) {
@@ -201,6 +206,5 @@ public class Client implements Runnable {
         Thread thread = new Thread(client);
         thread.start();
         client.mainLoop();
-
     }
 }

@@ -343,6 +343,18 @@ class ServerThread extends Thread {
             quitServer = true;
             break;
 
+        // GAME_ACTION: Just pass forwards the message
+        case GAME_ACTION:
+            ServerToClientMessage msgToSend = ServerToClientMessage.GAME_ACTION;
+            msgToSend.setArgument(arg);
+            for (Room r : currentGames)
+                if (r.hasNick(nick)) {
+                    host = r.getOtherNick(nick);
+                    queueMessage(users.get(host), msgToSend);
+                    break;
+                }
+            break;
+
         // Something not understood
         default:
             queueMessage(socket,

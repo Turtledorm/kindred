@@ -8,7 +8,8 @@ public enum ClientToServerMessage {
     HOST,
     UNHOST,
     JOIN,
-    QUIT;
+    QUIT,
+    GAME_ACTION;
 
     private static final ClientToServerMessage[] values = values();
     private String argument;

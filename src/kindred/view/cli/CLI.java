@@ -489,6 +489,9 @@ public class CLI extends AbstractView {
             key = "left_hosted_room";
             arg = new Object[] {};
             break;
+        case GAME_ACTION:
+            // TODO: display opponent's actions
+            break;
         }
         System.out.println(format(menuMsgBundle, key, arg) + complement);
     }
