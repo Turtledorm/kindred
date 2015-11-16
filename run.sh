@@ -7,10 +7,6 @@
 # Diretório do projeto
 DIR=`cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd`
 
-# Diretórios contendos código fonte do jogo
-SRCDIR="$DIR/src"
-GAMEDIR="kindred"
-
 # Cores/efeitos para mensagens no terminal
 NORMAL="\e[0m"
 BOLD="\e[1m"
@@ -20,29 +16,38 @@ BOLD="\e[1m"
 
 function uso {
     echo -e $BOLD"USO"$NORMAL
-    echo -e "\t./`basename $0` ["$BOLD"-h"$NORMAL"]\n"
+    echo -e "\t./`basename $0` ["$BOLD"-c"$NORMAL" [IP]] ["$BOLD"-s"$NORMAL"] ["$BOLD"-h"$NORMAL"]\n"
 
     echo -e $BOLD"DESCRIÇÃO"$NORMAL
-    echo -e "\tCompila e executa o jogo Kindred, localizado em '$SRCDIR'.\n"
+    echo -e "\tExecuta o jogo Kindred de acordo com o argumento dado.\n"
 
     echo -e $BOLD"OPÇÕES"$NORMAL
     echo -e "\tSepare cada opção com um espaço.\n"
-    echo -e "\t"$BOLD"-h"$NORMAL"\tMostra como usar o script, além de abandoná-lo.\n"
 
-    exit
+    echo -e "\t"$BOLD"-c"$NORMAL"\tExecuta o jogo Kindred como cliente."
+    echo -e "\t\tOpcionalmente, pode receber o IP do servidor a qual se conecta.\n"
+
+    echo -e "\t"$BOLD"-s"$NORMAL"\tExecuta o jogo Kindred como servidor.\n"
+
+    echo -e "\t"$BOLD"-h"$NORMAL"\tMostra como usar o script, além de abandoná-lo."
+
+    exit 1
 }
 
 # --------------------------------------------------------------------
 # MAIN 
 
-# Argumentos por linha de comando
-for arg in "$@"; do
-    case $arg in
-        -h)
-            uso;;
-    esac
-done
+if (( $# == 0 )); then uso; fi
 
-cd $SRCDIR
-javac $GAMEDIR/Main.java
-java $GAMEDIR/Main
+# Argumentos por linha de comando
+case $1 in
+    -h)
+        uso;;
+    -s)
+        java -cp bin/ kindred.network.Server;;
+    -c)
+        java -cp bin/ kindred.network.Client $2;;
+    *)
+        echo "Argumento '$arg' não reconhecido!"
+        uso;;
+esac

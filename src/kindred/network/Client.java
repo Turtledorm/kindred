@@ -10,6 +10,7 @@ import kindred.model.Game;
 import kindred.network.messages.ClientToServerMessage;
 import kindred.network.messages.ServerToClientMessage;
 import kindred.view.AbstractView;
+import kindred.view.cli.CLI;
 
 public class Client implements Runnable {
 
@@ -32,9 +33,12 @@ public class Client implements Runnable {
     public Client(String serverIP, AbstractView view) {
         quit = false;
         this.view = view;
-        if (serverIP == null) {
+
+        if (serverIP == null)
             serverIP = view.promptForIP();
-        }
+        if (serverIP.isEmpty())
+            serverIP = "localhost";
+
         // Create socket and connect to server
         try {
             socket = new Socket(serverIP, port);
@@ -187,5 +191,15 @@ public class Client implements Runnable {
     public void quit() {
         quit = true;
         send(ClientToServerMessage.QUIT);
+    }
+
+    public static void main(String[] args) {
+        String IP = args.length < 1 ? null : args[0];
+        AbstractView view = new CLI();
+        Client client = new Client(IP, view);
+        Thread thread = new Thread(client);
+        thread.start();
+        client.mainLoop();
+
     }
 }
