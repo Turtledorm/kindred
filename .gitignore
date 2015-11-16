@@ -3,20 +3,12 @@
 # Arquivos e diretórios gerados pelo TeX
 doc/fase1/aux/
 doc/fase1/main.pdf
+doc/fase2/main.pdf
 *.log
 *.1
 *.fls
 *.aux
 *.fdb_latexmk
-
-# Arquivos e diretórios gerados na instalação do Pygame
-pyj2d/
-pygame/
-doc/requisitos/pygame.txt*
-jython.jar
-
-# Arquivos gerados pelo Python
-__pycache__/
 
 # Arquivos gerados pelo Java
 bin/
