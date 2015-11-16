@@ -139,12 +139,9 @@ public class Map {
                 || defender.getTeam() == team)
             return -1;
 
-        // TODO: Check Players the units belongs to
-
-        // TODO: If necessary, change name of Unit/Weapon methods
         int range = attacker.getRange();
 
-        // Calculate x/y distance between Units
+        // Calculate x, y distance between Units
         int dx = Math.abs(xf - xi);
         int dy = Math.abs(yf - yi);
 

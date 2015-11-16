@@ -241,6 +241,7 @@ public class CLI extends AbstractView {
 
             String line = scanner.nextLine().trim().toLowerCase();
             String[] separate = line.split("\\s+");
+            // TODO: send to server
             switch (separate[0]) {
             case "move":
             case "mv":
@@ -291,7 +292,6 @@ public class CLI extends AbstractView {
                             .getString("invalid_argument_for_command"));
                     continue;
                 }
-                // TODO: send to server
                 return true;
             case "help":
                 if (!printFileContent("/kindred/view/cli/gameHelp.txt"))

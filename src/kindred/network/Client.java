@@ -26,7 +26,7 @@ public class Client implements Runnable {
     private BufferedReader serverIn;
 
     private String nickname, opponent;
-    private Game game; // TODO: Create game if CONNECT worked
+    private Game game;
     private int team;
     private boolean quit;
     private String serverIP;

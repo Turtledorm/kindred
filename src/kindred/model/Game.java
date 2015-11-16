@@ -109,7 +109,14 @@ public class Game {
 
     public int attack(int xi, int yi, int xf, int yf) {
         return map.attack(team, xi, yi, xf, yf);
-        // TODO: cause damage to units and check if it is dead
+    }
+
+    public boolean causeDamage(int x, int y, int damage) {
+        Unit unit = map.getTile(x, y).getUnit();
+        if (unit == null)
+            return false;
+        unit.loseHp(damage);
+        return unit.getCurrentHp() <= 0;
     }
 
     public Map getMap() {
