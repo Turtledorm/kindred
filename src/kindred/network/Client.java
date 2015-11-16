@@ -142,7 +142,6 @@ public class Client implements Runnable {
         if (!socket.isClosed()) {
             try {
                 socket.close();
-                System.out.println(".......!");
                 System.out.println("Connection with server has been lost!");
                 quit = true;
                 System.exit(1);

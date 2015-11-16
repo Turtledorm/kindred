@@ -112,7 +112,6 @@ class ServerThread extends Thread {
             while ((!quitServer && (inputLine = in.readLine()) != null)) {
                 if (inputLine.trim().equals(""))
                     continue;
-                System.out.println("[" + addr + "]: " + inputLine);
                 parse(inputLine);
                 while (!clientQueue.get(socket).isEmpty()) {
                     String msg = clientQueue.get(socket).remove();
@@ -166,7 +165,6 @@ class ServerThread extends Thread {
         // NICK [nickname] : Sets client's nickname as the specified value.
         // If no argument is given, returns client's nickname.
         case NICK:
-            System.out.println("{" + arg + "}");
             if (arg.isEmpty()) {
                 if (nick == null) {
                     sentMsg = ServerToClientMessage.ERR_NICKNAME_IS_UNDEFINED;
@@ -198,6 +196,12 @@ class ServerThread extends Thread {
             // After changing the nickname, the old one is deleted
             if (nick != null && users.containsKey(nick))
                 users.remove(nick);
+
+            // Changes user's nickname in the room they are hosting, if any
+            if (nick != null && rooms.containsKey(nick)) {
+                String map = rooms.remove(nick);
+                rooms.put(newNickname, map);
+            }
 
             // Sets client's nickname
             nick = newNickname;

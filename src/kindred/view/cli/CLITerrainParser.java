@@ -5,15 +5,13 @@ import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Scanner;
 
-import kindred.model.TerrainFileParser;
-
 /**
  * Provides a method to parse a file that contains the description of a terrain
  * in a command-line user interface.
  * 
  * @author Kindred Team
  */
-
+ 
 public class CLITerrainParser {
 
     /**

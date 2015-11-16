@@ -185,8 +185,10 @@ public class CLI extends AbstractView {
                             .getString("invalid_argument_for_command"));
                     continue;
                 }
-                if (!printFileContent("kindred/view/cli/menuHelp.txt"))
+                if (!printFileContent("kindred/view/cli/menuHelp.txt")) {
                     System.err.println(menuMsgBundle.getString("help_not_found"));
+                    continue;
+                }
                 break;
 
             case "QUIT":
@@ -294,8 +296,10 @@ public class CLI extends AbstractView {
                 // TODO: send to server
                 return true;
             case "help":
-                if (!printFileContent("kindred/view/cli/gameHelp.txt"))
+                if (!printFileContent("kindred/view/cli/gameHelp.txt")) {
                     System.err.println(gameMsgBundle.getString("help_not_found"));
+                    continue;
+                }
                 break;
             default:
                 System.out.println(gameMsgBundle.getString("unrecognised_command"));
@@ -396,7 +400,7 @@ public class CLI extends AbstractView {
             arg = new Object[] {};
             break;
         case ERR_CANNOT_UNHOST_WITHOUT_HOST:
-            key = "map_not_found";
+            key = "cannot_unhost_without_host";
             arg = new Object[] {};
             break;
         case ERR_INVALID_COMMAND_OR_ARGUMENTS:
@@ -430,8 +434,8 @@ public class CLI extends AbstractView {
         case INFO_AVAILABLE_MAPS:
             String[] maps = argument.split("\\|");
             String message = "";
-            if (maps.length == 0) {
-                key = "no_maps";
+            if (argument.isEmpty()) {
+                key = "no_map";
                 arg = new Object[] {};
             } else {
                 key = "available_maps";
@@ -444,13 +448,16 @@ public class CLI extends AbstractView {
         case INFO_AVAILABLE_ROOMS:
             String[] rooms = argument.split("\\|");
             message = "";
-            if (rooms.length == 0) {
-                key = "no_maps";
+            if (argument.isEmpty()) {
+                key = "no_room";
                 arg = new Object[] {};
             } else {
                 key = "available_rooms";
-                for (String r : rooms)
-                    message += "\n- " + r;
+                for (String r : rooms) {
+                    String[] roomParts = r.split(">");
+                    message += String.format("\n- %-10s -> %s", roomParts[0],
+                            roomParts[1]);
+                }
                 arg = new Object[] {};
                 complement = message;
             }
@@ -480,7 +487,6 @@ public class CLI extends AbstractView {
         case SUCC_NICKNAME_CHANGED:
             key = "changed_nickname";
             arg = new Object[] { argument };
-            System.out.println(argument);
             break;
         case INFO_LEAVE_HOSTED_ROOM: // after entering another room
         case SUCC_UNHOST: // after asking to unhost
