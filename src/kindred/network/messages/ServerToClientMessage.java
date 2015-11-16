@@ -15,6 +15,9 @@ public enum ServerToClientMessage {
     SUCC_HOST,
     SUCC_UNHOST,
     SUCC_JOIN,
+    /**
+     * Confirmation prefix command to indicate that the Client can safely close.
+     */
     SUCC_LEAVE,
     /**
      * Informs the Client's nickname.
@@ -32,11 +35,7 @@ public enum ServerToClientMessage {
      * Indicates that the Client will be the second player during the game.
      */
     INFO_SECOND_PLAYER,
-    INFO_MAP,
-    /**
-     * Confirmation prefix command to indicate that the Client can safely close.
-     */
-    INFO_DISCONNECTED;
+    INFO_MAP, ;
 
     private final static ServerToClientMessage[] values = values();
     private String argument;

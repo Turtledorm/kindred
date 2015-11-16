@@ -1,4 +1,4 @@
-package kindred.model;
+package kindred.network;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import kindred.model.Game;
+import kindred.network.messages.ClientToServerMessage;
 import kindred.network.messages.ServerToClientMessage;
 import kindred.view.AbstractView;
 
@@ -48,10 +50,8 @@ public class Client implements Runnable {
 
     }
 
-    public void send(String message) {
-        if (game != null) {
-        }
-        serverOut.println(message);
+    public void send(ClientToServerMessage msg) {
+        serverOut.println(msg.toEncodedString());
     }
 
     public void run() {
@@ -66,8 +66,6 @@ public class Client implements Runnable {
                 // Analyse message
                 String arg = msg.getArgument();
                 switch (msg) {
-                // TODO: properly handle every item below
-                // TODO: move help to client
                 case INFO_NICKNAME:
                     nickname = arg;
                     break;
@@ -88,42 +86,26 @@ public class Client implements Runnable {
                     game = new Game(nickname, opponent, "/kindred/data/maps/"
                             + mapFilename + ".txt", team, view);
                     break;
-                case INFO_DISCONNECTED:
+                case SUCC_LEAVE:
                     socket.close();
                     break;
-                case ERR_CANNOT_ENTER_OWN_ROOM:
-                    break;
-                case ERR_CANNOT_UNHOST_WITHOUT_HOST:
-                    break;
-                case ERR_INVALID_COMMAND_OR_ARGUMENTS:
-                    break;
-                case ERR_MAP_NOT_FOUND:
-                    break;
-                case ERR_NICKNAME_IS_INVALID:
-                    break;
-                case ERR_NICKNAME_IS_IN_USE:
-                    break;
-                case ERR_NICKNAME_IS_UNDEFINED:
-                    break;
-                case ERR_ROOM_NOT_FOUND:
-                    break;
-                case ERR_UNREGISTERED_USER:
-                    break;
-                case INFO_AVAILABLE_MAPS:
-                    break;
-                case INFO_AVAILABLE_ROOMS:
-                    break;
-                case INFO_LEAVE_HOSTED_ROOM:
+                case SUCC_NICKNAME_CHANGED:
+                    nickname = arg;
                     break;
                 case SUCC_HOST:
-                    break;
-                case SUCC_LEAVE:
-                    break;
-                case SUCC_NICKNAME_CHANGED:
-                    break;
                 case SUCC_UNHOST:
-                    break;
-                default:
+                case INFO_AVAILABLE_MAPS:
+                case INFO_AVAILABLE_ROOMS:
+                case INFO_LEAVE_HOSTED_ROOM:
+                case ERR_CANNOT_ENTER_OWN_ROOM:
+                case ERR_CANNOT_UNHOST_WITHOUT_HOST:
+                case ERR_INVALID_COMMAND_OR_ARGUMENTS:
+                case ERR_MAP_NOT_FOUND:
+                case ERR_NICKNAME_IS_INVALID:
+                case ERR_NICKNAME_IS_IN_USE:
+                case ERR_NICKNAME_IS_UNDEFINED:
+                case ERR_ROOM_NOT_FOUND:
+                case ERR_UNREGISTERED_USER:
                     break;
                 }
             }
@@ -142,5 +124,43 @@ public class Client implements Runnable {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void nick() {
+        send(ClientToServerMessage.NICK);
+    }
+
+    public void nick(String nickname) {
+        ClientToServerMessage msg = ClientToServerMessage.NICK;
+        msg.setArgument(nickname);
+        send(msg);
+    }
+
+    public void join(String host) {
+        ClientToServerMessage msg = ClientToServerMessage.JOIN;
+        msg.setArgument(host);
+        send(msg);
+    }
+
+    public void host(String mapName) {
+        ClientToServerMessage msg = ClientToServerMessage.HOST;
+        msg.setArgument(mapName);
+        send(msg);
+    }
+
+    public void unhost() {
+        send(ClientToServerMessage.UNHOST);
+    }
+
+    public void maps() {
+        send(ClientToServerMessage.MAPS);
+    }
+
+    public void rooms() {
+        send(ClientToServerMessage.ROOMS);
+    }
+
+    public void quit() {
+        send(ClientToServerMessage.QUIT);
     }
 }

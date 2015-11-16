@@ -1,12 +1,15 @@
 package kindred.view.cli;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
 import kindred.model.Game;
 import kindred.model.Map;
+import kindred.network.Client;
 import kindred.view.AbstractView;
 
 /**
@@ -68,8 +71,10 @@ public class CLI extends AbstractView {
             System.err.format("File '%s' not found!\n", colourFile);
             System.exit(1);
         }
-        msgBundle = ResourceBundle.getBundle("kindred.lang.CLI-MessageBundle",
-                locale);
+        menuMsgBundle = ResourceBundle.getBundle(
+                "kindred.lang.CLI-MessageBundle_Menu", locale);
+        gameMsgBundle = ResourceBundle.getBundle(
+                "kindred.lang.CLI-MessageBundle_Game", locale);
     }
 
     /**
@@ -103,18 +108,107 @@ public class CLI extends AbstractView {
     /**
      * {@inheritDoc}
      */
-    public void promptForMenuAction() {
-        // TODO: parse the commands and their arguments, then build a
-        // ClientToServerMessage to send
+    public void promptForMenuAction(Client client) {
+        System.out.println(menuMsgBundle.getString("type_in_your_command"));
+        printPrompt();
+
+        for (; scanner.hasNextLine(); printPrompt()) {
+            String line = scanner.nextLine().trim();
+            String[] separate = line.trim().split("\\s+");
+            switch (separate[0].toUpperCase()) {
+            case "JOIN":
+                if (separate.length != 2) {
+                    System.out.println(menuMsgBundle
+                            .getString("invalid_argument_for_command"));
+                    continue;
+                }
+                String host = separate[1];
+                client.join(host);
+                break;
+
+            case "NICK":
+                if (separate.length > 2) {
+                    System.out.println(menuMsgBundle
+                            .getString("invalid_argument_for_command"));
+                    continue;
+                } else if (separate.length == 1) {
+                    client.nick();
+                } else {
+                    String nickname = separate[1];
+                    client.nick(nickname);
+                }
+                break;
+
+            case "MAPS":
+                if (separate.length != 1) {
+                    System.out.println(menuMsgBundle
+                            .getString("invalid_argument_for_command"));
+                    continue;
+                }
+                client.maps();
+                break;
+
+            case "ROOMS":
+                if (separate.length != 1) {
+                    System.out.println(menuMsgBundle
+                            .getString("invalid_argument_for_command"));
+                    continue;
+                }
+                client.rooms();
+                break;
+
+            case "HELP":
+                if (separate.length != 1) {
+                    System.out.println(menuMsgBundle
+                            .getString("invalid_argument_for_command"));
+                    continue;
+                }
+                if (!printFileContent("kindred/view/cli/menuHelp.txt"))
+                    System.err.println(menuMsgBundle.getString("help_not_found"));
+                break;
+
+            case "QUIT":
+            case "EXIT":
+                if (separate.length != 1) {
+                    System.out.println(menuMsgBundle
+                            .getString("invalid_argument_for_command"));
+                    continue;
+                }
+                client.quit();
+                break;
+
+            case "HOST":
+                if (separate.length != 2) {
+                    System.out.println(menuMsgBundle
+                            .getString("invalid_argument_for_command"));
+                    continue;
+                }
+                String mapName = separate[1];
+                client.host(mapName);
+                break;
+
+            case "UNHOST":
+                if (separate.length != 1) {
+                    System.out.println(menuMsgBundle
+                            .getString("invalid_argument_for_command"));
+                    continue;
+                }
+                client.unhost();
+                break;
+
+            default:
+                System.out.println(menuMsgBundle.getString("unrecognised_command"));
+            }
+        }
+        scanner.close();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean promptForAction() {
-
-        System.out.println(msgBundle.getString("type_in_your_command"));
+    public boolean promptForGameAction() {
+        System.out.println(gameMsgBundle.getString("type_in_your_command"));
         printPrompt();
 
         for (; scanner.hasNextLine(); printPrompt()) {
@@ -126,7 +220,7 @@ public class CLI extends AbstractView {
             case "move":
             case "mv":
                 if (separate.length != 5) {
-                    System.out.println(msgBundle
+                    System.out.println(gameMsgBundle
                             .getString("invalid_argument_for_command"));
                     continue;
                 }
@@ -137,7 +231,7 @@ public class CLI extends AbstractView {
             case "attack":
             case "atk":
                 if (separate.length != 5) {
-                    System.out.println(msgBundle
+                    System.out.println(gameMsgBundle
                             .getString("invalid_argument_for_command"));
                     continue;
                 }
@@ -148,7 +242,7 @@ public class CLI extends AbstractView {
                 break;
             case "info":
                 if (separate.length != 3) {
-                    System.out.println(msgBundle
+                    System.out.println(gameMsgBundle
                             .getString("invalid_argument_for_command"));
                     continue;
                 }
@@ -161,13 +255,24 @@ public class CLI extends AbstractView {
                 break;
             case "end":
                 if (separate.length != 1) {
-                    System.out.println(msgBundle
+                    System.out.println(gameMsgBundle
                             .getString("invalid_argument_for_command"));
                     continue;
                 }
                 return true;
+            case "surrender":
+                if (separate.length != 1) {
+                    System.out.println(gameMsgBundle
+                            .getString("invalid_argument_for_command"));
+                    continue;
+                }
+                // TODO: send to server
+                return true;
+            case "help":
+                if (!printFileContent("kindred/view/cli/gameHelp.txt"))
+                    System.err.println(gameMsgBundle.getString("help_not_found"));
             default:
-                System.out.println(msgBundle.getString("unrecognised_command"));
+                System.out.println(gameMsgBundle.getString("unrecognised_command"));
             }
         }
         scanner.close();
@@ -195,13 +300,14 @@ public class CLI extends AbstractView {
                 positions[i - 1] = Integer.parseInt(separate[i]) - 1;
             }
         } catch (NumberFormatException ex) {
-            System.out.println(msgBundle.getString("position_not_a_number"));
+            System.out.println(gameMsgBundle.getString("position_not_a_number"));
             return null;
         }
 
         for (int i = 1; i < separate.length; i += 2) {
             if (!map.validPosition(positions[i - 1], positions[i])) {
-                System.out.println(msgBundle.getString("position_out_of_bounds"));
+                System.out
+                        .println(gameMsgBundle.getString("position_out_of_bounds"));
                 return null;
             }
         }
@@ -219,5 +325,23 @@ public class CLI extends AbstractView {
     @Override
     public void close() {
         scanner.close();
+    }
+
+    private boolean printFileContent(String filename) {
+        URL url = CLI.class.getResource(filename);
+        if (url == null)
+            return false;
+        File file = new File(url.getPath());
+        Scanner sc;
+        try {
+            sc = new Scanner(file);
+        } catch (FileNotFoundException e) {
+            return false;
+        }
+        while (sc.hasNextLine()) {
+            System.out.println(sc.nextLine());
+        }
+        sc.close();
+        return true;
     }
 }

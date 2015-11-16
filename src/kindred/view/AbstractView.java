@@ -5,6 +5,7 @@ import java.util.ResourceBundle;
 
 import kindred.model.Game;
 import kindred.model.Map;
+import kindred.network.Client;
 
 public abstract class AbstractView {
     /**
@@ -23,9 +24,14 @@ public abstract class AbstractView {
     protected int width;
 
     /**
-     * A ResourceBundle used to get messages in different languages
+     * A ResourceBundle used to get game messages in different languages
      */
-    protected ResourceBundle msgBundle;
+    protected ResourceBundle gameMsgBundle;
+
+    /**
+     * A ResourceBundle used to get menu messages in different languages
+     */
+    protected ResourceBundle menuMsgBundle;
 
     /**
      * The locale used by the program to show messages to the client.
@@ -73,9 +79,12 @@ public abstract class AbstractView {
     /**
      * Prompts the user for an action in the menu (i.e. not while in a room).
      * 
+     * @param client
+     *            the user's client object whose methods will be called
+     * 
      */
 
-    public abstract void promptForMenuAction();
+    public abstract void promptForMenuAction(Client client);
 
     /**
      * Prompts the user for an action in the game and (if the user chooses a
@@ -83,7 +92,7 @@ public abstract class AbstractView {
      * 
      * @return true if the user has finished their turn, false otherwise
      */
-    public abstract boolean promptForAction();
+    public abstract boolean promptForGameAction();
 
     /**
      * Closes the user interface.

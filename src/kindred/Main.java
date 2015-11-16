@@ -1,6 +1,6 @@
 package kindred;
 
-import kindred.model.Client;
+import kindred.network.Client;
 import kindred.view.AbstractView;
 import kindred.view.cli.CLI;
 
@@ -23,7 +23,7 @@ public class Main {
 
         while (thread.isAlive()) {
             String msg = view.askForString("");
-            client.send(msg);
+            // client.send(msg);
         }
     }
 }

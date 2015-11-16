@@ -11,6 +11,7 @@ import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import kindred.network.messages.ClientToServerMessage;
 import kindred.network.messages.ServerToClientMessage;
 
 /**
@@ -20,12 +21,6 @@ import kindred.network.messages.ServerToClientMessage;
  * @author Kindred Team
  */
 class ServerThread extends Thread {
-
-    /**
-     * Name of the file containing information on how the client can interact
-     * with the server.
-     */
-    private final String helpFile = "/kindred/network/help.txt";
 
     /**
      * Client's socket that is connected to the server.
@@ -96,6 +91,7 @@ class ServerThread extends Thread {
      */
     @Override
     public void run() {
+        // TODO: separate producer and consumer
         // Initialize socket input/output objects
         PrintWriter out = null;
         BufferedReader in = null;
@@ -161,54 +157,56 @@ class ServerThread extends Thread {
      *            message to be parsed, received from the client
      */
     private void parse(String message) {
-        // TODO: change the parameter to a ClientToServerMessage object and
-        // handle it
-        String[] splitStr = message.trim().split("\\s+");
-        ServerToClientMessage msg;
-        switch (splitStr[0].toUpperCase()) {
+        ClientToServerMessage receivedMsg = ClientToServerMessage
+                .fromEncodedString(message);
+        String arg = receivedMsg.getArgument();
+        ServerToClientMessage sentMsg;
+        switch (receivedMsg) {
 
         // NICK [nickname] : Sets client's nickname as the specified value.
         // If no argument is given, returns client's nickname.
-        case ("NICK"):
-            if (splitStr.length != 2) {
+        case NICK:
+            if (arg.isEmpty()) {
                 if (nick == null) {
-                    msg = ServerToClientMessage.ERR_NICKNAME_IS_UNDEFINED;
+                    sentMsg = ServerToClientMessage.ERR_NICKNAME_IS_UNDEFINED;
                 } else {
-                    msg = ServerToClientMessage.INFO_NICKNAME;
-                    msg.setArgument(nick);
+                    sentMsg = ServerToClientMessage.INFO_NICKNAME;
+                    sentMsg.setArgument(nick);
                 }
-                queueMessage(socket, msg);
+                queueMessage(socket, sentMsg);
                 return;
             }
-
+            String newNickname = arg;
             // Nickname must contain 3 to 10 alphanumeric characters, the first
             // one strictly being a letter
-            if (!splitStr[1].matches("^[a-zA-Z]\\w{2,9}$")) {
-                msg = ServerToClientMessage.ERR_NICKNAME_IS_INVALID;
-                msg.setArgument(splitStr[1]);
-                queueMessage(socket, msg);
-                return;
-            }
-            if (users.containsKey(splitStr[1])) {
-                msg = ServerToClientMessage.ERR_NICKNAME_IS_IN_USE;
-                msg.setArgument(splitStr[1]);
-                queueMessage(socket, msg);
+            if (!newNickname.matches("^[a-zA-Z]\\w{2,9}$")) {
+                sentMsg = ServerToClientMessage.ERR_NICKNAME_IS_INVALID;
+                sentMsg.setArgument(newNickname);
+                queueMessage(socket, sentMsg);
                 return;
             }
 
-            // Prevents error when changing nickname
+            // Nickname already exists
+            if (users.containsKey(newNickname)) {
+                sentMsg = ServerToClientMessage.ERR_NICKNAME_IS_IN_USE;
+                sentMsg.setArgument(newNickname);
+                queueMessage(socket, sentMsg);
+                return;
+            }
+
+            // After changing the nickname, the old one is deleted
             if (nick != null && users.containsKey(nick))
                 users.remove(nick);
 
             // Sets client's nickname
-            nick = splitStr[1];
+            nick = newNickname;
             users.put(nick, socket);
-            msg = ServerToClientMessage.SUCC_NICKNAME_CHANGED;
-            queueMessage(socket, msg);
+            sentMsg = ServerToClientMessage.SUCC_NICKNAME_CHANGED;
+            queueMessage(socket, sentMsg);
             break;
 
         // MAPS : Returns all available maps
-        case ("MAPS"):
+        case MAPS:
             String maps = "";
             URL url = ServerThread.class.getResource("/kindred/data/map");
             File folder = new File(url.getPath());
@@ -220,57 +218,51 @@ class ServerThread extends Thread {
                     maps += "|" + name;
                 }
             }
-            msg = ServerToClientMessage.INFO_AVAILABLE_MAPS;
+            sentMsg = ServerToClientMessage.INFO_AVAILABLE_MAPS;
             if (maps.length() >= 1)
-                msg.setArgument(maps.substring(1)); // remove initial '|'
-            queueMessage(socket, msg);
+                sentMsg.setArgument(maps.substring(1)); // remove initial '|'
+            queueMessage(socket, sentMsg);
             break;
 
         // ROOMS : Shows all valid rooms in the server
-        case ("ROOMS"):
+        case ROOMS:
             String roomStr = "";
             for (String r : rooms.keySet()) {
                 roomStr += "|" + r + ">" + rooms.get(r);
             }
-            msg = ServerToClientMessage.INFO_AVAILABLE_ROOMS;
+            sentMsg = ServerToClientMessage.INFO_AVAILABLE_ROOMS;
             if (roomStr.length() >= 1)
-                msg.setArgument(roomStr.substring(1)); // remove initial '|'
-            queueMessage(socket, msg);
+                sentMsg.setArgument(roomStr.substring(1)); // remove initial '|'
+            queueMessage(socket, sentMsg);
             break;
 
         // HOST <map> : Creates a room to play on the specified map
-        case ("HOST"):
+        case HOST:
             if (nick == null) {
                 queueMessage(socket, ServerToClientMessage.ERR_UNREGISTERED_USER);
                 return;
             }
-            if (splitStr.length != 2) {
-                msg = ServerToClientMessage.ERR_INVALID_COMMAND_OR_ARGUMENTS;
-                queueMessage(socket, msg);
-                return;
-            }
-
-            String mapName = splitStr[1];
+            String mapName = arg;
             if (mapName.contains("..") || mapName.contains("/"))
                 return;
             url = ServerThread.class.getResource("/kindred/data/map/" + mapName
                     + ".txt");
             if (url == null) {
-                msg = ServerToClientMessage.ERR_MAP_NOT_FOUND;
-                msg.setArgument(mapName);
-                queueMessage(socket, msg);
+                sentMsg = ServerToClientMessage.ERR_MAP_NOT_FOUND;
+                sentMsg.setArgument(mapName);
+                queueMessage(socket, sentMsg);
                 return;
             }
 
             // Creates a new room!
             rooms.put(nick, mapName);
-            msg = ServerToClientMessage.SUCC_HOST;
-            msg.setArgument(mapName);
-            queueMessage(socket, msg);
+            sentMsg = ServerToClientMessage.SUCC_HOST;
+            sentMsg.setArgument(mapName);
+            queueMessage(socket, sentMsg);
             break;
 
         // UNHOST : Removes room if client is hosting one
-        case ("UNHOST"):
+        case UNHOST:
             if (nick == null) {
                 queueMessage(socket, ServerToClientMessage.ERR_UNREGISTERED_USER);
                 return;
@@ -287,26 +279,20 @@ class ServerThread extends Thread {
             break;
 
         // JOIN <nickname> : Connects to a room hosted by the specified user
-        case ("JOIN"):
-            if (splitStr.length != 2) {
-                queueMessage(socket,
-                        ServerToClientMessage.ERR_INVALID_COMMAND_OR_ARGUMENTS);
-                return;
-            }
-
+        case JOIN:
             // Unregistered user cannot join a room
             if (nick == null) {
                 queueMessage(socket, ServerToClientMessage.ERR_UNREGISTERED_USER);
                 return;
             }
 
-            String host = splitStr[1];
+            String host = arg;
 
             // Non-existent room
             if (!rooms.containsKey(host)) {
-                msg = ServerToClientMessage.ERR_ROOM_NOT_FOUND;
-                msg.setArgument(host);
-                queueMessage(socket, msg);
+                sentMsg = ServerToClientMessage.ERR_ROOM_NOT_FOUND;
+                sentMsg.setArgument(host);
+                queueMessage(socket, sentMsg);
                 return;
             }
 
@@ -323,14 +309,14 @@ class ServerThread extends Thread {
 
             // Lets the guest user know that they have successfully entered a
             // room
-            msg = ServerToClientMessage.SUCC_JOIN;
-            msg.setArgument(host);
-            queueMessage(socket, msg);
+            sentMsg = ServerToClientMessage.SUCC_JOIN;
+            sentMsg.setArgument(host);
+            queueMessage(socket, sentMsg);
 
             // Let the host user know that someone has entered their room
-            msg = ServerToClientMessage.INFO_SOMEONE_ENTERED_ROOM;
-            msg.setArgument(nick);
-            queueMessage(users.get(host), msg);
+            sentMsg = ServerToClientMessage.INFO_SOMEONE_ENTERED_ROOM;
+            sentMsg.setArgument(nick);
+            queueMessage(users.get(host), sentMsg);
 
             // Let the host client know that they will be the second player
             queueMessage(socket, ServerToClientMessage.INFO_SECOND_PLAYER);
@@ -339,13 +325,13 @@ class ServerThread extends Thread {
             queueMessage(users.get(host), ServerToClientMessage.INFO_FIRST_PLAYER);
 
             // Let both players know which map will be used
-            msg = ServerToClientMessage.INFO_MAP;
-            msg.setArgument(rooms.get(host));
-            queueMessage(socket, msg);
-            queueMessage(users.get(host), msg);
+            sentMsg = ServerToClientMessage.INFO_MAP;
+            sentMsg.setArgument(rooms.get(host));
+            queueMessage(socket, sentMsg);
+            queueMessage(users.get(host), sentMsg);
 
             // Create the room
-            Room room = new Room(splitStr[1], nick);
+            Room room = new Room(host, nick);
 
             // Remove room from the list of the available rooms
             rooms.remove(host);
@@ -355,10 +341,9 @@ class ServerThread extends Thread {
             break;
 
         // QUIT : Makes client leave the server
-        case ("QUIT"):
-        case ("EXIT"):
+        case QUIT:
             quitServer = true;
-            queueMessage(socket, ServerToClientMessage.INFO_DISCONNECTED);
+            queueMessage(socket, ServerToClientMessage.SUCC_LEAVE);
             break;
 
         // Something not understood

@@ -91,9 +91,6 @@ public class Map {
         if (unit == null || unit.getTeam() != team)
             return false;
 
-        // TODO: Check Player the unit belongs to
-
-        // TODO: If necessary, change name of Unit method
         int move = unit.getMove() - tiles[xi][yi].getTerrain().getMovePenalty();
         if (move <= 0)
             move = 1;

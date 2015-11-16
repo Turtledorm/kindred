@@ -1,5 +1,6 @@
 package kindred.view.gui;
 
+import kindred.network.Client;
 import kindred.view.AbstractView;
 
 public class GUI extends AbstractView {
@@ -18,12 +19,12 @@ public class GUI extends AbstractView {
     }
 
     @Override
-    public void promptForMenuAction() {
+    public void promptForMenuAction(Client client) {
 
     }
 
     @Override
-    public boolean promptForAction() {
+    public boolean promptForGameAction() {
         return false;
     }
 
