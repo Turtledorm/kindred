@@ -185,11 +185,9 @@ public class CLI extends AbstractView {
                             .getString("invalid_argument_for_command"));
                     continue;
                 }
-                if (!printFileContent("kindred/view/cli/menuHelp.txt")) {
+                if (!printFileContent("/kindred/view/cli/menuHelp.txt"))
                     System.err.println(menuMsgBundle.getString("help_not_found"));
-                    continue;
-                }
-                break;
+                continue;
 
             case "QUIT":
             case "EXIT":
@@ -296,11 +294,9 @@ public class CLI extends AbstractView {
                 // TODO: send to server
                 return true;
             case "help":
-                if (!printFileContent("kindred/view/cli/gameHelp.txt")) {
+                if (!printFileContent("/kindred/view/cli/gameHelp.txt"))
                     System.err.println(gameMsgBundle.getString("help_not_found"));
-                    continue;
-                }
-                break;
+                continue;
             default:
                 System.out.println(gameMsgBundle.getString("unrecognised_command"));
                 continue;
