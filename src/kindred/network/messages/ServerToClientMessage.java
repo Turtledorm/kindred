@@ -1,6 +1,5 @@
 package kindred.network.messages;
 
-import kindred.model.GameAction;
 
 /**
  * Contains an enum number for every type of message the Server can send to the
@@ -130,7 +129,7 @@ public enum ServerToClientMessage {
 
     /**
      * Game-related command that the Server only passes forward to the Client.
-     * See {@link GameAction} class for more info.
+     * See {@link kindred.model.GameAction} class for more info.
      */
     GAME_ACTION;
 

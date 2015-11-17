@@ -5,8 +5,6 @@ import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Scanner;
 
-import kindred.model.TerrainFileParser;
-
 /**
  * Provides a method to parse a file that contains the description of Terrains
  * in a command-line user interface.
@@ -14,13 +12,13 @@ import kindred.model.TerrainFileParser;
  * @author Kindred Team
  */
 
-public class CLITerrainParser {
+public final class CLITerrainParser {
 
     /**
-     * Do not instantiate!
+     * Do not instantiate.
      */
     private CLITerrainParser() {
-        // Do not instantiate!
+        // Do not instantiate.
     }
 
     /**
@@ -31,7 +29,7 @@ public class CLITerrainParser {
      * of its background colour separated by whitespaces.
      * <p>
      * The name of the Terrain must be exactly the same as the one in the file
-     * parsed by {@link TerrainFileParser}.
+     * parsed by {@link kindred.model.TerrainFileParser}.
      * <p>
      * The name of the colour must be exactly one of the ones defined in the
      * {@link Colour} enum.

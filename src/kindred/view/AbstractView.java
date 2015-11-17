@@ -10,7 +10,10 @@ import kindred.model.Map;
 import kindred.network.Client;
 import kindred.network.messages.ServerToClientMessage;
 
-// TODO: Check Javadoc for this class
+/**
+ * @author Kindred Team
+ * 
+ */
 public abstract class AbstractView {
     /**
      * The game itself.
@@ -88,8 +91,6 @@ public abstract class AbstractView {
     /**
      * Defines the Map of the game.
      * 
-     * @param map
-     *            the Map of the game
      */
     public void setGame(Game game) {
         this.game = game;
@@ -133,12 +134,6 @@ public abstract class AbstractView {
      */
     public abstract void close();
 
-    /**
-     * 
-     * @param key
-     * @param arg
-     * @return
-     */
     protected String format(ResourceBundle rb, String key, Object[] arg) {
         String pattern = rb.getString(key);
         MessageFormat formatter = new MessageFormat(pattern, locale);

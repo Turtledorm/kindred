@@ -8,9 +8,14 @@ package kindred.network;
 public class Room {
 
     /**
-     * Both player's nicknames.
+     * Player A's nickname.
      */
-    public String nickA, nickB;
+    public String nickA;
+
+    /**
+     * Player B's nickname.
+     */
+    public String nickB;
 
     /**
      * Constructs a Room.
@@ -35,7 +40,7 @@ public class Room {
      *         otherwise
      */
     public boolean hasNick(String nick) {
-        return (nick.equals(nickA) || nick.equals(nickB));
+        return nick.equals(nickA) || nick.equals(nickB);
     }
 
     /**

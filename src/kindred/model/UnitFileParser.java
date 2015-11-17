@@ -11,13 +11,12 @@ import java.util.Scanner;
  * @author Kindred team
  */
 
-public class UnitFileParser {
+public final class UnitFileParser {
 
     /**
-     * Not to be instantiated, since this class is purely static!
+     * Not to be instantiated, since this class is purely static.
      */
     private UnitFileParser() {
-        // Do not instantiate!
     }
 
     /**

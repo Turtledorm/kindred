@@ -104,7 +104,7 @@ public class Battle {
             hitChance = (-20 * hitChance) + 80;
         }
 
-        return (randomInteger(1, 100) <= (int) hitChance);
+        return randomInteger(1, 100) <= (int) hitChance;
     }
 
     /**
