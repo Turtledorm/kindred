@@ -5,13 +5,15 @@ import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Scanner;
 
+import kindred.model.TerrainFileParser;
+
 /**
  * Provides a method to parse a file that contains the description of a terrain
  * in a command-line user interface.
  * 
  * @author Kindred Team
  */
- 
+
 public class CLITerrainParser {
 
     /**
@@ -21,10 +23,10 @@ public class CLITerrainParser {
     }
 
     /**
-     * Parses a file that describes the display of a terrain in a terminal
+     * Parses a file that describes the display of a Terrain in a terminal
      * interface.
      * <p>
-     * The file must have lines contained the name of each terrain and the name
+     * The file must have lines containing the name of each Terrain and the name
      * of its background colour separated by whitespaces.
      * <p>
      * The name of the terrain must be exactly the same as the one in the file
@@ -34,9 +36,11 @@ public class CLITerrainParser {
      * {@link Colour} enum.
      * 
      * @param filename
-     * @return a hashmap mapping each terrain name to a colour object
-     *         representing its background colour
+     *            name of the file informing colours for each Terrain
+     * @return HashMap mapping each Terrain name to a colour object representing
+     *         its background colour
      * @throws FileNotFoundException
+     *             if the specified file is not found
      */
     public static HashMap<String, Colour> parseFile(String filename)
             throws FileNotFoundException {

@@ -32,14 +32,15 @@ enum Colour {
     LIGHT_CYAN("1;36"),
     WHITE("1;37");
 
+    // TODO: Check exactly what are the below value/values
     private final String value;
     private static final Colour[] VALUES = values();
 
     /**
      * Initialises a new colour from its value.
      * 
-     * @param the
-     *            inner part of the ANSI escape sequence of this colour
+     * @param value
+     *            the inner part of the ANSI escape sequence of this colour
      */
     Colour(String value) {
         this.value = value;

@@ -2,9 +2,9 @@ package kindred.view.cli;
 
 /**
  * 
- * Represents an atom of a matrix to be shown in a command-line user interface.
+ * Represents an Atom of a matrix to be shown in a command-line user interface.
  * <p>
- * Each atom contains a caracter, a background colour and a foreground colour.
+ * Each Atom contains a Character, a background colour and a foreground colour.
  * 
  * @author Kindred Team
  * 
@@ -12,22 +12,22 @@ package kindred.view.cli;
 class Atom {
 
     /**
-     * the character of this atom
+     * Character of this Atom.
      */
     public final char character;
 
     /**
-     * the background colour of this atom
+     * Background colour of this Atom.
      */
     public final Colour backgroundColour;
 
     /**
-     * the foreground colour of this atom
+     * Foreground colour of this Atom.
      */
     public final Colour foregroundColour;
 
     /**
-     * Instantiates an atom.
+     * Instantiates an Atom.
      * 
      * @param character
      *            the character of the atom

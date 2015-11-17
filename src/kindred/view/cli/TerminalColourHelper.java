@@ -12,6 +12,7 @@ public class TerminalColourHelper {
      * Do not instantiate!
      */
     private TerminalColourHelper() {
+        // Do not instantiate!
     }
 
     /**
@@ -38,12 +39,12 @@ public class TerminalColourHelper {
     }
 
     /**
-     * Prints a matrix of atoms. Each atom is printed with its corresponding
+     * Prints a matrix of Atoms. Each Atom is printed with its corresponding
      * character using their background and foreground colours. Additionally,
      * column and row headers are printed to show their coordinates to the user.
      * 
      * @param atoms
-     *            a matrix of atoms to be printed
+     *            a matrix of Atoms to be printed
      */
     public static void drawMatrix(Atom[][] atoms) {
         Integer h = atoms.length;
@@ -53,6 +54,7 @@ public class TerminalColourHelper {
         String rowLabelFormat = " %" + hLength + "d ";
         String emptyCornerFormat = " %" + hLength + "s ";
         int power = (int) Math.pow(10, wLength - 1);
+
         for (int d = 0; d < wLength; d++) {
             boolean onlyZero = true;
             System.out.printf(emptyCornerFormat, "");
@@ -68,6 +70,7 @@ public class TerminalColourHelper {
             System.out.println();
             power /= 10;
         }
+
         for (int i = 0; i < h; i++) {
             System.out.printf(String.format(rowLabelFormat, 1 + i));
             for (int j = 0; j < w; j++) {
