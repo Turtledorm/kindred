@@ -24,6 +24,16 @@ public class Map {
     private final int tileWidth;
 
     /**
+     * Number of units that the first player has on the Map.
+     */
+    private int numUnitsA;
+
+    /**
+     * Number of units that the second player has on the Map.
+     */
+    private int numUnitsB;
+
+    /**
      * Calculates results of battles between Units.
      */
     private final Battle battle;
@@ -44,6 +54,7 @@ public class Map {
         this.tileHeight = tileHeight;
         this.tileWidth = tileWidth;
         this.battle = new Battle();
+        numUnitsA = numUnitsB = 0;
     }
 
     /**
@@ -81,6 +92,11 @@ public class Map {
             return false;
 
         tiles[x][y].setUnit(unit);
+        if (unit.getTeam() == 1)
+            numUnitsA++;
+        else
+            numUnitsB++;
+
         return true;
     }
 
@@ -185,6 +201,35 @@ public class Map {
     }
 
     /**
+     * Directly causes the specified amount of damage to the Unit on Tile (x, y)
+     * of the Map. Supposes that a Unit exists on the specified Tile. Returns
+     * {@code true} if the Unit is dead, i.e., has no more hit points left, or
+     * {@code false} otherwise.
+     * 
+     * @param x
+     *            x coordinate of the Unit that will take damage
+     * @param y
+     *            y coordinate of the Unit that will take damage
+     * @param damage
+     *            damage to be caused to the Unit
+     * @return {@code true}, if the Unit is dead, or {@code false} otherwise
+     */
+    public boolean causeDamage(int x, int y, int damage) {
+        Unit unit = getTile(x, y).getUnit();
+        if (unit == null)
+            return false;
+        unit.loseHp(damage);
+        boolean isDead = unit.getCurrentHp() <= 0;
+        if (isDead) {
+            if (unit.getTeam() == 1)
+                numUnitsA--;
+            else
+                numUnitsB--;
+        }
+        return isDead;
+    }
+
+    /**
      * Returns the Tile on position (x, y).
      * 
      * @param x
@@ -237,6 +282,24 @@ public class Map {
     }
 
     /**
+     * Returns the remaining number of Units that player A has on the Map.
+     * 
+     * @return the number of Units of player A
+     */
+    public int getNumUnitsA() {
+        return numUnitsA;
+    }
+
+    /**
+     * Returns the remaining number of Units that player B has on the Map.
+     * 
+     * @return the number of Units of player B
+     */
+    public int getNumUnitsB() {
+        return numUnitsB;
+    }
+
+    /**
      * Returns a String containing information about the Unit and Terrain on
      * Tile (x, y).
      * 
@@ -263,10 +326,9 @@ public class Map {
             message += "\n Agi: " + unit.getAtk();
         }
         message += "\n" + tile.getTerrain().getName();
-        message += String.format(" (%+d%% Def, %+d%% Agi, -%d Move)",
-                tile.getTerrain().getDefenseModifier(),
-                tile.getTerrain().getAgilityModifier(),
-                tile.getTerrain().getMovePenalty());
+        message += String.format(" (%+d%% Def, %+d%% Agi, -%d Move)", tile
+                .getTerrain().getDefenseModifier(), tile.getTerrain()
+                .getAgilityModifier(), tile.getTerrain().getMovePenalty());
 
         return message;
     }

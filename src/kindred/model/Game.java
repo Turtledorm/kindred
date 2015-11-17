@@ -3,9 +3,6 @@ package kindred.model;
 import java.io.FileNotFoundException;
 import java.util.HashSet;
 
-import kindred.view.AbstractView;
-
-//TODO: Check Javadoc for this class
 /**
  * Represents a game match where two Players battle against each other.
  * 
@@ -14,43 +11,29 @@ import kindred.view.AbstractView;
 public class Game {
 
     /**
-     * Map played by both Players.
-     */
-    private Map map;
-
-    /**
      * Name of the file containing valid Terrain types.
      */
     private final String terrainFile = "/kindred/data/terrain/terrain.txt";
 
     /**
-     * ID for the Player's Units.
+     * Map played by both Players.
+     */
+    private Map map;
+
+    /**
+     * ID for the user, identifies which Units are under their control.
      */
     private final int team;
 
     /**
-     * Number of Units remaining for player A.
-     */
-    private int playerAUnits; // TODO: Read this number
-
-    /**
-     * Number of Units remaining for Player B.
-     */
-    private int playerBUnits;
-
-    /**
-     * 
+     * HashSet for all Units that have moved this turn.
      */
     private HashSet<Unit> unitsThatMoved;
 
     /**
-     * 
+     * HashSet for all Units that have attacked this turn.
      */
     private HashSet<Unit> unitsThatAttacked;
-
-    private boolean readyA = false;
-
-    private boolean readyB = false;
 
     /**
      * Controls which Player is playing at the moment.
@@ -72,11 +55,12 @@ public class Game {
      *            playerB's name
      * @param mapFile
      *            name of the file containing Map to be played on
-     * @param view
-     *            the user interface
+     * @param team
+     *            user's ID representing which team he will play on
      */
-    public Game(String nameA, String nameB, String mapFile, int team,
-            AbstractView view) {
+    public Game(String nameA, String nameB, String mapFile, int team) {
+        this.team = team;
+
         try {
             map = MapFileParser.parseFile(mapFile,
                     TerrainFileParser.parseFile(terrainFile));
@@ -88,11 +72,29 @@ public class Game {
         unitsThatMoved = new HashSet<Unit>();
         unitsThatAttacked = new HashSet<Unit>();
 
-        this.team = team;
         turn = 1;
         isOver = false;
     }
 
+    /**
+     * Moves Unit from the specified team on Tile (xi, yi) to Tile (xf, yf) on
+     * this Map during the current player's turn. Supposes that all given
+     * coordinates are valid, i.e., not outside borders of this Map.
+     * <p>
+     * Returns {@code true} if movement was successful or {@code false}
+     * otherwise.
+     * 
+     * @param xi
+     *            x coordinate of the Unit to be moved
+     * @param yi
+     *            y coordinate of the Unit to be moved
+     * @param xf
+     *            x coordinate of the destination Tile
+     * @param yf
+     *            y coordinate of the destination Tile
+     * @return {@code true}, if movement was successful, or {@code false}
+     *         otherwise
+     */
     public boolean move(int xi, int yi, int xf, int yf) {
         if (turn == team) {
             Unit unit = map.getTile(xi, yi).getUnit();
@@ -107,6 +109,27 @@ public class Game {
         return false;
     }
 
+    /**
+     * Makes the Unit on Tile (xi, yi) attack the Unit on Tile (xf, yf), if
+     * possible, on the current player's turn. Returns an integer representing
+     * damage:
+     * <ul>
+     * <li>If damage = -1, then the attack wasn't possible to be done.</li>
+     * <li>If damage &ge; 0, then it represents the damage received by the
+     * defending Unit.</li>
+     * </ul>
+     * 
+     * @param xi
+     *            x coordinate of the attacker
+     * @param yi
+     *            y coordinate of the attacker
+     * @param xf
+     *            x coordinate of the defender
+     * @param yf
+     *            y coordinate of the defender
+     * @return damage received by the defending unit if the attack succeeded, or
+     *         -1 otherwise
+     */
     public int attack(int xi, int yi, int xf, int yf) {
         if (turn == team) {
             Unit unit = map.getTile(xi, yi).getUnit();
@@ -123,35 +146,58 @@ public class Game {
         return -1;
     }
 
+    /**
+     * Directly causes the specified amount of damage to the Unit on Tile (x, y)
+     * of the Map. Supposes that a Unit exists on the specified Tile. Returns
+     * {@code true} if the Unit is dead, i.e., has no more hit points left, or
+     * {@code false} otherwise.
+     * 
+     * @param x
+     *            x coordinate of the Unit that will take damage
+     * @param y
+     *            y coordinate of the Unit that will take damage
+     * @param damage
+     *            damage to be caused to the Unit
+     * @return {@code true}, if the Unit is dead, or {@code false} otherwise
+     */
     public boolean causeDamage(int x, int y, int damage) {
-        Unit unit = map.getTile(x, y).getUnit();
-        if (unit == null)
-            return false;
-        unit.loseHp(damage);
-        boolean isDead = unit.getCurrentHp() <= 0;
-        if (isDead) {
-            if (unit.getTeam() == 1)
-                playerAUnits--;
-            else
-                playerBUnits--;
-            if (Math.min(playerAUnits, playerBUnits) <= 0)
-                isOver = true;
-        }
+        boolean isDead = map.causeDamage(x, y, damage);
+        if (Math.min(map.getNumUnitsA(), map.getNumUnitsB()) <= 0)
+            isOver = true;
         return isDead;
     }
 
+    /**
+     * Returns the Map being played in the Game.
+     * 
+     * @return the Map being played in the Game
+     */
     public Map getMap() {
         return map;
     }
 
+    /**
+     * Makes the Game end with one of the players forfeiting the match.
+     */
     public void surrender() {
         isOver = true;
     }
 
+    /**
+     * Ends the current player's turn, letting the next user take action.
+     */
     public void endTurn() {
         turn ^= 0x03; // 1 <-> 2
+        unitsThatMoved.clear();
+        unitsThatAttacked.clear();
     }
 
+    /**
+     * Returns {@code true} if the Game has ended, i.e., one of the players lost
+     * all of their Units, or {@code false} otherwise.
+     * 
+     * @return {@code true} if the Game ended, or {@code false} otherwise
+     */
     public boolean isOver() {
         return isOver;
     }

@@ -86,7 +86,7 @@ public class Battle {
      *            agility of the defending Unit, already considering the Terrain
      *            modifier
      * 
-     * @return{@code true} if the attack succeeded, or{@code false} otherwise
+     * @return {@code true} if the attack succeeded, or {@code false} otherwise
      */
     private boolean checkHit(double attackerAgi, double defenderAgi) {
         if (attackerAgi >= 2 * defenderAgi)

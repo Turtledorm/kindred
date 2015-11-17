@@ -31,6 +31,9 @@ public class Client implements Runnable {
      */
     private Socket socket;
 
+    /**
+     * IP of the Server that the Client will connect to.
+     */
     private String serverIP;
 
     /**
@@ -164,7 +167,7 @@ public class Client implements Runnable {
                     team = Integer.parseInt(parts[1]);
                     String mapFilename = parts[2];
                     game = new Game(nickname, opponent, "/kindred/data/map/"
-                            + mapFilename + ".txt", team, view);
+                            + mapFilename + ".txt", team);
                     view.setGame(game);
                     break;
                 case SUCC_LEAVE:

@@ -3,6 +3,7 @@ package kindred.view.cli;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 import java.util.Scanner;
@@ -10,11 +11,11 @@ import java.util.Scanner;
 import kindred.model.Game;
 import kindred.model.GameAction;
 import kindred.model.Map;
+import kindred.model.Unit;
 import kindred.network.Client;
 import kindred.network.messages.ServerToClientMessage;
 import kindred.view.AbstractView;
 
-// TODO: Check Javadoc for this class
 /**
  * Provides a command-line user interface (CLI) to interact with the user
  * through a terminal.
@@ -41,7 +42,7 @@ public class CLI extends AbstractView {
     /**
      * Name of the file containing the symbols for each Unit.
      */
-    private final String symbolFile = "/kindred/data/terrain/unitSymbols.txt";
+    private final String symbolFile = "/kindred/data/unit/unitSymbol.txt";
 
     /**
      * Maps names of Units to their corresponding Character symbol.
@@ -90,37 +91,26 @@ public class CLI extends AbstractView {
     }
 
     @Override
-    public void displayMap() {
-        Map map = game.getMap();
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                if (!colourTypes.containsKey(map.getTile(i, j).getTerrain()
-                        .getName())) {
-                    System.err.println("Terrain not found in CLI colour file '"
-                            + map.getTile(i, j).getTerrain().getName() + "'");
-                    // new MessageFormat(
-                    // msgBundle.getString("terrain_colour_not_found"), locale);
-                    System.exit(1);
-                }
-                Colour foregroundColour = Colour.LIGHT_RED;
-                Colour backgroundColour = colourTypes.get(map.getTile(i, j)
-                        .getTerrain().getName());
-                char character = symbolTypes.get(map.getTile(i, j).getUnit());
-                atomMap[i][j] = new Atom(character, backgroundColour,
-                        foregroundColour);
-            }
-        }
-
-        TerminalColourHelper.drawMatrix(atomMap);
-    }
-
-    @Override
     public String promptForIP() {
         System.out.println(menuMsgBundle.getString("enter_ip"));
         if (scanner.hasNextLine())
             return scanner.nextLine().trim();
         else
             return null;
+    }
+
+    @Override
+    public void connectionResult(boolean success, String serverIP) {
+        String key = success ? "connection_established" : "connection_error";
+        String message = format(menuMsgBundle, key, new Object[] { serverIP });
+        System.out.println(message);
+    }
+
+    @Override
+    public void connectionLost() {
+        System.out
+                .println(format(menuMsgBundle, "connection_lost", new Object[] {}));
+
     }
 
     @Override
@@ -315,80 +305,6 @@ public class CLI extends AbstractView {
         return false;
     }
 
-    /**
-     * Parses an array of strings containing numbers, except for the first
-     * element, which is supposedly a command (ignored by this method). As the
-     * numbers represent positions (row, column), there must be an even quantity
-     * of numbers. This method also checks if the position is valid (i.e., is
-     * inside the bounds of the map)
-     * 
-     * @param separate
-     *            an array of strings containing anything in the first position
-     *            and an even quantity of numbers in the rest of it
-     * @return an array of {@code int}s representing the positions given in the
-     *         strings of {@code separate}, or {@code null} in case of errors
-     */
-    private int[] parsePosition(String[] separate) {
-        Map map = game.getMap();
-        int[] positions = new int[separate.length - 1];
-        try {
-            for (int i = 1; i < separate.length; i++) {
-                positions[i - 1] = Integer.parseInt(separate[i]) - 1;
-            }
-        } catch (NumberFormatException ex) {
-            System.out.println(gameMsgBundle.getString("position_not_a_number"));
-            return null;
-        }
-
-        for (int i = 1; i < separate.length; i += 2) {
-            if (!map.validPosition(positions[i - 1], positions[i])) {
-                System.out
-                        .println(gameMsgBundle.getString("position_out_of_bounds"));
-                return null;
-            }
-        }
-
-        return positions;
-    }
-
-    /**
-     * Displays a prompt message to the user.
-     */
-    private static void printPrompt() {
-        System.out.print(">> ");
-    }
-
-    @Override
-    public void close() {
-        System.out.println("\n...");
-        scanner.close();
-    }
-
-    private boolean printFileContent(String filename) {
-        URL url = CLI.class.getResource(filename);
-        if (url == null)
-            return false;
-        File file = new File(url.getPath());
-        Scanner sc;
-        try {
-            sc = new Scanner(file);
-        } catch (FileNotFoundException e) {
-            return false;
-        }
-        while (sc.hasNextLine()) {
-            System.out.println(sc.nextLine());
-        }
-        sc.close();
-        return true;
-    }
-
-    @Override
-    public void connectionResult(boolean success, String serverIP) {
-        String key = success ? "connection_established" : "connection_error";
-        String message = format(menuMsgBundle, key, new Object[] { serverIP });
-        System.out.println(message);
-    }
-
     @Override
     public void remoteEvent(ServerToClientMessage msg) {
         String argument = msg.getArgument();
@@ -473,12 +389,12 @@ public class CLI extends AbstractView {
             break;
         case INFO_SOMEONE_ENTERED_ROOM:
             key = "someone_entered_room";
-            arg = new Object[] { argument };
+            arg = new Object[] { argument.split("\\|")[0] };
             complement = "\n" + gameStartedMessage(argument);
             break;
         case SUCC_JOIN:
             key = "successfully_joined_room";
-            arg = new Object[] { argument };
+            arg = new Object[] { argument.split("\\|")[0] };
             complement = "\n" + gameStartedMessage(argument);
             break;
         case SUCC_LEAVE:
@@ -521,18 +437,126 @@ public class CLI extends AbstractView {
         System.out.println(format(menuMsgBundle, key, arg) + complement);
     }
 
+    @Override
+    public void displayMap() {
+        Map map = game.getMap();
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                if (!colourTypes.containsKey(map.getTile(i, j).getTerrain()
+                        .getName())) {
+                    System.err.println(new MessageFormat(gameMsgBundle
+                            .getString("terrain_colour_not_found"), locale));
+                    System.exit(1);
+                }
+                Unit unit = map.getTile(i, j).getUnit();
+                char character;
+                Colour backgroundColour = colourTypes.get(map.getTile(i, j)
+                        .getTerrain().getName());
+                Colour foregroundColour;
+                if (unit == null) {
+                    foregroundColour = Colour.RESET;
+                    character = ' ';
+                } else {
+                    foregroundColour = unit.getTeam() == 1 ? Colour.LIGHT_RED
+                            : Colour.LIGHT_BLUE;
+                    character = symbolTypes.get(unit.getName());
+                }
+                atomMap[i][j] = new Atom(character, backgroundColour,
+                        foregroundColour);
+            }
+        }
+
+        TerminalColourHelper.drawMatrix(atomMap);
+    }
+
+    @Override
+    public void close() {
+        System.out.println("\n...");
+        scanner.close();
+    }
+
+    /**
+     * Parses an array of strings containing numbers, except for the first
+     * element, which is supposedly a command (ignored by this method). As the
+     * numbers represent positions (row, column), there must be an even quantity
+     * of numbers. This method also checks if the position is valid (i.e., is
+     * inside the bounds of the map)
+     * 
+     * @param separate
+     *            an array of strings containing anything in the first position
+     *            and an even quantity of numbers in the rest of it
+     * @return an array of {@code int}s representing the positions given in the
+     *         strings of {@code separate}, or {@code null} in case of errors
+     */
+    private int[] parsePosition(String[] separate) {
+        Map map = game.getMap();
+        int[] positions = new int[separate.length - 1];
+        try {
+            for (int i = 1; i < separate.length; i++) {
+                positions[i - 1] = Integer.parseInt(separate[i]) - 1;
+            }
+        } catch (NumberFormatException ex) {
+            System.out.println(gameMsgBundle.getString("position_not_a_number"));
+            return null;
+        }
+
+        for (int i = 1; i < separate.length; i += 2) {
+            if (!map.validPosition(positions[i - 1], positions[i])) {
+                System.out
+                        .println(gameMsgBundle.getString("position_out_of_bounds"));
+                return null;
+            }
+        }
+
+        return positions;
+    }
+
+    /**
+     * Displays a prompt message to the user.
+     */
+    private static void printPrompt() {
+        System.out.print(">> ");
+    }
+
+    /**
+     * Reads and prints content of the specified file.
+     * 
+     * @param filename
+     *            name of the file to be printed to the user
+     * 
+     * @return {@code true} if successful, or {@code false} otherwise
+     */
+    private boolean printFileContent(String filename) {
+        URL url = CLI.class.getResource(filename);
+        if (url == null)
+            return false;
+        File file = new File(url.getPath());
+        Scanner sc;
+        try {
+            sc = new Scanner(file);
+        } catch (FileNotFoundException e) {
+            return false;
+        }
+        while (sc.hasNextLine()) {
+            System.out.println(sc.nextLine());
+        }
+        sc.close();
+        return true;
+    }
+
+    /**
+     * Returns a message telling the user that the game has started.
+     * 
+     * @param argument
+     *            pipe-separated String containing the opponent's name, the
+     *            user's team identifier (1 or 2) and the map name
+     * @return the String to be printed
+     */
     private String gameStartedMessage(String argument) {
         String[] parts = argument.split("\\|");
         Integer playerNo = Integer.parseInt(parts[1]);
         String mapName = parts[2];
         Object[] arg = new Object[] { playerNo, mapName };
         return format(menuMsgBundle, "game_start", arg);
-    }
-
-    @Override
-    public void connectionLost() {
-        System.out
-                .println(format(menuMsgBundle, "connection_lost", new Object[] {}));
-
     }
 }

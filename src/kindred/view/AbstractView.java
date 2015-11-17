@@ -11,8 +11,9 @@ import kindred.network.Client;
 import kindred.network.messages.ServerToClientMessage;
 
 /**
- * @author Kindred Team
+ * Abstract class for a user interaction.
  * 
+ * @author Kindred Team
  */
 public abstract class AbstractView {
     /**
@@ -89,8 +90,10 @@ public abstract class AbstractView {
     public abstract String askForString(String message);
 
     /**
-     * Defines the Map of the game.
+     * Defines the Game during which this class will interact with the user.
      * 
+     * @param game
+     *            the Game during which this class will interact with the user.
      */
     public void setGame(Game game) {
         this.game = game;
@@ -100,14 +103,28 @@ public abstract class AbstractView {
     }
 
     /**
-     * Displays the Map to the user.
-     */
-    public abstract void displayMap();
-
-    /**
-     * Prompts the user for an IP.
+     * Prompts the user for the server IP.
+     * 
+     * @return the server IP
      */
     public abstract String promptForIP();
+
+    /**
+     * Informs the user whether the connection to the Server was successful or
+     * not.
+     * 
+     * @param success
+     *            {@code true} if the connection was successful or {@code false}
+     *            otherwise
+     * @param serverIP
+     *            the server IP
+     */
+    public abstract void connectionResult(boolean success, String serverIP);
+
+    /**
+     * Informs the user that the connection to the Server has been lost.
+     */
+    public abstract void connectionLost();
 
     /**
      * Prompts the user for an action in the menu, i.e., while not in a room.
@@ -130,19 +147,38 @@ public abstract class AbstractView {
     public abstract boolean promptForGameAction(Client client);
 
     /**
-     * Closes the user interface.
+     * Describes a received message from the server to the client.
+     * 
+     * @param msg
+     *            message received from the server
      */
-    public abstract void close();
+    public abstract void remoteEvent(ServerToClientMessage msg);
 
+    /**
+     * Displays the Map to the user.
+     */
+    public abstract void displayMap();
+
+    /**
+     * Retrieves a message from the ResourceBundle language according to the
+     * specified key and its arguments.
+     * 
+     * @param rb
+     *            the ResourceBundle containing messages for a certain language
+     * @param key
+     *            key to access the language message
+     * @param arg
+     *            arguments for the specified key
+     * @return the formatted String
+     */
     protected String format(ResourceBundle rb, String key, Object[] arg) {
         String pattern = rb.getString(key);
         MessageFormat formatter = new MessageFormat(pattern, locale);
         return formatter.format(arg);
     }
 
-    public abstract void connectionResult(boolean success, String serverIP);
-
-    public abstract void remoteEvent(ServerToClientMessage msg);
-
-    public abstract void connectionLost();
+    /**
+     * Closes the user interface.
+     */
+    public abstract void close();
 }
