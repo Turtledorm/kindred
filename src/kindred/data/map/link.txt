@@ -1,1 +1,0 @@
-/home/bcc/cyruss/Documents/Projects/kindred/src/kindred/data/map/simpleMap.txt
