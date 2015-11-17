@@ -74,6 +74,9 @@ public class Server implements Runnable {
 
     /**
      * Starts a Server.
+     * 
+     * @param args
+     *            not used
      */
     public static void main(String args[]) {
         try {

@@ -373,7 +373,7 @@ class ServerThread extends Thread {
      * @param socket
      *            Client's socket whose message queue will receive the message
      *            to be sent
-     * @param message
+     * @param msg
      *            message to be queued
      */
     private void queueMessage(Socket socket, ServerToClientMessage msg) {

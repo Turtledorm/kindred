@@ -13,6 +13,7 @@ import kindred.network.Client;
 import kindred.network.messages.ServerToClientMessage;
 import kindred.view.AbstractView;
 
+// TODO: Check Javadoc for this class
 /**
  * Provides a command-line user interface (CLI) to interact with the user
  * through a terminal.

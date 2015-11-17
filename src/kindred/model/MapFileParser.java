@@ -22,7 +22,7 @@ public class MapFileParser {
 
     /**
      * Parses a given file containing information about a Map. Also uses a
-     * Character->Terrain HashMap to understand valid Terrains for the Map.
+     * Character to Terrain HashMap to understand valid Terrains for the Map.
      * <p>
      * Creates and returns a Map, according to the information contained in the
      * file.

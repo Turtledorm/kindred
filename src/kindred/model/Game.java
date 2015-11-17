@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 
 import kindred.view.AbstractView;
 
+//TODO: Check Javadoc for this class
 /**
  * Represents a game match where two Players battle against each other.
  * 

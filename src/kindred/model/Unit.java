@@ -31,6 +31,8 @@ public class Unit {
      *            the Unit's name
      * @param attribute
      *            the Unit's attributes
+     * @param team
+     *            number identifying which Player the Unit belongs to
      */
     public Unit(String name, Attribute attribute, int team) {
         this.name = name;

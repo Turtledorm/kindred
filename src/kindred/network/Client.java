@@ -235,6 +235,9 @@ public class Client implements Runnable {
 
     /**
      * Sends a NICK message with the user's new desired nickname to the Server.
+     * 
+     * @param nickname
+     *            user's desired new nickname to be sent to the Server
      */
     public void nick(String nickname) {
         ClientToServerMessage msg = ClientToServerMessage.NICK;
@@ -259,6 +262,9 @@ public class Client implements Runnable {
     /**
      * Sends a HOST message with the user's desired map name to play on to the
      * Server.
+     * 
+     * @param mapName
+     *            user's desired map name to host a room on
      */
     public void host(String mapName) {
         ClientToServerMessage msg = ClientToServerMessage.HOST;
@@ -275,6 +281,9 @@ public class Client implements Runnable {
 
     /**
      * Sends a JOIN message with the desired opponent's nickname to the Server.
+     * 
+     * @param host
+     *            nickname of the player whose run the user wants to join
      */
     public void join(String host) {
         ClientToServerMessage msg = ClientToServerMessage.JOIN;
@@ -293,6 +302,9 @@ public class Client implements Runnable {
     /**
      * Starts a Client. Connects to the Server with IP equal to {@code args[0]},
      * if given; otherwise, later prompts the Client for the Server's IP.
+     * 
+     * @param args
+     *            if {@code args[0]} exists, then it is used as the Server's IP
      */
     public static void main(String[] args) {
         String IP = args.length < 1 ? null : args[0];

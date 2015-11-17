@@ -10,6 +10,7 @@ import kindred.model.Map;
 import kindred.network.Client;
 import kindred.network.messages.ServerToClientMessage;
 
+// TODO: Check Javadoc for this class
 public abstract class AbstractView {
     /**
      * The game itself.

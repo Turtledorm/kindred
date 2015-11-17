@@ -185,12 +185,12 @@ public enum ServerToClientMessage {
      * Decodes a String, converting it to its corresponding
      * ServerToClientMessage format.
      * 
-     * @param argument
+     * @param str
      *            argument contained in the message
      * @return a decoded ServerToClientMessage message
      */
-    public static ServerToClientMessage fromEncodedString(String s) {
-        String[] parts = s.split("\\|", 2);
+    public static ServerToClientMessage fromEncodedString(String str) {
+        String[] parts = str.split("\\|", 2);
         ServerToClientMessage msg = values[Integer.parseInt(parts[0])];
         msg.setArgument(parts[1]);
         return msg;

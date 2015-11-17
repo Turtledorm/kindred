@@ -85,11 +85,16 @@ public class Map {
     }
 
     /**
-     * Moves Unit on Tile (xi, yi) to Tile (xf, yf) on this Map. Supposes that
-     * all given coordinates are valid, i.e., not outside borders of this Map.
+     * Moves Unit from the specified team on Tile (xi, yi) to Tile (xf, yf) on
+     * this Map. Supposes that all given coordinates are valid, i.e., not
+     * outside borders of this Map.
      * <p>
      * Returns {@code true} if movement was successful or {@code false}
      * otherwise.
+     * 
+     * @param team
+     *            number identifier of the player whose turn the game is
+     *            currently on
      * 
      * @param xi
      *            x coordinate of the Unit to be moved
@@ -235,6 +240,10 @@ public class Map {
      * Returns a String containing information about the Unit and Terrain on
      * Tile (x, y).
      * 
+     * @param x
+     *            x coordinate of the desired Tile
+     * @param y
+     *            y coordinate of the desired Tile
      * @return a String containing information about the specified Tile
      */
     public String getTileInfo(int x, int y) {
