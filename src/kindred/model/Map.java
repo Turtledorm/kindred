@@ -323,7 +323,7 @@ public class Map {
             message += "\n Rng: " + unit.getRange();
             message += "\n Atk: " + unit.getAtk();
             message += "\n Def: " + unit.getDef();
-            message += "\n Agi: " + unit.getAtk();
+            message += "\n Agi: " + unit.getAgi();
         }
         message += "\n" + tile.getTerrain().getName();
         message += String.format(" (%+d%% Def, %+d%% Agi, -%d Move)", tile

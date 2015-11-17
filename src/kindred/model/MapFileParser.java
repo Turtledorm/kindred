@@ -80,7 +80,6 @@ public final class MapFileParser {
         }
 
         Map map = new Map(tiles, tileHeight, tileWidth);
-        System.out.println("Mapa criado!");
 
         // p = Pattern.compile("\\s*[12]\\s+\\w+\\s+\\d+\\s+\\d+");
         UnitFactory unitFactory = new UnitFactory();

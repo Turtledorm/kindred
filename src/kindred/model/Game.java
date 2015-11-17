@@ -178,18 +178,31 @@ public class Game {
 
     /**
      * Makes the Game end with one of the players forfeiting the match.
+     * 
+     * @return {@code true}, if the command succeeded, of {@code false}
+     *         otherwise
      */
-    public void surrender() {
-        isOver = true;
+    public boolean surrender() {
+        if (team == turn) {
+            isOver = true;
+        }
+        return isOver;
     }
 
     /**
      * Ends the current player's turn, letting the next user take action.
+     * 
+     * @return {@code true}, if the command succeeded, of {@code false}
+     *         otherwise
      */
-    public void endTurn() {
-        turn ^= 0x03; // 1 <-> 2
-        unitsThatMoved.clear();
-        unitsThatAttacked.clear();
+    public boolean endTurn() {
+        if (team == turn) {
+            turn ^= 0x03; // 1 <-> 2
+            unitsThatMoved.clear();
+            unitsThatAttacked.clear();
+            return true;
+        }
+        return false;
     }
 
     /**

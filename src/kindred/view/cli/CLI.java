@@ -42,7 +42,7 @@ public class CLI extends AbstractView {
     /**
      * Name of the file containing the symbols for each Unit.
      */
-    private final String symbolFile = "/kindred/data/unit/unitSymbol.txt";
+    private final String symbolFile = "/kindred/data/unit/unitSymbols.txt";
 
     /**
      * Maps names of Units to their corresponding Character symbol.
@@ -238,8 +238,10 @@ public class CLI extends AbstractView {
                 positions = parsePosition(separate);
                 if (positions != null) {
                     if (game.move(positions[0], positions[1], positions[2],
-                            positions[3]))
+                            positions[3])) {
                         client.move(positions);
+                    } else
+                        continue;
                 }
                 break;
 
@@ -257,6 +259,8 @@ public class CLI extends AbstractView {
                     // Attack missed if damage = 0, and hit if damage > 0
                     if (damage >= 0)
                         client.attack(positions[2], positions[3], damage);
+                    else
+                        continue;
                 }
                 break;
 
@@ -280,8 +284,11 @@ public class CLI extends AbstractView {
                             .getString("invalid_argument_for_command"));
                     continue;
                 }
-                client.endTurn();
-                return true;
+                if (game.endTurn()) {
+                    client.endTurn();
+                    return true;
+                }
+                continue;
 
             case "SURRENDER":
                 if (separate.length != 1) {
@@ -289,8 +296,11 @@ public class CLI extends AbstractView {
                             .getString("invalid_argument_for_command"));
                     continue;
                 }
-                client.surrender();
-                return true;
+                if (game.surrender()) {
+                    client.surrender();
+                    return true;
+                }
+                continue;
 
             case "HELP":
                 if (!printFileContent("/kindred/view/cli/gameHelp.txt"))

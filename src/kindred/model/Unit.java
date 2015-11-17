@@ -83,7 +83,7 @@ public class Unit {
      * 
      * @return the Unit's attack
      */
-    public double getAtk() {
+    public int getAtk() {
         return attribute.getAttack();
     }
 
@@ -92,7 +92,7 @@ public class Unit {
      * 
      * @return the Unit's defense
      */
-    public double getDef() {
+    public int getDef() {
         return attribute.getDefense();
     }
 
@@ -101,7 +101,7 @@ public class Unit {
      * 
      * @return the Unit's agility
      */
-    public double getAgi() {
+    public int getAgi() {
         return attribute.getAgility();
     }
 
