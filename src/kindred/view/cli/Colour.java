@@ -6,9 +6,9 @@ import java.util.Random;
  * Represents one of the possible colours in the terminal using ANSI escape
  * sequences.
  * 
+ * @author Kindred Team
  * @see <a href="http://www.tldp.org/HOWTO/Bash-Prompt-HOWTO/x329.html">ANSI
  *      Escape Sequences: Colours and Cursor Movement</a>
- * @author Kindred Team
  */
 
 enum Colour {

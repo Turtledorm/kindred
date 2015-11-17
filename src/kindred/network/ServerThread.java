@@ -111,7 +111,7 @@ class ServerThread extends Thread {
         try {
             // Read and parse Client message
             String inputLine;
-            while ((!quitServer && (inputLine = in.readLine()) != null)) {
+            while (!quitServer && (inputLine = in.readLine()) != null) {
                 if (inputLine.trim().equals(""))
                     continue;
                 parse(inputLine);
@@ -121,8 +121,8 @@ class ServerThread extends Thread {
                 }
             }
         } catch (IOException e) {
-            System.out.println(
-                    "'" + addr + "' error: Received null when reading socket");
+            System.out.println("'" + addr
+                    + "' error: Received null when reading socket");
         }
 
         // Close connection
@@ -251,8 +251,8 @@ class ServerThread extends Thread {
             if (mapName.contains("..") || mapName.contains("/"))
                 return;
 
-            url = ServerThread.class
-                    .getResource("/kindred/data/map/" + mapName + ".txt");
+            url = ServerThread.class.getResource("/kindred/data/map/" + mapName
+                    + ".txt");
             // Check if map exists
             if (url == null) {
                 sentMsg = ServerToClientMessage.ERR_MAP_NOT_FOUND;
@@ -306,8 +306,7 @@ class ServerThread extends Thread {
 
             // Disallow entering in own room
             if (nick.equals(host)) {
-                queueMessage(socket,
-                        ServerToClientMessage.ERR_CANNOT_ENTER_OWN_ROOM);
+                queueMessage(socket, ServerToClientMessage.ERR_CANNOT_ENTER_OWN_ROOM);
                 return;
             }
 

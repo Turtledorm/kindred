@@ -4,6 +4,10 @@ import kindred.network.Client;
 import kindred.network.messages.ServerToClientMessage;
 import kindred.view.AbstractView;
 
+/**
+ * @author Kindred Team
+ * 
+ */
 public class GUI extends AbstractView {
 
     public GUI() {
@@ -43,9 +47,6 @@ public class GUI extends AbstractView {
     public void close() {
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void connectionResult(boolean success, String serverIP) {
     }

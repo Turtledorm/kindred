@@ -9,10 +9,16 @@ package kindred.model;
 
 public class Attribute {
     /**
-     * Indicates a Unit's total and current hit points. When it reaches zero,
-     * the Unit is considered dead.
+     * Indicates a Unit's total hit points.
      */
-    private int totalHp, currentHp;
+    private int totalHp;
+
+    /**
+     * Indicates a Unit's current hit points. When it reaches zero, it is
+     * considered dead.
+     */
+
+    private int currentHp;
 
     /**
      * Raises damage caused by a Unit.

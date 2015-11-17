@@ -61,29 +61,20 @@ public class CLI extends AbstractView {
 
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void readLanguageData() {
         menuMsgBundle = ResourceBundle.getBundle(
-                "kindred.lang.CLI-MessageBundle_Menu", locale);
+                "kindred.lang.menu.CLI-MessageBundle", locale);
         gameMsgBundle = ResourceBundle.getBundle(
-                "kindred.lang.CLI-MessageBundle_Game", locale);
+                "kindred.lang.game.CLI-MessageBundle", locale);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String askForString(String message) {
         System.out.print(message);
         return scanner.nextLine().trim();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void setGame(Game game) {
         super.setGame(game);
@@ -97,9 +88,6 @@ public class CLI extends AbstractView {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void displayMap() {
         Map map = game.getMap();
@@ -125,9 +113,6 @@ public class CLI extends AbstractView {
         TerminalColourHelper.drawMatrix(atomMap);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String promptForIP() {
         System.out.println(menuMsgBundle.getString("enter_ip"));
@@ -137,9 +122,6 @@ public class CLI extends AbstractView {
             return null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean promptForMenuAction(Client client) {
         System.out.println(menuMsgBundle.getString("type_in_your_command"));
@@ -241,9 +223,6 @@ public class CLI extends AbstractView {
         return false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public synchronized boolean promptForGameAction(Client client) {
         System.out.println(gameMsgBundle.getString("type_in_your_command"));
@@ -378,9 +357,6 @@ public class CLI extends AbstractView {
         System.out.print(">> ");
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void close() {
         System.out.println("\n...");
@@ -405,9 +381,6 @@ public class CLI extends AbstractView {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void connectionResult(boolean success, String serverIP) {
         String key = success ? "connection_established" : "connection_error";
@@ -415,9 +388,6 @@ public class CLI extends AbstractView {
         System.out.println(message);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void remoteEvent(ServerToClientMessage msg) {
         String argument = msg.getArgument();

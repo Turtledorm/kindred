@@ -5,8 +5,6 @@ import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Scanner;
 
-import kindred.model.UnitFileParser;
-
 /**
  * Provides a method to parse a file that contains the description of Units in a
  * command-line user interface.
@@ -14,13 +12,12 @@ import kindred.model.UnitFileParser;
  * @author Kindred Team
  */
 
-public class CLIUnitParser {
+public final class CLIUnitParser {
 
     /**
-     * Do not instantiate!
+     * Do not instantiate.
      */
     private CLIUnitParser() {
-        // Do not instantiate!
     }
 
     /**
@@ -31,7 +28,7 @@ public class CLIUnitParser {
      * representing it separated by whitespaces.
      * <p>
      * The name of the Unit must be exactly the same as the one in the file
-     * parsed by {@link UnitFileParser}.
+     * parsed by {@link kindred.model.UnitFileParser}.
      * 
      * @param filename
      *            name of the file informing symbols for each Unit

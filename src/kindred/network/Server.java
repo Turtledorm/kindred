@@ -78,7 +78,7 @@ public class Server implements Runnable {
      * @param args
      *            not used
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         try {
             Server server = new Server();
             (new Thread(server)).start();

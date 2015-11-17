@@ -6,13 +6,12 @@ package kindred.view.cli;
  * @author Kindred Team
  * 
  */
-public class TerminalColourHelper {
+public final class TerminalColourHelper {
 
     /**
-     * Do not instantiate!
+     * Do not instantiate.
      */
     private TerminalColourHelper() {
-        // Do not instantiate!
     }
 
     /**

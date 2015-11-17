@@ -11,10 +11,10 @@ import java.util.regex.Pattern;
  * 
  * @author Kindred Team
  */
-public class MapFileParser {
+public final class MapFileParser {
 
     /**
-     * Not to be instantiated, since this class is purely static!
+     * Not to be instantiated, since this class is purely static.
      */
     private MapFileParser() {
         // Do not instantiate!

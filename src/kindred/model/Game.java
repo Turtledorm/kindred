@@ -18,9 +18,14 @@ public class Game {
     private Map map;
 
     /**
-     * First and second Players.
+     * First player.
      */
-    private final String playerA, playerB;
+    private final String playerA;
+
+    /**
+     * Second player.
+     */
+    private final String playerB;
 
     /**
      * Name of the file containing valid Terrain types.
@@ -28,7 +33,7 @@ public class Game {
     private final String terrainFile = "/kindred/data/terrain/terrain.txt";
 
     /**
-     * ID for the Player's Units
+     * ID for the Player's Units.
      */
     private final int team;
 
@@ -38,19 +43,23 @@ public class Game {
     private final int initUnits = 12;
 
     /**
-     * Number of Units remaining for each Player.
+     * Number of Units remaining for player A.
      */
-    private int playerAUnits = initUnits, playerBUnits = initUnits;
+    private int playerAUnits = initUnits;
+
+    /**
+     * Number of Units remaining for Player B.
+     */
+    private int playerBUnits = initUnits;
 
     /**
      * Creates Units for the Players to use during the game.
      */
     private UnitFactory unitFactory;
 
-    /**
-     * 
-     */
-    private boolean readyA = false, readyB = false;
+    private boolean readyA = false;
+
+    private boolean readyB = false;
 
     /**
      * Controls which Player is playing at the moment.
@@ -58,7 +67,8 @@ public class Game {
     private int turn;
 
     /**
-     * 
+     * Stores the status of the match: {@code true} if finished, {@code false}
+     * otherwise.
      */
     private boolean isOver;
 
@@ -69,8 +79,6 @@ public class Game {
      *            playerA's name
      * @param nameB
      *            playerB's name
-     * @param terrainFile
-     *            name of the file containing valid Terrains
      * @param mapFile
      *            name of the file containing Map to be played on
      * @param view
