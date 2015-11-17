@@ -127,7 +127,7 @@ class ServerThread extends Thread {
 
         // Close connection
         try {
-            System.out.println("Disconnected: " + addr);
+            System.out.println("Disconnected:   " + addr);
 
             // Remove all data related to Client
             if (nick != null) {
