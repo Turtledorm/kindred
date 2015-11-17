@@ -1,6 +1,7 @@
 package kindred.model;
 
 import java.io.FileNotFoundException;
+import java.util.HashSet;
 
 import kindred.view.AbstractView;
 
@@ -18,16 +19,6 @@ public class Game {
     private Map map;
 
     /**
-     * First player.
-     */
-    private final String playerA;
-
-    /**
-     * Second player.
-     */
-    private final String playerB;
-
-    /**
      * Name of the file containing valid Terrain types.
      */
     private final String terrainFile = "/kindred/data/terrain/terrain.txt";
@@ -38,24 +29,24 @@ public class Game {
     private final int team;
 
     /**
-     * Number of Units each Player begins with.
-     */
-    private final int initUnits = 12;
-
-    /**
      * Number of Units remaining for player A.
      */
-    private int playerAUnits = initUnits;
+    private int playerAUnits; // TODO: Read this number
 
     /**
      * Number of Units remaining for Player B.
      */
-    private int playerBUnits = initUnits;
+    private int playerBUnits;
 
     /**
-     * Creates Units for the Players to use during the game.
+     * 
      */
-    private UnitFactory unitFactory;
+    private HashSet<Unit> unitsThatMoved;
+
+    /**
+     * 
+     */
+    private HashSet<Unit> unitsThatAttacked;
 
     private boolean readyA = false;
 
@@ -93,28 +84,42 @@ public class Game {
             e.printStackTrace();
             System.exit(1);
         }
-        playerA = nameA;
-        playerB = nameB;
 
-        this.unitFactory = new UnitFactory();
-        map.placeUnit(unitFactory.getNewUnit("Archer", 1), 1, 1);
-        map.placeUnit(unitFactory.getNewUnit("Wizard", 1), 0, 0);
+        unitsThatMoved = new HashSet<Unit>();
+        unitsThatAttacked = new HashSet<Unit>();
+
         this.team = team;
         turn = 1;
         isOver = false;
     }
 
-    public boolean placeUnit(String unitName, int team, int x, int y) {
-        return map.placeUnit(unitFactory.getNewUnit(unitName, team), x, y);
-    }
-
     public boolean move(int xi, int yi, int xf, int yf) {
-        return turn == team && map.move(team, xi, yi, xf, yf);
+        if (turn == team) {
+            Unit unit = map.getTile(xi, yi).getUnit();
+            if (unit == null)
+                return false;
+            if (!unitsThatMoved.contains(unit) && !unitsThatAttacked.contains(unit)
+                    && map.move(team, xi, yi, xf, yf)) {
+                unitsThatMoved.add(unit);
+                return true;
+            }
+        }
+        return false;
     }
 
     public int attack(int xi, int yi, int xf, int yf) {
-        if (turn == team)
-            return map.attack(team, xi, yi, xf, yf);
+        if (turn == team) {
+            Unit unit = map.getTile(xi, yi).getUnit();
+            if (unit == null)
+                return -1;
+            if (!unitsThatAttacked.contains(unit)) {
+                int damage = map.attack(team, xi, yi, xf, yf);
+                if (damage >= 0)
+                    unitsThatAttacked.add(unit);
+                return map.attack(team, xi, yi, xf, yf);
+            }
+        }
+
         return -1;
     }
 
