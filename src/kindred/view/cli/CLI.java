@@ -8,8 +8,8 @@ import java.util.ResourceBundle;
 import java.util.Scanner;
 
 import kindred.model.Game;
+import kindred.model.GameAction;
 import kindred.model.Map;
-import kindred.model.Unit;
 import kindred.network.Client;
 import kindred.network.messages.ServerToClientMessage;
 import kindred.view.AbstractView;
@@ -41,7 +41,7 @@ public class CLI extends AbstractView {
     /**
      * Name of the file containing the symbols for each Unit.
      */
-    private final String symbolFile = "/kindred/data/unit/unitSymbols.txt";
+    private final String symbolFile = "/kindred/data/terrain/unitSymbols.txt";
 
     /**
      * Maps names of Units to their corresponding Character symbol.
@@ -102,19 +102,10 @@ public class CLI extends AbstractView {
                     // msgBundle.getString("terrain_colour_not_found"), locale);
                     System.exit(1);
                 }
-                Unit unit = map.getTile(i, j).getUnit();
-                char character;
+                Colour foregroundColour = Colour.LIGHT_RED;
                 Colour backgroundColour = colourTypes.get(map.getTile(i, j)
                         .getTerrain().getName());
-                Colour foregroundColour;
-                if (unit == null) {
-                    foregroundColour = Colour.RESET;
-                    character = ' ';
-                } else {
-                    foregroundColour = unit.getTeam() == 1 ? Colour.LIGHT_RED
-                            : Colour.LIGHT_BLUE;
-                    character = symbolTypes.get(unit.getName());
-                }
+                char character = symbolTypes.get(map.getTile(i, j).getUnit());
                 atomMap[i][j] = new Atom(character, backgroundColour,
                         foregroundColour);
             }
@@ -482,12 +473,12 @@ public class CLI extends AbstractView {
             break;
         case INFO_SOMEONE_ENTERED_ROOM:
             key = "someone_entered_room";
-            arg = new Object[] { argument.split("\\|")[0] };
+            arg = new Object[] { argument };
             complement = "\n" + gameStartedMessage(argument);
             break;
         case SUCC_JOIN:
             key = "successfully_joined_room";
-            arg = new Object[] { argument.split("\\|")[0] };
+            arg = new Object[] { argument };
             complement = "\n" + gameStartedMessage(argument);
             break;
         case SUCC_LEAVE:
@@ -504,8 +495,28 @@ public class CLI extends AbstractView {
             arg = new Object[] {};
             break;
         case GAME_ACTION:
-            // TODO: display opponent's actions
-            break;
+            GameAction action = GameAction.fromEncodedString(argument);
+            String values = action.getArgument();
+            String k = null; // key
+            Object[] o = new Object[] {}; // objects
+            switch (action) {
+            case ATTACK:
+                k = "opponent_attacked";
+                o = values.split("\\|");
+                break;
+            case END_TURN:
+                k = "opponent_ended";
+                break;
+            case MOVE:
+                k = "opponent_moved";
+                o = values.split("\\|");
+                break;
+            case SURRENDER:
+                k = "opponent_surrendered";
+                break;
+            }
+            System.out.println(format(gameMsgBundle, k, o));
+            return;
         }
         System.out.println(format(menuMsgBundle, key, arg) + complement);
     }
