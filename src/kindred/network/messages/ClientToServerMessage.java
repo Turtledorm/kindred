@@ -1,5 +1,12 @@
 package kindred.network.messages;
 
+/**
+ * Contains an enum number for every type of menu-related message the Client can
+ * send to the Server. Can also encode and decode these values to shorten and
+ * simplify Client to Server messages.
+ * 
+ * @author Kindred Team
+ */
 public enum ClientToServerMessage {
     /**
      * If it has no argument, asks the Server for the Client's nickname; if it
@@ -39,15 +46,15 @@ public enum ClientToServerMessage {
     QUIT,
 
     /**
-     * Sends an action related to the game being played. The action is forwarded
+     * Sends an action-related to the game being played. The action is forwarded
      * by the Server to the user's opponent in the game.
      */
     GAME_ACTION;
 
-    // TODO: Check Javadoc below (not sure what values does...)
     /**
      * Contains the corresponding enum value of each possible
-     * ClientToServerMessage type.
+     * ClientToServerMessage type. Stored in a static variable to save time from
+     * calling {@code values()} many times.
      */
     private static final ClientToServerMessage[] values = values();
 

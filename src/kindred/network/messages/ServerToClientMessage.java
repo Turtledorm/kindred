@@ -128,14 +128,14 @@ public enum ServerToClientMessage {
 
     // TODO: Give more details to GAME_ACTION below
     /**
-     * Game related command that the Server only passes forward to the Client.
+     * Game-related command that the Server only passes forward to the Client.
      */
     GAME_ACTION;
 
-    // TODO: Check Javadoc below (not sure what values does...)
     /**
      * Contains the corresponding enum value of each possible
-     * ServerToClientMessage type.
+     * ClientToServerMessage type. Stored in a static variable to save time from
+     * calling {@code values()} many times.
      */
     private static final ServerToClientMessage[] values = values();
 

@@ -56,8 +56,7 @@ public class MapFileParser {
                     // Sudden end of file
                     System.err.format("Invalid line in '%s'\n", filename);
                     scanner.close();
-                    // TODO: Use System.Exit() instead of return null?
-                    return null;
+                    System.exit(1);
                 }
                 // Read and create Tile based on Terrain's Character
                 char c = scanner.next(p).trim().charAt(0);
@@ -67,8 +66,7 @@ public class MapFileParser {
                     // Invalid type of Terrain
                     System.err.format("Invalid line in '%s'\n", filename);
                     scanner.close();
-                    // TODO: Use System.Exit() instead of return null?
-                    return null;
+                    System.exit(1);
                 }
             }
         }
