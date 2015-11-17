@@ -33,7 +33,7 @@ public class CLI extends AbstractView {
     /**
      * Name of the file containing the background colours of the Terrains.
      */
-    private final String colourFile = "/kindred/data/terrain/terrainColors.txt";
+    private final String colourFile = "/kindred/common/data/terrain/terrainColors.txt";
 
     /**
      * Maps names of Terrains to their corresponding background colours.
@@ -43,7 +43,7 @@ public class CLI extends AbstractView {
     /**
      * Name of the file containing the symbols for each Unit.
      */
-    private final String symbolFile = "/kindred/data/unit/unitSymbols.txt";
+    private final String symbolFile = "/kindred/common/data/unit/unitSymbols.txt";
 
     /**
      * Maps names of Units to their corresponding Character symbol.

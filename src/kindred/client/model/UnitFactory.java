@@ -15,7 +15,7 @@ public class UnitFactory {
     /**
      * Name of the file containing valid Unit types.
      */
-    private final String filename = "/kindred/data/unit/unit.txt";
+    private final String filename = "/kindred/common/data/unit/unit.txt";
 
     /**
      * HashMap containing Unit names as keys and their attributes as values.

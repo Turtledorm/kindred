@@ -20,10 +20,101 @@
 
 \section{Introdução}
 
-\emph{Kindred} é um jogo de estratégia multiplayer online jogado por turnos, baseado em jogos como Advance Wars e Fire Emblem. As partidas são individuais, com um jogador (nome dado ao usuário do sistema) enfrentando apenas um adversário em um mapa escolhido. Cada jogador tem à sua disposição um exército: seus soldados são genericamente chamados de unidades. O objetivo do jogo é eliminar as tropas adversárias em sua totalidade, levando seu exército à vitória.
+\emph{Kindred} é um jogo de estratégia multiplayer online jogado por turnos, baseado em jogos como Advance Wars e Fire Emblem. A ideia de turnos é que apenas um usuário joga por vez, enquanto seu adversário assiste suas ações. Posteriormente, o controle é passado ao oponente quando o usuário decreta o fim de seu turno, e assim segue o ritmo do jogo. \par
 
-\section{Units}
-Cada jogador começa com um certo número de \emph{unidades}, e cada \emph{unidade} tem suas características expressas em valores numéricos denominados \emph{atributos}. Estes são melhor explicados na Tabela 1. Uma utilização inteligente do mapa e das características das \emph{unidades} em jogo, tanto aliadas quanto adversárias, vão definir o vencedor da partida. Estratégia é essencial para dominar este jogo.
+As partidas são individuais, com um jogador (nome dado ao usuário do sistema) enfrentando apenas um adversário em um mapa escolhido. Cada jogador tem à sua disposição um exército: seus soldados são genericamente chamados de \emph{unidades}. O objetivo do jogo é eliminar as tropas adversárias em sua totalidade, levando seu exército à vitória.
+
+\section{Pré-Requisitos}
+Kindred atualmente é um jogo feito apenas para plataformas Unix. Para jogá-lo, o usuário deve ter instalado:
+    \begin{enumerate}
+        \item Java (versão 7 ou maior);
+        \item Ant: necessário para compilar o jogo.
+    \end{enumerate}
+
+\section{Como Executar}
+    \begin{enumerate}
+    \item Abra um terminal e vá até o diretório do jogo.
+    \item Digite, no root do projeto: \par
+            \texttt{\$ ant build} \par
+            Com isso, cria-se um diretório \emph{bin/} onde o jogo pode ser executado.
+    \item Para executar o Kindred, execute algum dos comandos abaixo no terminal. Se tiver alguma dúvida, digite no root do projeto: \par
+            \texttt{\$ ./run.sh -h} \par
+        \begin{enumerate}
+        \item Servidor: \par
+                \texttt{\$ ./run.sh -s}
+        \item Cliente: \par
+                \texttt{\$ ./run.sh -c}
+        \end{enumerate}
+    \end{enumerate}
+
+\section{Modo de Uso}
+    Atualmente, o jogo só suporta uma CLI (interface por linha de comando), ou seja, toda a interação do usuário com o servidor/cliente será feita pelo terminal. Abaixo vão mais instruções de como interagir com o programa:
+    \subsection{Servidor}
+        O usuário não tem como interagir diretamente com o servidor. O único comando aceito é \emph{CLOSE}, responsável por finalizar e fechá-lo com segurança;
+    \subsection{Cliente (fora da partida)}
+        Ao abrir o cliente, pede-se o endereço IP do servidor para o cliente. Importante: o programa não funciona se não houver conexão com algum servidor! \par
+        Feito isso, o usuário entrará no menu principal do jogo, onde alguns comandos digitados, juntamente com seus argumentos, podem ser utilizados. O caractere de espaço \texttt{' '} deve ser usado para separar comandos e argumentos. \par
+        Os comandos aceitos pelo servidor, juntamente com seus argumentos, são:
+        \begin{enumerate}
+        \item \textbf{NICK} [nome] \par
+            Se o parâmetro nome for dado, define o nome do usuário no servidor. Caso contrário, apenas mostra ao usuário o nome que definiu no servidor. \par
+
+            O nickname definido deve ter de 3 a 10 caracteres alfanuméricos, sendo que o primeiro caractere deve ser obrigatoriamente uma letra. \par
+
+            Retorna uma mensagem de erro se o nome já estiver sendo usado por outro usuário ou se for inválido (isto é, fora da definição especificada).
+        \item \textbf{MAPS} \par
+            Mostra uma lista de mapas na qual se pode jogar. Mais detalhes sobre mapas são dados na seção \emph{Regras do Jogo}.
+        \item \textbf{ROOMS} \par
+            Mostra uma lista de todas as salas existentes. Uma sala é um local no servidor onde um usuário pode esperar um outro usuário qualquer se conectar para poderem disputar uma partida num mapa já definido. \par
+            A lista de salas é composta pelo nome do usuário que criou a sala e o mapa escolhido para jogar uma partida.
+        \item \textbf{HOST} [NOME DO MAPA] \par
+            Cria uma sala para jogar no mapa especificado. Cada usuário pode criar no máximo uma sala; se outra for criada, a anterior é desfeita. \par
+            \emph{Atenção:} Este comando só funciona depois que o usuário registrou um nome no servidor! \par
+            Retorna uma mensagem de erro se o nome do mapa especificado não for encontrado.
+        \item \textbf{UNHOST} \par
+            Desfaz a sala criada pelo usuário, se ela existir. Caso contrário, nada ocorre. \par
+            \emph{Atenção:} Este comando só funciona depois que o usuário registrou um nome no servidor!
+        \item \textbf{JOIN} [NOME] \par
+            Conecta o usuário na sala criada pelo usuário de nome especificado. \par
+            \emph{Atenção:} Este comando só funciona depois que o usuário registrou um nome no servidor! \par
+            Retorna uma mensagem de erro se não existir uma sala criada pelo referido nome.
+        \item \textbf{HELP} \par
+            Indica como interagir com o servidor ao mostrar esta mesma lista de comandos para o usuário.
+        \item \textbf{QUIT} \par
+            Disconecta o usuário do servidor. \par
+            Como sinônimo, também pode ser usado o comando \textbf{EXIT}.
+        \end{enumerate}
+     \subsection{Cliente (dentro da partida)}
+        Após entrar numa sala, ambos os jogadores são notificados e o jogo começa! Os comandos suportados agora são diferentes. A estrutura para mandar mensagens é a mesma de fora da partida: através de comandos e argumentos, separados pelo caractere de espaço \texttt{' '}. \par
+
+        Para maiores detalhes técnicos de como jogar e o que significam os termos do jogo, consulte a seção \emph{Regras do Jogo}. \par
+
+        A interação com o jogo em si é feita através dos seguintes comandos, juntamente com seus argumentos:
+        \begin{enumerate}
+        \item \textbf{MOVE} [xi] [yi] [xf] [yf]\par
+            Move a \emph{unidade} localizada na posição (xi, yi) do mapa para a posição (xf, yf). \par
+            Retorna uma mensagem de erro se algo impede o movimento (\emph{tile} ocupado, coordenadas inválidas etc.). \par
+            Como sinônimo, também pode ser usado o comando \textbf{MV}.
+        \item \textbf{ATTACK} [xi] [yi] [xf] [yf]\par
+            Faz a \emph{unidade} na posição (xi, yi) do mapa atacar a unidade na posição (xf, yf). \par
+            Retorna uma mensagem de erro se algo impede o ataque (coordenadas inválidas, \emph{unidade} alvo fora do alcance etc.). \par
+            Como sinônimo, também pode ser usado o comando \textbf{ATK}.
+        \item \textbf{INFO} [x] [y]\par
+            Dá informações sobre o \emph{Tile} na posição (x, y), detalhando qual seu \emph{terreno} e \emph{unidade}, se houver.
+        \item \textbf{HELP} \par
+            Indica como agir no jogo ao mostrar esta mesma lista de comandos para o usuário.
+        \item \textbf{END} \par
+            Encerra o turno do usuário, passando a vez para o adversário.
+        \item \textbf{SURRENDER} \par
+            Faz com que o usuário desista do jogo, encerrando a partida e concedendo a vitória ao adversário.
+        \end{enumerate}
+
+\section{Regras do Jogo}
+
+\subsection{Unidades}
+Cada jogador começa com um certo número de \emph{unidades}, e cada \emph{unidade} tem suas características expressas em valores numéricos denominados \emph{atributos}. Estes são melhor explicados na Tabela 1. Uma utilização inteligente do mapa e das características das \emph{unidades} em jogo, tanto aliadas quanto adversárias, vão definir o vencedor da partida. Estratégia é essencial para dominar este jogo. \par
+
+\emph{Unidades} pertencentes a jogadores diferentes podem batalhar entre si. O \emph{HP} da \emph{unidade} defensora é reduzido de acordo com seus \emph{atributos} e os da \emph{unidade} atacante.
 
 \begin{table}[H]
 \centering
@@ -39,24 +130,10 @@ Cada jogador começa com um certo número de \emph{unidades}, e cada \emph{unida
 \caption{Atributos de uma unidade}
 \end{table}
 
-\section{Mapas}
-Os mapas têm tamanhos variáveis e são divididos em "quadradinhos" menores chamados \emph{tiles}, que podem ser ocupados por apenas uma \emph{unidade}. Cada \emph{tile} representa um tipo de \emph{terreno}, que podem ou não atribuir alguns bônus para a \emph{unit} que nela se encontra. Estes aprimoramentos incluem um aumento em \emph{defense} e/ou \emph{agility}. No entanto, quase todos os \emph{terrains} também afetam a mobilidade de suas tropas, portanto, fique atento para onde posiciona suas \emph{units}!
+\subsection{Classes}
+Cada \emph{unidade} pertence a uma \emph{classe} que define seus \emph{atributos}; ou seja, todas as \emph{unidades} pertencentes a uma \emph{classe} são iguais. As \emph{classes} disponíveis e suas características estão indicadas na Tabela 2. Veja que cada \emph{classe} conta com sua gama de forças e fraquezas, definidas não só pelos \emph{atributos} mas também pelo uso que se dá a elas. \par
 
-\begin{table}[H]
-\centering
-\begin{tabular}{|l|l|c|c|c|}\hline
- \textbf{Nome} & \textbf{Cor} & \textbf{Bônus de defesa} & \textbf{Bônus de agilidade} & \textbf{Penalidade de movimento}\\\hline
- Road     & Cinza claro  &  0 &   0 & 0 \\\hline
- Plains   & Marrom claro &  0 &  10 & 1 \\\hline
- Forest   & Verde        & 10 &   0 & 1 \\\hline
- Swamp    & Roxo         & 20 & -10 & 2 \\\hline
- Mountain & Preto        & 30 &  10 & 3 \\\hline
-\end{tabular}
-\caption{Terrenos existentes}
-\end{table}
-
-\section{Classes}
-Uma \emph{unit} tem \emph{atributos}, \emph{range} e \emph{movement}, mas o que defines esses parâmetros é a \emph{classe} à qual ela pertence. As \emph{classes} disponíveis são \emph{Knight}, \emph{Acher}, \emph{Lancer}, \emph{Rogue}, \emph{Swordsman} e \emph{Wizard}, cada uma com sua gama de forças e fraquezas, definidas não só pelos parâmetros, já explicados, mas também pelo uso que se dá a elas. Um \emph{Wizard}, por exemplo, tem a maior \emph{range} do jogo e um dos maiores \emph{attacks}, mas também a menor \emph{defense} e \emph{movement}. Ou seja, seu \emph{Wizard} será letal se usado corretamente a distância e se estiver sempre bem posicionado, no entanto, por sua inerente fraqueza, um erro de cálculo pode lhe custar a vida dele e, consequentemente, o jogo. Manter seu \emph{Wizard} afastado do núcleo de combate e protegido por outras \emph{units} é recomendável. 
+Um \emph{Wizard}, por exemplo, tem o maior \emph{alcance} do jogo e um \emph{ataque} bem elevado, mas também a menor \emph{defesa} e um baixo \emph{movimento}. Ou seja, o \emph{Wizard} será letal se usado corretamente à distância e se estiver sempre bem posicionado. No entanto, por sua inerente fragilidade, um erro de cálculo pode custar-lhe a vida e, consequentemente, o jogo. Manter seu \emph{Wizard} afastado do núcleo de combate e protegido por outras \emph{unidades} é recomendado.
 
 \begin{table}[H]
 \centering
@@ -72,10 +149,27 @@ Wizard    & W & 10 & 4 & 4 & 12 &  3 &  8 \\\hline
 \caption{Classes existentes}
 \end{table}
 
-\section{Estratégias}
-O primeiro passo e qualquer batalha que seja é conhecer seu exército. Dominando suas \emph{units}, você já tem meio caminho andado para a vitória. O passo seguinte é observar o \emph{mapa}. Ver que tipo de \emph{terrain} predomina e se existe algum foco de um \emph{terrain} distinto do predominante lhe permite formular as estratégias necessárias para conduzir as ações do inimigo a seu favor e assegurar uma vitória. Em um mapa pequeno, por exemplo, as unidades de longo alcance -- como \emph{archers} e \emph{wizards} -- têm vantagem, pois estarão próximas de aliados que as podem defender e os oponentes não terão muito espaço para manobrar ou fugir. Por que não, então, despachar unidades com alta mobilidade para eliminar essas unidades inimigas antes que elas causem estrago? Da mesma forma, você poderia também usar essas mesmas unidades como isca, enquanto prepara uma elaborada armadilha para seu oponente. Após o conhecimento de suas \emph{units} e do \emph{mapa}, sua adaptabilidade e engenhosidade serão os fatores que desequilibrarão uma partida!
+\subsection{Mapas}
+Os mapas têm tamanhos variáveis e são divididos em "quadradinhos" menores chamados \emph{tiles}, que podem ser ocupados por apenas uma \emph{unidade}. Cada \emph{tile} representa um tipo de \emph{terreno}, que podem ou não atribuir alguns bônus para a \emph{unidade} que nela se encontra. Estes aprimoramentos incluem um aumento em \emph{defesa} e/ou \emph{agilidade}. No entanto, quase todos os \emph{terrenos} também afetam a mobilidade de suas tropas. Portanto, fique atento para onde posiciona suas \emph{unidades}! Verifique a Tabela 3 para saber os terrenos existentes.
 
-\section{Comandos do Terminal}
-[completar...]
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|c|c|c|}\hline
+ \textbf{Nome} & \textbf{Cor} & \textbf{Bônus de defesa} & \textbf{Bônus de agilidade} & \textbf{Penalidade de movimento}\\\hline
+ Road     & Cinza claro  &   0   &   0   &  0 \\\hline
+ Plains   & Marrom claro &   0   & +10\% & -1 \\\hline
+ Forest   & Verde        & +10\% &   0   & -1 \\\hline
+ Swamp    & Roxo         & +20\% & -10\% & -2 \\\hline
+ Mountain & Preto        & +30\% &   0   & -3 \\\hline
+\end{tabular}
+\caption{Terrenos existentes}
+\end{table}
+
+\subsection{Estratégias}
+O primeiro passo antes de qualquer batalha é conhecer seu exército. Dominando suas \emph{unidades}, o jogador já tem meio caminho andado para a vitória. O passo seguinte é observar o \emph{mapa}. Ver que tipo de \emph{terreno} predomina e se existe algum foco de um \emph{terreno} distinto do predominante lhe permite formular as estratégias necessárias para conduzir as ações do inimigo a seu favor e assegurar uma vitória. \par
+
+Em um mapa pequeno, por exemplo, as \emph{unidades} de longo alcance -- como \emph{Archers} e \emph{Wizards} -- têm vantagem, pois estarão próximas de aliados que as podem defender e os oponentes não terão muito espaço para manobrar ou fugir. Por que não, então, despachar unidades com alta mobilidade para eliminar essas \emph{unidades} inimigas antes que elas causem estrago? Da mesma forma, você poderia também usar essas mesmas \emph{unidades} como isca, enquanto prepara uma elaborada armadilha para seu oponente. \par
+
+Após o conhecimento de suas \emph{unidades} e do \emph{mapa}, sua adaptabilidade e engenhosidade serão os fatores que desequilibrarão uma partida!
 
 \end{document}

@@ -14,8 +14,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import kindred.common.ClientToServerMessage;
 import kindred.common.ServerToClientMessage;
 
-
-
 /**
  * Runs as a Server thread for a connected Client, being responsible for
  * exchanging data with the user.
@@ -123,8 +121,8 @@ class ServerThread extends Thread {
                 }
             }
         } catch (IOException e) {
-            System.out.println("'" + addr
-                    + "' error: Received null when reading socket");
+            System.out.println(
+                    "'" + addr + "' error: Received null when reading socket");
         }
 
         // Close connection
@@ -212,7 +210,7 @@ class ServerThread extends Thread {
         // MAPS : Return all available maps
         case MAPS:
             String maps = "";
-            URL url = ServerThread.class.getResource("/kindred/data/map");
+            URL url = ServerThread.class.getResource("/kindred/common/data/map");
             File folder = new File(url.getPath());
             for (File f : folder.listFiles()) {
                 if (f.isFile()) {
@@ -253,8 +251,8 @@ class ServerThread extends Thread {
             if (mapName.contains("..") || mapName.contains("/"))
                 return;
 
-            url = ServerThread.class.getResource("/kindred/data/map/" + mapName
-                    + ".txt");
+            url = ServerThread.class
+                    .getResource("/kindred/common/data/map/" + mapName + ".txt");
             // Check if map exists
             if (url == null) {
                 sentMsg = ServerToClientMessage.ERR_MAP_NOT_FOUND;
@@ -308,7 +306,8 @@ class ServerThread extends Thread {
 
             // Disallow entering in own room
             if (nick.equals(host)) {
-                queueMessage(socket, ServerToClientMessage.ERR_CANNOT_ENTER_OWN_ROOM);
+                queueMessage(socket,
+                        ServerToClientMessage.ERR_CANNOT_ENTER_OWN_ROOM);
                 return;
             }
 

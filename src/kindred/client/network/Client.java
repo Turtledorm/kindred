@@ -166,7 +166,7 @@ public class Client implements Runnable {
                     opponent = parts[0];
                     team = Integer.parseInt(parts[1]);
                     String mapFilename = parts[2];
-                    game = new Game(nickname, opponent, "/kindred/data/map/"
+                    game = new Game(nickname, opponent, "/kindred/common/data/map/"
                             + mapFilename + ".txt", team);
                     view.setGame(game);
                     break;

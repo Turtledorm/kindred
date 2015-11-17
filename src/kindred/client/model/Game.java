@@ -16,7 +16,7 @@ public class Game {
     /**
      * Name of the file containing valid Terrain types.
      */
-    private final String terrainFile = "/kindred/data/terrain/terrain.txt";
+    private final String terrainFile = "/kindred/common/data/terrain/terrain.txt";
 
     /**
      * Map played by both Players.
