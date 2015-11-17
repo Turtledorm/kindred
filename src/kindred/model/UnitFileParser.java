@@ -3,9 +3,7 @@ package kindred.model;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
-import java.util.NoSuchElementException;
 import java.util.Scanner;
-import java.util.regex.Pattern;
 
 /**
  * Parses a file and gets information regarding valid Unit types.
@@ -48,34 +46,40 @@ public class UnitFileParser {
         }
 
         Scanner scanner = new Scanner(f);
-        Pattern p = Pattern.compile("\\s*\\w");
 
         while (scanner.hasNextLine()) {
-            String name = null;
-            int hp, atk, def, agi, mov, rng;
-            hp = atk = def = agi = mov = rng = 0;
+            String line = scanner.nextLine().trim();
 
-            try {
-                name = scanner.next(p);
-                hp = scanner.nextInt();
-                atk = scanner.nextInt();
-                def = scanner.nextInt();
-                agi = scanner.nextInt();
-                mov = scanner.nextInt();
-                rng = scanner.nextInt();
-            } catch (NoSuchElementException e) {
-                System.err.format("Invalid file format in '%s'\n", filename);
-                System.exit(1);
-            } finally {
-                scanner.close();
+            // Skips empty lines
+            if (line.isEmpty())
+                continue;
+
+            String[] tokens = line.split("\\s+");
+            if (tokens.length != 7) {
+                // Line contains more or less information than necessary
+                System.err.format("Invalid line size in '%s'\n", filename);
+            } else {
+                String name = null;
+                int hp, atk, def, agi, mov, rng;
+                hp = atk = def = agi = mov = rng = 0;
+
+                try {
+                    name = tokens[0];
+                    hp = Integer.parseInt(tokens[1]);
+                    atk = Integer.parseInt(tokens[2]);
+                    def = Integer.parseInt(tokens[3]);
+                    agi = Integer.parseInt(tokens[4]);
+                    mov = Integer.parseInt(tokens[5]);
+                    rng = Integer.parseInt(tokens[6]);
+                } catch (NumberFormatException e) {
+                    System.err.format("Invalid file format in '%s'\n", filename);
+                    System.exit(1);
+                }
+
+                // Adds the new Unit type to the HashMap
+                Attribute attribute = new Attribute(hp, atk, def, agi, mov, rng);
+                unitTypes.put(name, attribute);
             }
-
-            if (scanner.hasNext(p))
-                System.err.format("Warning: Extra information in '%s'\n", filename);
-
-            // Adds the new Unit type to the HashMap
-            Attribute attribute = new Attribute(hp, atk, def, agi, mov, rng);
-            unitTypes.put(name, attribute);
         }
 
         scanner.close();
