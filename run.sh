@@ -44,9 +44,9 @@ case $1 in
     -h)
         uso;;
     -s)
-        java -cp bin/ kindred.network.Server;;
+        java -cp bin/ kindred.server.Server;;
     -c)
-        java -cp bin/ kindred.network.Client $2;;
+        java -cp bin/ kindred.client.network.Client $2;;
     *)
         echo "Argumento '$arg' não reconhecido!"
         uso;;

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="build" name="Kindred">
+    <target name="clean">
+        <delete dir="bin"/>
+        <delete dir="jar"/>
+    </target>
+
+    <target name="build">
+        <mkdir dir="bin"/>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="src">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+        <javac srcdir="src" destdir="bin" includeantruntime="false"/>
+    </target>
+
+    <target name="release" depends="build">
+        <mkdir dir="release/jar"/>
+        <jar destfile="release/jar/KindredServer.jar" basedir="bin">
+            <manifest>
+                <attribute name="Main-Class" value="kindred.server.Server"/>
+            </manifest>
+        </jar>
+        <jar destfile="release/jar/KindredClient.jar" basedir="bin">
+            <manifest>
+                <attribute name="Main-Class" value="kindred.client.network.Client"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="run-server">
+        <java jar="release/jar/KindredServer.jar" fork="true"/>
+    </target>
+    
+    <target name="run-client">
+        <java jar="release/jar/KindredClient.jar" fork="true"/>
+    </target>
+
+</project>

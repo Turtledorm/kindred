@@ -1,10 +1,8 @@
 package kindred.client.view.gui;
 
-
 import kindred.client.network.Client;
 import kindred.client.view.AbstractView;
 import kindred.common.ServerToClientMessage;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Graphical User Interface view for the user. Not implemented yet!
@@ -17,12 +15,12 @@ public class GUI extends AbstractView {
      * Constructs a GUI. Since this class isn't implemented yet, so it throws an
      * exception.
      * 
-     * @throws NotImplementedException
+     * @throws Exception
      *             since it isn't implemented
      */
-    public GUI() {
+    public GUI() throws Exception {
         super();
-        throw new NotImplementedException();
+        throw new Exception("This class will be implemented in a future release.");
     }
 
     @Override
