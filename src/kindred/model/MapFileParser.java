@@ -79,12 +79,33 @@ public final class MapFileParser {
             }
         }
 
-        if (scanner.hasNext(p)) {
-            System.err.format("Extra information in '%s'\n", filename);
+        Map map = new Map(tiles, tileHeight, tileWidth);
+        System.out.println("Mapa criado!");
+
+        // p = Pattern.compile("\\s*[12]\\s+\\w+\\s+\\d+\\s+\\d+");
+        UnitFactory unitFactory = new UnitFactory();
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine().trim();
+            if (line.isEmpty())
+                continue;
+            String[] parts = line.split("\\s+");
+            int team, x, y;
+            String name = null;
+            team = x = y = 0;
+            try {
+                team = Integer.parseInt(parts[0]);
+                name = parts[1];
+                x = Integer.parseInt(parts[2]);
+                y = Integer.parseInt(parts[3]);
+            } catch (NumberFormatException e) {
+                System.err.format("Invalid line in '%s'\n", filename);
+                scanner.close();
+                System.exit(1);
+            }
+            map.placeUnit(unitFactory.getNewUnit(name, team), x, y);
         }
 
         scanner.close();
-        Map map = new Map(tiles, tileHeight, tileWidth);
         return map;
     }
 }

@@ -102,15 +102,19 @@ public class CLI extends AbstractView {
                     // msgBundle.getString("terrain_colour_not_found"), locale);
                     System.exit(1);
                 }
-                Colour foregroundColour = Colour.LIGHT_RED;
-                Colour backgroundColour = colourTypes.get(map.getTile(i, j)
-                        .getTerrain().getName());
                 Unit unit = map.getTile(i, j).getUnit();
                 char character;
-                if (unit == null)
+                Colour backgroundColour = colourTypes.get(map.getTile(i, j)
+                        .getTerrain().getName());
+                Colour foregroundColour;
+                if (unit == null) {
+                    foregroundColour = Colour.RESET;
                     character = ' ';
-                else
+                } else {
+                    foregroundColour = unit.getTeam() == 1 ? Colour.LIGHT_RED
+                            : Colour.LIGHT_BLUE;
                     character = symbolTypes.get(unit.getName());
+                }
                 atomMap[i][j] = new Atom(character, backgroundColour,
                         foregroundColour);
             }

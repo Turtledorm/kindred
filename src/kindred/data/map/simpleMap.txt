@@ -6,3 +6,13 @@ S M R R M S
 S M R R M S
 F F P R R S
 F F P P R R
+1 Archer    0 0
+1 Swordsman 0 1
+1 Wizard    1 0
+1 Knight    1 1
+1 Rogue     0 2
+2 Archer    5 5
+2 Swordsman 5 4
+2 Wizard    4 5
+2 Knight    4 4
+2 Rogue     5 3
