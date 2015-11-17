@@ -32,8 +32,16 @@ enum Colour {
     LIGHT_CYAN("1;36"),
     WHITE("1;37");
 
-    // TODO: Check exactly what are the below value/values
+    /**
+     * The inner part of the ANSI escape sequence of this colour.
+     */
     private final String value;
+
+    /**
+     * Contains the corresponding enum value of each possible
+     * ClientToServerMessage type. Stored in a static variable to save time from
+     * calling {@code values()} many times.
+     */
     private static final Colour[] VALUES = values();
 
     /**
