@@ -20,23 +20,62 @@
 
 \section{Introdução}
 
-\emph{Kindred} é um jogo de estratégia multiplayer online jogado por turnos, baseado em jogos como Advance Wars e Fire Emblem. As partidas são individuais, com um jogador enfrentando apenas um adversário em um mapa escolhido. Os dois jogadores terão as mesmas unidades à disposição, sendo que os esquadrões comandados pelos jogadores começam em lados opostos do mapa. O objetivo do jogo é eliminar as tropas inimigas em sua totalidade. 
-
-\section{Mapas}
-Os mapas têm tamanhos variáveis e são divididos em \emph{tiles}, que podem ser ocupadas por apenas uma \emph{unit}. Cada \emph{tile} representa um tipo de \emph{terrain}, que atribui alguns bônus e penalidades para a \emph{unit} nela. Entre os bônus se encontram \emph{defense} aprimorada, enquanto de penalidade temos \emph{agility} diminuída. Quase todos os \emph{terrains} também afetam a mobilidade de suas tropas, portanto, fique atento para o lugar em que envia suas \emph{units}! 
-
+\emph{Kindred} é um jogo de estratégia multiplayer online jogado por turnos, baseado em jogos como Advance Wars e Fire Emblem. As partidas são individuais, com um jogador (nome dado ao usuário do sistema) enfrentando apenas um adversário em um mapa escolhido. Cada jogador tem à sua disposição um exército: seus soldados são genericamente chamados de unidades. O objetivo do jogo é eliminar as tropas adversárias em sua totalidade, levando seu exército à vitória.
 
 \section{Units}
-Cada jogador começa com um certo número de \emph{units}, e cada \emph{unit} tem os próprios \emph{atributos}, \emph{range} e \emph{movement}. Os \emph{atributos} são \emph{HP}, \emph{attack}, \emph{defense} e \emph{agility}, e definem, respectivamente, a quantidade de dano total que uma \emph{unit} pode sofrer, o dano máximo que ela pode infligir, a resistência a danos que ela possui, e a chance que ela tem de se esquivar de um golpe. \emph{Range} define o raio de alcance total que uma unidade tem para atacar outras unidades.  \emph{Movement} define a quantidade de tiles pelas quais uma unidade pode se deslocar a cada turno. Uma utilização inteligente do mapa e das características de suas \emph{units} e das \emph{units} do oponente vão definir o vencedor da partida. Estratégia é essencial para de dominar este jogo.
+Cada jogador começa com um certo número de \emph{unidades}, e cada \emph{unidade} tem suas características expressas em valores numéricos denominados \emph{atributos}. Estes são melhor explicados na Tabela 1. Uma utilização inteligente do mapa e das características das \emph{unidades} em jogo, tanto aliadas quanto adversárias, vão definir o vencedor da partida. Estratégia é essencial para dominar este jogo.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|l|p{0.7\textwidth}|}\hline
+ \textbf{Sigla} & \textbf{Nome} & \textbf{Descrição} \\\hline
+ MOV & Movimento & Número máximo de tiles (horizontais e verticais) de que uma unidade pode se deslocar durante o turno. \\\hline
+ RNG & Alcance   & Distância máxima, em tiles (horizontais e verticais) que uma unidade tem para atacar uma unidade adversária. \\\hline
+ HP  & HP        & Vida da unidade. Quando chegar a zero, a unidade é destruída. \\\hline
+ ATK & Ataque    & Quantidade de dano que uma unidade pode causar em uma batalha. \\\hline
+ DEF & Defesa    & Redução de dano aplicada quando uma unidade sofre um ataque. \\\hline
+ AGI & Agilidade & Chance de acertar e de se esquivar do ataque de uma unidade adversária. \\\hline
+\end{tabular}
+\caption{Atributos de uma unidade}
+\end{table}
+
+\section{Mapas}
+Os mapas têm tamanhos variáveis e são divididos em "quadradinhos" menores chamados \emph{tiles}, que podem ser ocupados por apenas uma \emph{unidade}. Cada \emph{tile} representa um tipo de \emph{terreno}, que podem ou não atribuir alguns bônus para a \emph{unit} que nela se encontra. Estes aprimoramentos incluem um aumento em \emph{defense} e/ou \emph{agility}. No entanto, quase todos os \emph{terrains} também afetam a mobilidade de suas tropas, portanto, fique atento para onde posiciona suas \emph{units}!
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|c|c|c|}\hline
+ \textbf{Nome} & \textbf{Cor} & \textbf{Bônus de defesa} & \textbf{Bônus de agilidade} & \textbf{Penalidade de movimento}\\\hline
+ Road     & Cinza claro  &  0 &   0 & 0 \\\hline
+ Plains   & Marrom claro &  0 &  10 & 1 \\\hline
+ Forest   & Verde        & 10 &   0 & 1 \\\hline
+ Swamp    & Roxo         & 20 & -10 & 2 \\\hline
+ Mountain & Preto        & 30 &  10 & 3 \\\hline
+\end{tabular}
+\caption{Terrenos existentes}
+\end{table}
 
 \section{Classes}
 Uma \emph{unit} tem \emph{atributos}, \emph{range} e \emph{movement}, mas o que defines esses parâmetros é a \emph{classe} à qual ela pertence. As \emph{classes} disponíveis são \emph{Knight}, \emph{Acher}, \emph{Lancer}, \emph{Rogue}, \emph{Swordsman} e \emph{Wizard}, cada uma com sua gama de forças e fraquezas, definidas não só pelos parâmetros, já explicados, mas também pelo uso que se dá a elas. Um \emph{Wizard}, por exemplo, tem a maior \emph{range} do jogo e um dos maiores \emph{attacks}, mas também a menor \emph{defense} e \emph{movement}. Ou seja, seu \emph{Wizard} será letal se usado corretamente a distância e se estiver sempre bem posicionado, no entanto, por sua inerente fraqueza, um erro de cálculo pode lhe custar a vida dele e, consequentemente, o jogo. Manter seu \emph{Wizard} afastado do núcleo de combate e protegido por outras \emph{units} é recomendável. 
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|c|c|c|c|c|c|c|}\hline
+ \textbf{Nome} & \textbf{Símbolo} & \textbf{HP} & \textbf{MOV} & \textbf{RNG} & \textbf{ATK} & \textbf{DEF} & \textbf{AGI}\\\hline
+Archer    & A & 15 & 4 & 3 & 10 &  5 &  9 \\\hline
+Knight    & K & 30 & 5 & 1 &  6 & 12 &  6 \\\hline
+Lancer    & L & 25 & 5 & 2 &  8 &  8 &  7 \\\hline
+Rogue     & R & 18 & 7 & 1 &  6 &  5 & 15 \\\hline
+Swordsman & S & 20 & 6 & 1 &  7 &  7 & 12 \\\hline
+Wizard    & W & 10 & 4 & 4 & 12 &  3 &  8 \\\hline
+\end{tabular}
+\caption{Classes existentes}
+\end{table}
 
 \section{Estratégias}
 O primeiro passo e qualquer batalha que seja é conhecer seu exército. Dominando suas \emph{units}, você já tem meio caminho andado para a vitória. O passo seguinte é observar o \emph{mapa}. Ver que tipo de \emph{terrain} predomina e se existe algum foco de um \emph{terrain} distinto do predominante lhe permite formular as estratégias necessárias para conduzir as ações do inimigo a seu favor e assegurar uma vitória. Em um mapa pequeno, por exemplo, as unidades de longo alcance -- como \emph{archers} e \emph{wizards} -- têm vantagem, pois estarão próximas de aliados que as podem defender e os oponentes não terão muito espaço para manobrar ou fugir. Por que não, então, despachar unidades com alta mobilidade para eliminar essas unidades inimigas antes que elas causem estrago? Da mesma forma, você poderia também usar essas mesmas unidades como isca, enquanto prepara uma elaborada armadilha para seu oponente. Após o conhecimento de suas \emph{units} e do \emph{mapa}, sua adaptabilidade e engenhosidade serão os fatores que desequilibrarão uma partida!
 
 \section{Comandos do Terminal}
 [completar...]
-
 
 \end{document}

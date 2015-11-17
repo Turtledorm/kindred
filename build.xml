@@ -29,11 +29,11 @@
         </jar>
     </target>
 
-    <target name="run-server">
+    <target name="run-server" depends="release">
         <java jar="release/jar/KindredServer.jar" fork="true"/>
     </target>
     
-    <target name="run-client">
+    <target name="run-client" depends="release">
         <java jar="release/jar/KindredClient.jar" fork="true"/>
     </target>
 
