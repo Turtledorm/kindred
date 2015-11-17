@@ -1,0 +1,42 @@
+\documentclass{article}
+% uncomment to set the page format to A4 instead of A5
+\def\RELEASEDOCUMENT{}
+
+\input{preamble-vbm.tex}
+
+\title{
+    Kindred -- Manual do Usuário
+}
+
+\author{
+    Bruno Guilherme Ricci Lucas (4460596)\\
+    Leonardo Pereira Macedo (8536065)\\
+    Vinícius Bitencourt Matos (8536221)
+}
+
+\begin{document}
+
+\maketitle
+
+\section{Introdução}
+
+\emph{Kindred} é um jogo de estratégia multiplayer online jogado por turnos, baseado em jogos como Advance Wars e Fire Emblem. As partidas são individuais, com um jogador enfrentando apenas um adversário em um mapa escolhido. Os dois jogadores terão as mesmas unidades à disposição, sendo que os esquadrões comandados pelos jogadores começam em lados opostos do mapa. O objetivo do jogo é eliminar as tropas inimigas em sua totalidade. 
+
+\section{Mapas}
+Os mapas têm tamanhos variáveis e são divididos em \emph{tiles}, que podem ser ocupadas por apenas uma \emph{unit}. Cada \emph{tile} representa um tipo de \emph{terrain}, que atribui alguns bônus e penalidades para a \emph{unit} nela. Entre os bônus se encontram \emph{defense} aprimorada, enquanto de penalidade temos \emph{agility} diminuída. Quase todos os \emph{terrains} também afetam a mobilidade de suas tropas, portanto, fique atento para o lugar em que envia suas \emph{units}! 
+
+
+\section{Units}
+Cada jogador começa com um certo número de \emph{units}, e cada \emph{unit} tem os próprios \emph{atributos}, \emph{range} e \emph{movement}. Os \emph{atributos} são \emph{HP}, \emph{attack}, \emph{defense} e \emph{agility}, e definem, respectivamente, a quantidade de dano total que uma \emph{unit} pode sofrer, o dano máximo que ela pode infligir, a resistência a danos que ela possui, e a chance que ela tem de se esquivar de um golpe. \emph{Range} define o raio de alcance total que uma unidade tem para atacar outras unidades.  \emph{Movement} define a quantidade de tiles pelas quais uma unidade pode se deslocar a cada turno. Uma utilização inteligente do mapa e das características de suas \emph{units} e das \emph{units} do oponente vão definir o vencedor da partida. Estratégia é essencial para de dominar este jogo.
+
+\section{Classes}
+Uma \emph{unit} tem \emph{atributos}, \emph{range} e \emph{movement}, mas o que defines esses parâmetros é a \emph{classe} à qual ela pertence. As \emph{classes} disponíveis são \emph{Knight}, \emph{Acher}, \emph{Lancer}, \emph{Rogue}, \emph{Swordsman} e \emph{Wizard}, cada uma com sua gama de forças e fraquezas, definidas não só pelos parâmetros, já explicados, mas também pelo uso que se dá a elas. Um \emph{Wizard}, por exemplo, tem a maior \emph{range} do jogo e um dos maiores \emph{attacks}, mas também a menor \emph{defense} e \emph{movement}. Ou seja, seu \emph{Wizard} será letal se usado corretamente a distância e se estiver sempre bem posicionado, no entanto, por sua inerente fraqueza, um erro de cálculo pode lhe custar a vida dele e, consequentemente, o jogo. Manter seu \emph{Wizard} afastado do núcleo de combate e protegido por outras \emph{units} é recomendável. 
+
+\section{Estratégias}
+O primeiro passo e qualquer batalha que seja é conhecer seu exército. Dominando suas \emph{units}, você já tem meio caminho andado para a vitória. O passo seguinte é observar o \emph{mapa}. Ver que tipo de \emph{terrain} predomina e se existe algum foco de um \emph{terrain} distinto do predominante lhe permite formular as estratégias necessárias para conduzir as ações do inimigo a seu favor e assegurar uma vitória. Em um mapa pequeno, por exemplo, as unidades de longo alcance -- como \emph{archers} e \emph{wizards} -- têm vantagem, pois estarão próximas de aliados que as podem defender e os oponentes não terão muito espaço para manobrar ou fugir. Por que não, então, despachar unidades com alta mobilidade para eliminar essas unidades inimigas antes que elas causem estrago? Da mesma forma, você poderia também usar essas mesmas unidades como isca, enquanto prepara uma elaborada armadilha para seu oponente. Após o conhecimento de suas \emph{units} e do \emph{mapa}, sua adaptabilidade e engenhosidade serão os fatores que desequilibrarão uma partida!
+
+\section{Comandos do Terminal}
+[completar...]
+
+
+\end{document}

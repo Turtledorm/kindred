@@ -1,5 +1,5 @@
 SHELL    =bash
-TARGET   =main.pdf
+TARGET   =main.pdf UserManual.pdf
 PREAMBLE =preamble-vbm
 TEX      =*.tex
 
