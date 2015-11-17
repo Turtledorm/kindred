@@ -12,24 +12,73 @@ import java.util.Random;
  */
 
 enum Colour {
+    /**
+     * Resets the colours.
+     */
     RESET("0"),
-    // Colours available to both background and foreground
+    /**
+     * Black colour. Available to both background and foreground.
+     */
     BLACK("0;30"),
+    /**
+     * Red colour. Available to both background and foreground.
+     */
     RED("0;31"),
+    /**
+     * Green colour. Available to both background and foreground.
+     */
     GREEN("0;32"),
+    /**
+     * Brown colour. Available to both background and foreground.
+     */
     BROWN("0;33"),
+    /**
+     * Blue colour. Available to both background and foreground.
+     */
     BLUE("0;34"),
+    /**
+     * Purple colour. Available to both background and foreground.
+     */
     PURPLE("0;35"),
+    /**
+     * Cyan colour. Available to both background and foreground.
+     */
     CYAN("0;36"),
+    /**
+     * Light grey colour. Available to both background and foreground.
+     */
     LIGHT_GREY("0;37"),
-    // Colours available only to foreground
+    /**
+     * Dark grey colour. Available only to foreground.
+     */
     DARK_GREY("1;30"),
+    /**
+     * Light red colour. Available only to foreground.
+     */
     LIGHT_RED("1;31"),
+    /**
+     * Light green colour. Available only to foreground.
+     */
     LIGHT_GREEN("1;32"),
+    /**
+     * Yellow colour. Available only to foreground.
+     */
     YELLOW("1;33"),
+    /**
+     * Light blue colour. Available only to foreground.
+     */
     LIGHT_BLUE("1;34"),
+    /**
+     * Light purple colour. Available only to foreground.
+     */
     LIGHT_PURPLE("1;35"),
+    /**
+     * Light cyan colour. Available only to foreground.
+     */
     LIGHT_CYAN("1;36"),
+    /**
+     * White colour. Available only to foreground.
+     */
     WHITE("1;37");
 
     /**
