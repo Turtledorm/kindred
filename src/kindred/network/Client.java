@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 import kindred.model.Game;
+import kindred.model.GameAction;
 import kindred.network.messages.ClientToServerMessage;
 import kindred.network.messages.ServerToClientMessage;
 import kindred.view.AbstractView;
@@ -105,8 +106,8 @@ public class Client implements Runnable {
         // Define socket I/O
         try {
             socketOut = new PrintWriter(socket.getOutputStream(), true);
-            socketIn = new BufferedReader(
-                    new InputStreamReader(socket.getInputStream()));
+            socketIn = new BufferedReader(new InputStreamReader(
+                    socket.getInputStream()));
         } catch (IOException e) {
             view.connectionResult(false, serverIP);
             System.exit(1);
@@ -129,7 +130,7 @@ public class Client implements Runnable {
                 } catch (InterruptedException e) {
                 }
             } else if (!game.isOver())
-                view.promptForGameAction();
+                view.promptForGameAction(this);
             else
                 game = null;
         }
@@ -157,20 +158,19 @@ public class Client implements Runnable {
                     break;
                 case SUCC_JOIN:
                 case INFO_SOMEONE_ENTERED_ROOM:
-                    String[] parts = arg.split("|");
+                    String[] parts = arg.split("\\|");
                     opponent = parts[0];
                     team = Integer.parseInt(parts[1]);
                     String mapFilename = parts[2];
-                    game = new Game(nickname, opponent,
-                            "/kindred/data/maps/" + mapFilename + ".txt", team,
-                            view);
+                    game = new Game(nickname, opponent, "/kindred/data/map/"
+                            + mapFilename + ".txt", team, view);
                     break;
                 case SUCC_LEAVE:
                     System.exit(0);
                     socket.close();
                     return;
                 case GAME_ACTION:
-                    // TODO: Handle this
+                    receiveGameAction(GameAction.fromEncodedString(arg));
                     break;
                 // Nothing to do here in the following cases
                 case SUCC_HOST:
@@ -190,7 +190,7 @@ public class Client implements Runnable {
                     break;
                 }
 
-                view.menuEvent(msg);
+                view.remoteEvent(msg);
                 synchronized (view) {
                     view.notify();
                 }
@@ -297,6 +297,107 @@ public class Client implements Runnable {
     public void quit() {
         quitClient = true;
         send(ClientToServerMessage.QUIT);
+    }
+
+    /**
+     * Sends a game MOVE command to the Server. Makes the user's Unit on (
+     * {@code positions[0]}, {@code positions[1]}) move to Tile
+     * {@code positions[2]}, {@code positions[3]}).
+     * 
+     * @param positions
+     *            array containing the first two values as the (x, y) position
+     *            of the user's Unit. The third and fourth values are the (x, y)
+     *            position of the Tile that the Unit will move to.
+     */
+    public void move(int[] positions) {
+        GameAction cmd = GameAction.MOVE;
+        String arg = "";
+        for (int i = 0; i < positions.length; i++)
+            arg = "|" + positions[i];
+        cmd.setArgument(arg.substring(1));
+
+        ClientToServerMessage msg = ClientToServerMessage.GAME_ACTION;
+        msg.setArgument(cmd.toEncodedString());
+        send(msg);
+    }
+
+    /**
+     * Sends a game ATTACK command to the Server. Makes the opponent's Unit on
+     * (x, y) suffer the specified amount of damage.
+     * 
+     * @param x
+     *            x coordinate of the opponent's Unit
+     * @param y
+     *            y coordinate of the opponent's Unit
+     * @param damage
+     *            damage caused to the opponent's Unit
+     */
+    public void attack(int x, int y, int damage) {
+        GameAction cmd = GameAction.ATTACK;
+        String arg = x + "|" + y + "|" + damage;
+        cmd.setArgument(arg.substring(1));
+
+        ClientToServerMessage msg = ClientToServerMessage.GAME_ACTION;
+        msg.setArgument(cmd.toEncodedString());
+        send(msg);
+    }
+
+    /**
+     * Sends a game END command to the Server, indicating that the user has
+     * ended their current turn.
+     */
+    public void endTurn() {
+        GameAction cmd = GameAction.END_TURN;
+        ClientToServerMessage msg = ClientToServerMessage.GAME_ACTION;
+        msg.setArgument(cmd.toEncodedString());
+        send(msg);
+    }
+
+    /**
+     * Sends a game SURRENDER command to the Server, indicating that the user
+     * has forfeited the match.
+     */
+    public void surrender() {
+        GameAction cmd = GameAction.SURRENDER;
+        ClientToServerMessage msg = ClientToServerMessage.GAME_ACTION;
+        msg.setArgument(cmd.toEncodedString());
+        send(msg);
+    }
+
+    /**
+     * Parses a GameAction message sent by the opponent, resulting in an action
+     * in the user's Game.
+     * 
+     * @param message
+     *            GameAction message sent by the opponent
+     */
+    private void receiveGameAction(GameAction message) {
+        String[] partsString = message.getArgument().split("\\|");
+        Integer[] parts = new Integer[partsString.length];
+        for (int i = 0; i < parts.length; i++)
+            parts[i] = Integer.parseInt(partsString[i]);
+
+        switch (message) {
+        // MOVE: xi yi xf yf
+        case MOVE:
+            game.move(parts[0], parts[1], parts[2], parts[3]);
+            break;
+
+        // ATTACK: x y damage
+        case ATTACK:
+            game.causeDamage(parts[0], parts[1], parts[2]);
+            break;
+
+        // END_TURN
+        case END_TURN:
+            game.endTurn();
+            break;
+
+        // SURRENDER
+        case SURRENDER:
+            game.surrender();
+            break;
+        }
     }
 
     /**

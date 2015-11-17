@@ -1,5 +1,7 @@
 package kindred.network.messages;
 
+import kindred.model.GameAction;
+
 /**
  * Contains an enum number for every type of message the Server can send to the
  * Client. Can also encode and decode these values to shorten and simplify
@@ -126,9 +128,9 @@ public enum ServerToClientMessage {
      */
     INFO_SOMEONE_ENTERED_ROOM,
 
-    // TODO: Give more details to GAME_ACTION below
     /**
      * Game-related command that the Server only passes forward to the Client.
+     * See {@link GameAction} class for more info.
      */
     GAME_ACTION;
 

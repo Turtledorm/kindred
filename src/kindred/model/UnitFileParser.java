@@ -39,13 +39,21 @@ public class UnitFileParser {
             throws FileNotFoundException {
         HashMap<String, Attribute> unitTypes = new HashMap<String, Attribute>();
 
-        File f = new File(UnitFileParser.class.getResource(filename).getPath());
+        File f = null;
+        try {
+            f = new File(UnitFileParser.class.getResource(filename).getPath());
+        } catch (NullPointerException e) {
+            System.err.println("File '" + filename + "' not found!");
+            System.exit(1);
+        }
+
         Scanner scanner = new Scanner(f);
         Pattern p = Pattern.compile("\\s*\\w");
 
         while (scanner.hasNextLine()) {
-            String name;
+            String name = null;
             int hp, atk, def, agi, mov, rng;
+            hp = atk = def = agi = mov = rng = 0;
 
             try {
                 name = scanner.next(p);
@@ -57,7 +65,7 @@ public class UnitFileParser {
                 rng = scanner.nextInt();
             } catch (NoSuchElementException e) {
                 System.err.format("Invalid file format in '%s'\n", filename);
-                return null;
+                System.exit(1);
             } finally {
                 scanner.close();
             }

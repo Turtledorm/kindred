@@ -25,7 +25,7 @@ public class Game {
     /**
      * Name of the file containing valid Terrain types.
      */
-    private final String terrainFile = "/kindred/data/terrain/terrainColors.txt";
+    private final String terrainFile = "/kindred/data/terrain/terrain.txt";
 
     /**
      * ID for the Player's Units
@@ -46,11 +46,6 @@ public class Game {
      * Creates Units for the Players to use during the game.
      */
     private UnitFactory unitFactory;
-
-    /**
-     * Object representing the means of interaction a Player has with the game.
-     */
-    private AbstractView view;
 
     /**
      * 
@@ -94,7 +89,8 @@ public class Game {
         playerB = nameB;
 
         this.unitFactory = new UnitFactory();
-        this.view = view;
+        map.placeUnit(unitFactory.getNewUnit("Archer", 1), 1, 1);
+        map.placeUnit(unitFactory.getNewUnit("Wizard", 1), 0, 0);
         this.team = team;
         turn = 1;
         isOver = false;
@@ -105,11 +101,13 @@ public class Game {
     }
 
     public boolean move(int xi, int yi, int xf, int yf) {
-        return map.move(team, xi, yi, xf, yf);
+        return turn == team && map.move(team, xi, yi, xf, yf);
     }
 
     public int attack(int xi, int yi, int xf, int yf) {
-        return map.attack(team, xi, yi, xf, yf);
+        if (turn == team)
+            return map.attack(team, xi, yi, xf, yf);
+        return -1;
     }
 
     public boolean causeDamage(int x, int y, int damage) {

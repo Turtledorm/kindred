@@ -7,7 +7,7 @@ package kindred.model;
  * 
  * @author Kindred Team
  */
-public enum GameCommand {
+public enum GameAction {
     /**
      * Moves a Unit the player controls to a different Tile, if possible.
      */
@@ -31,11 +31,11 @@ public enum GameCommand {
     SURRENDER;
 
     /**
-     * Contains the corresponding enum value of each possible GameCommand type.
+     * Contains the corresponding enum value of each possible GameAction type.
      * Stored in a static variable to save time from calling {@code values()}
      * many times.
      */
-    private static final GameCommand[] values = values();
+    private static final GameAction[] values = values();
 
     /**
      * Message argument. If more than one, they have to be separated with the
@@ -44,9 +44,9 @@ public enum GameCommand {
     private String argument;
 
     /**
-     * Initially sets all GameCommand messages to have no arguments.
+     * Initially sets all GameAction messages to have no arguments.
      */
-    GameCommand() {
+    GameAction() {
         setArgument("");
     }
 
@@ -73,22 +73,22 @@ public enum GameCommand {
      * Encodes the message in a single String containing its enum number and
      * argument, these two separated with the char '|'.
      * 
-     * @return an encoded GameCommand message
+     * @return an encoded GameAction message
      */
     public String toEncodedString() {
         return ordinal() + "|" + argument;
     }
 
     /**
-     * Decodes a String, converting it to its corresponding GameCommand format.
+     * Decodes a String, converting it to its corresponding GameAction format.
      * 
      * @param str
      *            argument contained in the message
-     * @return a decoded GameCommand message
+     * @return a decoded GameAction message
      */
-    public static GameCommand fromEncodedString(String str) {
+    public static GameAction fromEncodedString(String str) {
         String[] parts = str.split("\\|", 2);
-        GameCommand msg = values[Integer.parseInt(parts[0])];
+        GameAction msg = values[Integer.parseInt(parts[0])];
         msg.setArgument(parts[1]);
         return msg;
     }

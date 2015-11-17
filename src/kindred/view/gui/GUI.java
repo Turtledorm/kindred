@@ -35,7 +35,7 @@ public class GUI extends AbstractView {
     }
 
     @Override
-    public boolean promptForGameAction() {
+    public boolean promptForGameAction(Client client) {
         return false;
     }
 
@@ -50,7 +50,7 @@ public class GUI extends AbstractView {
     public void connectionResult(boolean success, String serverIP) {
     }
 
-    public void menuEvent(ServerToClientMessage msg) {
+    public void remoteEvent(ServerToClientMessage msg) {
 
     }
 

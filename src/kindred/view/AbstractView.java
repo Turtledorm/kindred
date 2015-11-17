@@ -62,8 +62,10 @@ public abstract class AbstractView {
             readLanguageData();
             return;
         } catch (MissingResourceException e) {
-            System.err.println("Also, the default language (" + locale.toString()
-                    + ") could not be found. I'm sorry! :'(\nPlease reinstall this program and be happy!");
+            System.err
+                    .println("Also, the default language ("
+                            + locale.toString()
+                            + ") could not be found. I'm sorry! :'(\nPlease reinstall this program and be happy!");
             System.exit(1);
         }
     }
@@ -117,12 +119,14 @@ public abstract class AbstractView {
 
     /**
      * Prompts the user for an action in the game and (if the user chooses a
-     * valid action) calls the corresponding method of {@code map}.
+     * valid action) calls the corresponding method of map.
      * 
+     * @param client
+     *            the user's Client object whose methods will be called
      * @return {@code true} if the user has finished their turn, or
      *         {@code false} otherwise
      */
-    public abstract boolean promptForGameAction();
+    public abstract boolean promptForGameAction(Client client);
 
     /**
      * Closes the user interface.
@@ -143,7 +147,7 @@ public abstract class AbstractView {
 
     public abstract void connectionResult(boolean success, String serverIP);
 
-    public abstract void menuEvent(ServerToClientMessage msg);
+    public abstract void remoteEvent(ServerToClientMessage msg);
 
     public abstract void connectionLost();
 }

@@ -8,7 +8,7 @@ import java.util.Scanner;
 import kindred.model.TerrainFileParser;
 
 /**
- * Provides a method to parse a file that contains the description of a terrain
+ * Provides a method to parse a file that contains the description of Terrains
  * in a command-line user interface.
  * 
  * @author Kindred Team
@@ -20,6 +20,7 @@ public class CLITerrainParser {
      * Do not instantiate!
      */
     private CLITerrainParser() {
+        // Do not instantiate!
     }
 
     /**
@@ -29,7 +30,7 @@ public class CLITerrainParser {
      * The file must have lines containing the name of each Terrain and the name
      * of its background colour separated by whitespaces.
      * <p>
-     * The name of the terrain must be exactly the same as the one in the file
+     * The name of the Terrain must be exactly the same as the one in the file
      * parsed by {@link TerrainFileParser}.
      * <p>
      * The name of the colour must be exactly one of the ones defined in the

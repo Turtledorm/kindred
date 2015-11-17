@@ -38,6 +38,16 @@ public class CLI extends AbstractView {
     private HashMap<String, Colour> colourTypes;
 
     /**
+     * Name of the file containing the symbols for each Unit.
+     */
+    private final String symbolFile = "/kindred/data/terrain/unitSymbols.txt";
+
+    /**
+     * Maps names of Units to their corresponding Character symbol.
+     */
+    private HashMap<String, Character> symbolTypes;
+
+    /**
      * The scanner object to get user's input from the command-line interface.
      */
     private final Scanner scanner;
@@ -56,10 +66,10 @@ public class CLI extends AbstractView {
      */
     @Override
     protected void readLanguageData() {
-        menuMsgBundle = ResourceBundle
-                .getBundle("kindred.lang.CLI-MessageBundle_Menu", locale);
-        gameMsgBundle = ResourceBundle
-                .getBundle("kindred.lang.CLI-MessageBundle_Game", locale);
+        menuMsgBundle = ResourceBundle.getBundle(
+                "kindred.lang.CLI-MessageBundle_Menu", locale);
+        gameMsgBundle = ResourceBundle.getBundle(
+                "kindred.lang.CLI-MessageBundle_Game", locale);
     }
 
     /**
@@ -80,6 +90,7 @@ public class CLI extends AbstractView {
         atomMap = new Atom[height][width];
         try {
             colourTypes = CLITerrainParser.parseFile(colourFile);
+            symbolTypes = CLIUnitParser.parseFile(symbolFile);
         } catch (FileNotFoundException e) {
             System.err.format("File '%s' not found!\n", colourFile);
             System.exit(1);
@@ -94,8 +105,8 @@ public class CLI extends AbstractView {
         Map map = game.getMap();
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                if (!colourTypes
-                        .containsKey(map.getTile(i, j).getTerrain().getName())) {
+                if (!colourTypes.containsKey(map.getTile(i, j).getTerrain()
+                        .getName())) {
                     System.err.println("Terrain not found in CLI colour file '"
                             + map.getTile(i, j).getTerrain().getName() + "'");
                     // new MessageFormat(
@@ -103,9 +114,9 @@ public class CLI extends AbstractView {
                     System.exit(1);
                 }
                 Colour foregroundColour = Colour.LIGHT_RED;
-                Colour backgroundColour = colourTypes
-                        .get(map.getTile(i, j).getTerrain().getName());
-                char character = ' ';
+                Colour backgroundColour = colourTypes.get(map.getTile(i, j)
+                        .getTerrain().getName());
+                char character = symbolTypes.get(map.getTile(i, j).getUnit());
                 atomMap[i][j] = new Atom(character, backgroundColour,
                         foregroundColour);
             }
@@ -142,8 +153,8 @@ public class CLI extends AbstractView {
             switch (separate[0].toUpperCase()) {
             case "JOIN":
                 if (separate.length != 2) {
-                    System.out.println(
-                            menuMsgBundle.getString("invalid_argument_for_command"));
+                    System.out.println(menuMsgBundle
+                            .getString("invalid_argument_for_command"));
                     continue;
                 }
                 String host = separate[1];
@@ -152,8 +163,8 @@ public class CLI extends AbstractView {
 
             case "NICK":
                 if (separate.length > 2) {
-                    System.out.println(
-                            menuMsgBundle.getString("invalid_argument_for_command"));
+                    System.out.println(menuMsgBundle
+                            .getString("invalid_argument_for_command"));
                     continue;
                 } else if (separate.length == 1) {
                     client.nick();
@@ -165,8 +176,8 @@ public class CLI extends AbstractView {
 
             case "MAPS":
                 if (separate.length != 1) {
-                    System.out.println(
-                            menuMsgBundle.getString("invalid_argument_for_command"));
+                    System.out.println(menuMsgBundle
+                            .getString("invalid_argument_for_command"));
                     continue;
                 }
                 client.maps();
@@ -174,8 +185,8 @@ public class CLI extends AbstractView {
 
             case "ROOMS":
                 if (separate.length != 1) {
-                    System.out.println(
-                            menuMsgBundle.getString("invalid_argument_for_command"));
+                    System.out.println(menuMsgBundle
+                            .getString("invalid_argument_for_command"));
                     continue;
                 }
                 client.rooms();
@@ -183,8 +194,8 @@ public class CLI extends AbstractView {
 
             case "HELP":
                 if (separate.length != 1) {
-                    System.out.println(
-                            menuMsgBundle.getString("invalid_argument_for_command"));
+                    System.out.println(menuMsgBundle
+                            .getString("invalid_argument_for_command"));
                     continue;
                 }
                 if (!printFileContent("/kindred/view/cli/menuHelp.txt"))
@@ -194,8 +205,8 @@ public class CLI extends AbstractView {
             case "QUIT":
             case "EXIT":
                 if (separate.length != 1) {
-                    System.out.println(
-                            menuMsgBundle.getString("invalid_argument_for_command"));
+                    System.out.println(menuMsgBundle
+                            .getString("invalid_argument_for_command"));
                     continue;
                 }
                 client.quit();
@@ -203,8 +214,8 @@ public class CLI extends AbstractView {
 
             case "HOST":
                 if (separate.length != 2) {
-                    System.out.println(
-                            menuMsgBundle.getString("invalid_argument_for_command"));
+                    System.out.println(menuMsgBundle
+                            .getString("invalid_argument_for_command"));
                     continue;
                 }
                 String mapName = separate[1];
@@ -213,8 +224,8 @@ public class CLI extends AbstractView {
 
             case "UNHOST":
                 if (separate.length != 1) {
-                    System.out.println(
-                            menuMsgBundle.getString("invalid_argument_for_command"));
+                    System.out.println(menuMsgBundle
+                            .getString("invalid_argument_for_command"));
                     continue;
                 }
                 client.unhost();
@@ -234,45 +245,55 @@ public class CLI extends AbstractView {
      * {@inheritDoc}
      */
     @Override
-    public synchronized boolean promptForGameAction() {
+    public synchronized boolean promptForGameAction(Client client) {
         System.out.println(gameMsgBundle.getString("type_in_your_command"));
         printPrompt();
 
         for (; scanner.hasNextLine(); printPrompt()) {
             int[] positions;
 
-            String line = scanner.nextLine().trim().toLowerCase();
+            String line = scanner.nextLine().trim();
+            if (line.isEmpty())
+                continue;
             String[] separate = line.split("\\s+");
-            // TODO: send to server
-            switch (separate[0]) {
-            case "move":
-            case "mv":
+
+            switch (separate[0].toUpperCase()) {
+            case "MOVE":
+            case "MV":
                 if (separate.length != 5) {
-                    System.out.println(
-                            gameMsgBundle.getString("invalid_argument_for_command"));
+                    System.out.println(gameMsgBundle
+                            .getString("invalid_argument_for_command"));
                     continue;
                 }
                 positions = parsePosition(separate);
-                if (positions != null)
-                    game.move(positions[0], positions[1], positions[2],
-                            positions[3]);
+                if (positions != null) {
+                    if (game.move(positions[0], positions[1], positions[2],
+                            positions[3]))
+                        client.move(positions);
+                }
                 break;
-            case "attack":
-            case "atk":
+
+            case "ATTACK":
+            case "ATK":
                 if (separate.length != 5) {
-                    System.out.println(
-                            gameMsgBundle.getString("invalid_argument_for_command"));
+                    System.out.println(gameMsgBundle
+                            .getString("invalid_argument_for_command"));
                     continue;
                 }
                 positions = parsePosition(separate);
-                if (positions != null)
-                    game.attack(positions[0], positions[1], positions[2],
-                            positions[3]);
+                if (positions != null) {
+                    int damage = game.attack(positions[0], positions[1],
+                            positions[2], positions[3]);
+                    // Attack missed if damage = 0, and hit if damage > 0
+                    if (damage >= 0)
+                        client.attack(positions[2], positions[3], damage);
+                }
                 break;
-            case "info":
+
+            case "INFO":
                 if (separate.length != 3) {
-                    System.out.println(
-                            gameMsgBundle.getString("invalid_argument_for_command"));
+                    System.out.println(gameMsgBundle
+                            .getString("invalid_argument_for_command"));
                     continue;
                 }
                 positions = parsePosition(separate);
@@ -282,24 +303,30 @@ public class CLI extends AbstractView {
                     System.out.println(message);
                 }
                 break;
-            case "end":
+
+            case "END":
                 if (separate.length != 1) {
-                    System.out.println(
-                            gameMsgBundle.getString("invalid_argument_for_command"));
+                    System.out.println(gameMsgBundle
+                            .getString("invalid_argument_for_command"));
                     continue;
                 }
+                client.endTurn();
                 return true;
-            case "surrender":
+
+            case "SURRENDER":
                 if (separate.length != 1) {
-                    System.out.println(
-                            gameMsgBundle.getString("invalid_argument_for_command"));
+                    System.out.println(gameMsgBundle
+                            .getString("invalid_argument_for_command"));
                     continue;
                 }
+                client.surrender();
                 return true;
-            case "help":
+
+            case "HELP":
                 if (!printFileContent("/kindred/view/cli/gameHelp.txt"))
                     System.err.println(gameMsgBundle.getString("help_not_found"));
                 continue;
+
             default:
                 System.out.println(gameMsgBundle.getString("unrecognised_command"));
                 continue;
@@ -391,7 +418,8 @@ public class CLI extends AbstractView {
     /**
      * {@inheritDoc}
      */
-    public void menuEvent(ServerToClientMessage msg) {
+    @Override
+    public void remoteEvent(ServerToClientMessage msg) {
         String argument = msg.getArgument();
         Object[] arg = null;
         String key = "";
