@@ -129,9 +129,10 @@ public class Client implements Runnable {
                     }
                 } catch (InterruptedException e) {
                 }
-            } else if (!game.isOver())
+            } else if (!game.isOver()) {
+                view.displayMap();
                 view.promptForGameAction(this);
-            else
+            } else
                 game = null;
         }
     }
@@ -164,6 +165,7 @@ public class Client implements Runnable {
                     String mapFilename = parts[2];
                     game = new Game(nickname, opponent, "/kindred/data/map/"
                             + mapFilename + ".txt", team, view);
+                    view.setGame(game);
                     break;
                 case SUCC_LEAVE:
                     System.exit(0);

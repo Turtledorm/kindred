@@ -9,6 +9,7 @@ import java.util.Scanner;
 
 import kindred.model.Game;
 import kindred.model.Map;
+import kindred.model.Unit;
 import kindred.network.Client;
 import kindred.network.messages.ServerToClientMessage;
 import kindred.view.AbstractView;
@@ -40,7 +41,7 @@ public class CLI extends AbstractView {
     /**
      * Name of the file containing the symbols for each Unit.
      */
-    private final String symbolFile = "/kindred/data/terrain/unitSymbols.txt";
+    private final String symbolFile = "/kindred/data/unit/unitSymbols.txt";
 
     /**
      * Maps names of Units to their corresponding Character symbol.
@@ -104,7 +105,12 @@ public class CLI extends AbstractView {
                 Colour foregroundColour = Colour.LIGHT_RED;
                 Colour backgroundColour = colourTypes.get(map.getTile(i, j)
                         .getTerrain().getName());
-                char character = symbolTypes.get(map.getTile(i, j).getUnit());
+                Unit unit = map.getTile(i, j).getUnit();
+                char character;
+                if (unit == null)
+                    character = ' ';
+                else
+                    character = symbolTypes.get(unit.getName());
                 atomMap[i][j] = new Atom(character, backgroundColour,
                         foregroundColour);
             }
@@ -472,12 +478,12 @@ public class CLI extends AbstractView {
             break;
         case INFO_SOMEONE_ENTERED_ROOM:
             key = "someone_entered_room";
-            arg = new Object[] { argument };
+            arg = new Object[] { argument.split("\\|")[0] };
             complement = "\n" + gameStartedMessage(argument);
             break;
         case SUCC_JOIN:
             key = "successfully_joined_room";
-            arg = new Object[] { argument };
+            arg = new Object[] { argument.split("\\|")[0] };
             complement = "\n" + gameStartedMessage(argument);
             break;
         case SUCC_LEAVE:
