@@ -22,16 +22,16 @@ public class MapFileParser {
 
     /**
      * Parses a given file containing information about a Map. Also uses a
-     * char->Terrain HashMap to understand valid Terrains for the Map.
+     * Character->Terrain HashMap to understand valid Terrains for the Map.
      * <p>
      * Creates and returns a Map, according to the information contained in the
      * file.
      * 
      * @param filename
-     *            Name of the Map file
+     *            name of the Map file
      * @param hashMap
-     *            HashMap containing identifying chars as keys and Terrains as
-     *            values
+     *            HashMap containing identifying Characters as keys and Terrains
+     *            as values
      * 
      * @return Map object created based on information from the file
      * 
@@ -40,13 +40,9 @@ public class MapFileParser {
      */
     public static Map parseFile(String filename, HashMap<Character, Terrain> hashMap)
             throws FileNotFoundException {
-        File f;
-        try {
-            f = new File(Map.class.getResource(filename).getPath());
-        } catch (NullPointerException e) {
-            throw new FileNotFoundException();
-        }
+        File f = new File(TerrainFileParser.class.getResource(filename).getPath());
         Scanner scanner = new Scanner(f);
+
         int rows = scanner.nextInt();
         int cols = scanner.nextInt();
         int tileHeight = scanner.nextInt();
@@ -54,15 +50,16 @@ public class MapFileParser {
         Tile[][] tiles = new Tile[rows][cols];
 
         Pattern p = Pattern.compile("\\s*\\w");
-
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 if (!scanner.hasNext(p)) {
                     // Sudden end of file
                     System.err.format("Invalid line in '%s'\n", filename);
                     scanner.close();
+                    // TODO: Use System.Exit() instead of return null?
                     return null;
                 }
+                // Read and create Tile based on Terrain's Character
                 char c = scanner.next(p).trim().charAt(0);
                 if (hashMap.containsKey(c))
                     tiles[i][j] = new Tile(hashMap.get(c));
@@ -70,6 +67,7 @@ public class MapFileParser {
                     // Invalid type of Terrain
                     System.err.format("Invalid line in '%s'\n", filename);
                     scanner.close();
+                    // TODO: Use System.Exit() instead of return null?
                     return null;
                 }
             }
@@ -78,6 +76,7 @@ public class MapFileParser {
         if (scanner.hasNext(p)) {
             System.err.format("Extra information in '%s'\n", filename);
         }
+
         scanner.close();
         Map map = new Map(tiles, tileHeight, tileWidth);
         return map;

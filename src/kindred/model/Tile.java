@@ -14,13 +14,13 @@ public class Tile {
     private final Terrain terrain;
 
     /**
-     * Unit currently occupying this Tile, if there is any. Otherwise, has value
+     * Unit currently occupying this Tile, if any. Otherwise, has value
      * {@code null}.
      */
     private Unit unit;
 
     /**
-     * Constructs a Tile.
+     * Constructs a Tile, initially unoccupied by any Unit.
      * 
      * @param terrain
      *            Terrain object occurring in this Tile
@@ -61,10 +61,10 @@ public class Tile {
     }
 
     /**
-     * Removes and returns the Unit contained in Tile. If no Unit exists,
+     * Removes and returns the Unit contained in this Tile. If no Unit exists,
      * returns {@code null}.
      * 
-     * @return the Unit contained in Tile, if it exists, or {@code null}
+     * @return the Unit contained in this Tile, if it exists, or {@code null}
      *         otherwise
      */
     public Unit removeUnit() {

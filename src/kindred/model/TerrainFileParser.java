@@ -34,9 +34,10 @@ public class TerrainFileParser {
      */
     public static HashMap<Character, Terrain> parseFile(String filename)
             throws FileNotFoundException {
+        HashMap<Character, Terrain> hashMap = new HashMap<Character, Terrain>();
+
         File f = new File(TerrainFileParser.class.getResource(filename).getPath());
         Scanner scanner = new Scanner(f);
-        HashMap<Character, Terrain> hashMap = new HashMap<Character, Terrain>();
 
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine().trim();
@@ -53,7 +54,6 @@ public class TerrainFileParser {
                 char id = tokens[0].charAt(0);
                 String name = tokens[1];
                 int defenseModifier, agilityModifier, movePenalty;
-
                 try {
                     defenseModifier = Integer.parseInt(tokens[2]);
                     agilityModifier = Integer.parseInt(tokens[3]);

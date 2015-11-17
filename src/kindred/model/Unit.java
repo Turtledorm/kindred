@@ -1,25 +1,26 @@
 package kindred.model;
 
 /**
- * Defines a Unit that a User can command, as well as its UnitClass, Weapon and
- * attributes.
+ * Defines a Unit that a User can command, as well as its Attributes.
  * 
  * @author Kindred Team
  */
 public class Unit {
 
     /**
-     * The Unit's name
+     * Name for the Unit's type. There is no distinction in name for Units of
+     * the same type.
      */
     private final String name;
 
     /**
-     * The Unit's attributes
+     * Attributes defining Unit's performance.
      */
     private final Attribute attribute;
 
     /**
-     * Number representing the unit's team
+     * Identifier number for the Unit's team. Shows which player controls the
+     * Unit.
      */
     private final int team;
 
@@ -27,9 +28,9 @@ public class Unit {
      * Constructs a Unit.
      * 
      * @param name
-     *            The Unit's name
+     *            the Unit's name
      * @param attribute
-     *            The Unit's attribute
+     *            the Unit's attributes
      */
     public Unit(String name, Attribute attribute, int team) {
         this.name = name;
@@ -38,93 +39,94 @@ public class Unit {
     }
 
     /**
-     * Returns the Unit's name
+     * Returns this name given to the Unit's type.
      * 
-     * @return name
+     * @return this Unit's name
      */
     public String getName() {
         return name;
     }
 
     /**
-     * Returns the Unit's team identifier
+     * Returns this Unit's attribute that represents its total hit points.
      * 
-     * @return team identifier
-     */
-    public int getTeam() {
-        return team;
-    }
-
-    /**
-     * Returns the Unit's total HP
-     * 
-     * @return hitPoints
+     * @return this Unit's total hit points
      */
     public int getTotalHp() {
-        return attribute.getHitPoints();
+        return attribute.getTotalHp();
     }
 
     /**
-     * Returns the Unit's current HP
+     * Returns this Unit's attribute that represents its current hit points.
      * 
-     * @return currentHP
+     * @return this Unit's current hit points
      */
     public int getCurrentHp() {
         return attribute.getCurrentHp();
     }
 
     /**
-     * Returns the Unit's attack
+     * Reduces this Unit's current hit points according to the specified amount
+     * of damage.
      * 
-     * @return attack
+     * @param damage
+     *            value to be subtracted from this Unit's current hit points
+     */
+    public void loseHp(int damage) {
+        attribute.loseHp(damage);
+    }
+
+    /**
+     * Returns the Unit's attribute that represents its attack power.
+     * 
+     * @return the Unit's attack
      */
     public double getAtk() {
         return attribute.getAttack();
     }
 
     /**
-     * Returns the Unit's defense
+     * Returns the Unit's attribute that represents its defense value.
      * 
-     * @return defense
+     * @return the Unit's defense
      */
     public double getDef() {
         return attribute.getDefense();
     }
 
     /**
-     * Returns the Unit's agility
+     * Returns the Unit's attribute that represents its agility value.
      * 
-     * @return agility
+     * @return the Unit's agility
      */
     public double getAgi() {
         return attribute.getAgility();
     }
 
     /**
-     * Returns the Unit's movement
+     * Returns the Unit's attribute that represents its movement per turn.
      * 
-     * @return movement
+     * @return the Unit's movement
      */
     public int getMove() {
         return attribute.getMovement();
     }
 
     /**
-     * Returns the Unit's range
+     * Returns the Unit's attribute that represents it maximum range of attack.
      * 
-     * @return range
+     * @return the Unit's range
      */
     public int getRange() {
         return attribute.getRange();
     }
 
     /**
-     * Updates the Unit's currentHp according to a given damage the Unit has
-     * taken
+     * Returns a number that identifies which player the Unit belongs to.
      * 
-     * @param damage
+     * @return the Unit's team identifier
      */
-    public void loseHp(int damage) {
-        attribute.loseHp(damage);
+    public int getTeam() {
+        return team;
     }
 }

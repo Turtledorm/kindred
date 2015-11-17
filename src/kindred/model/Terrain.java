@@ -35,16 +35,16 @@ public class Terrain {
      * Constructs a Terrain.
      * 
      * @param name
-     *            Name of the Terrain
+     *            name of the Terrain
      * @param defenseModifier
-     *            Percentage of defense increase/decrease to a Unit standing on
+     *            percentage of defense increase/decrease to a Unit standing on
      *            a Tile with this Terrain
      * @param agilityModifier
-     *            Percentage of agility increase/decrease to a Unit standing on
+     *            percentage of agility increase/decrease to a Unit standing on
      *            a Tile with this Terrain
      * @param movePenalty
-     *            Movement penalty inflicted on a Unit standing on a Tile with
-     *            this terrain
+     *            movement penalty inflicted on a Unit standing on a Tile with
+     *            this Terrain
      */
     public Terrain(String name, int defenseModifier, int agilityModifier,
             int movePenalty) {
@@ -55,36 +55,36 @@ public class Terrain {
     }
 
     /**
-     * Returns the Terrain's name.
+     * Returns this Terrain's name.
      * 
-     * @return the Terrain's name
+     * @return this Terrain's name
      */
     public String getName() {
         return name;
     }
 
     /**
-     * Returns the Terrain's defense modifier.
+     * Returns this Terrain's defense modifier.
      * 
-     * @return the Terrain's defense modifier
+     * @return this Terrain's defense modifier
      */
     public int getDefenseModifier() {
         return defenseModifier;
     }
 
     /**
-     * Returns the Terrain's agility modifier.
+     * Returns this Terrain's agility modifier.
      * 
-     * @return the Terrain's agility modifier
+     * @return this Terrain's agility modifier
      */
     public int getAgilityModifier() {
         return agilityModifier;
     }
 
     /**
-     * Returns the Terrain's movement penalty.
+     * Returns this Terrain's movement penalty.
      * 
-     * @return the Terrain's movement penalty
+     * @return this Terrain's movement penalty
      */
     public int getMovePenalty() {
         return movePenalty;

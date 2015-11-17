@@ -15,15 +15,15 @@ import kindred.network.messages.ClientToServerMessage;
 import kindred.network.messages.ServerToClientMessage;
 
 /**
- * Runs as a thread for each connected client. Reads and sends data to the
- * client.
+ * Runs as a Server thread for a connected Client, being responsible for
+ * exchanging data with the user.
  * 
  * @author Kindred Team
  */
 class ServerThread extends Thread {
 
     /**
-     * Client's socket that is connected to the server.
+     * Client's socket that is connected to the Server.
      */
     private Socket socket;
 
@@ -33,52 +33,53 @@ class ServerThread extends Thread {
     private final String addr;
 
     /**
-     * Client's nickname, is null if not yet defined.
+     * Client's nickname, equals {@code null} if not yet defined.
      */
     private String nick = null;
 
     /**
-     * If true, then the socket connected to the client will close the
-     * connection to the server.
+     * If {@code true}, then the socket connected to the Client will close the
+     * connection to the Server.
      */
     private boolean quitServer = false;
 
     /**
-     * Thread-safe HashMap that stores client nicknames and their socket. Shared
-     * among all threads.
-     */
-    private static ConcurrentHashMap<String, Socket> users = new ConcurrentHashMap<String, Socket>();
-
-    /**
-     * Thread-safe HashMap that stores nicknames of clients and the map on which
-     * they are hosting a room. Shared among all threads.
-     */
-    private static ConcurrentHashMap<String, String> rooms = new ConcurrentHashMap<String, String>();
-
-    /**
-     * Thread-safe, stores Rooms of all games currently being played. Shared
-     * among all threads.
-     */
-    private static Vector<Room> currentGames = new Vector<Room>();
-
-    /**
      * Thread-safe HashMap that stores a thread-safe message queue for each
-     * client socket. The queue is used to send messages to client in a
+     * Client socket. The queue is used to send messages to Clients in a
      * controlled fashion. Shared among all threads.
      */
     private static ConcurrentHashMap<Socket, ConcurrentLinkedQueue<String>> clientQueue = new ConcurrentHashMap<Socket, ConcurrentLinkedQueue<String>>();
 
     /**
+     * Thread-safe HashMap that stores Client nicknames and their socket. Shared
+     * among all threads.
+     */
+    private static ConcurrentHashMap<String, Socket> nicksToSocks = new ConcurrentHashMap<String, Socket>();
+
+    /**
+     * Thread-safe HashMap that stores the nicknames of Clients that are hosting
+     * a room, and the name of the map they wish to play on. Shared among all
+     * threads.
+     */
+    private static ConcurrentHashMap<String, String> hostRooms = new ConcurrentHashMap<String, String>();
+
+    /**
+     * Thread-safe Vector that stores Rooms of all games currently being played.
+     * Shared among all threads.
+     */
+    private static Vector<Room> currentGames = new Vector<Room>();
+
+    /**
      * Constructs a ServerThread.
      * 
      * @param socket
-     *            socket connected to the client
+     *            socket connected to the Client
      */
     public ServerThread(Socket socket) {
         super("ServerThread");
         this.socket = socket;
 
-        // Adds client to hashMap (queue initially empty -> null)
+        // Creates an empty queue for the new connected Client
         clientQueue.put(socket, new ConcurrentLinkedQueue<String>());
 
         this.addr = socket.getInetAddress().getHostAddress() + ":"
@@ -87,11 +88,13 @@ class ServerThread extends Thread {
     }
 
     /**
-     * Reads data sent by the client and responds according the message queue.
+     * Run by a thread. Loop that reads data sent by the Client and responds
+     * according the message queue.
      */
     @Override
     public void run() {
-        // TODO: separate producer and consumer
+        // TODO: Separate producer and consumer
+
         // Initialize socket input/output objects
         PrintWriter out = null;
         BufferedReader in = null;
@@ -104,10 +107,9 @@ class ServerThread extends Thread {
             e.printStackTrace();
         }
 
-        // Main client loop
+        // Main Client loop
         try {
-
-            // Read and parse client message
+            // Read and parse Client message
             String inputLine;
             while ((!quitServer && (inputLine = in.readLine()) != null)) {
                 if (inputLine.trim().equals(""))
@@ -118,42 +120,34 @@ class ServerThread extends Thread {
                     out.println(msg);
                 }
             }
-
         } catch (IOException e) {
-            System.out.println("'" + addr
-                    + "' error: Received null when reading socket");
+            System.out.println(
+                    "'" + addr + "' error: Received null when reading socket");
         }
 
         // Close connection
         try {
             System.out.println("Disconnected: " + addr);
 
-            // Remove all data related to client
+            // Remove all data related to Client
             if (nick != null) {
-                for (Room r : currentGames) {
-                    if (r.hasNick(nick)) {
-                        currentGames.remove(r);
-                        break;
-                    }
-                }
-                rooms.remove(nick);
-                users.remove(nick);
+                hostRooms.remove(nick);
+                nicksToSocks.remove(nick);
             }
             clientQueue.remove(socket);
-
             socket.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            // Ignore if socket couldn't be closed
             return;
         }
     }
 
     /**
-     * Parses a given message sent by the client, putting an answer to be sent
-     * to the client on their message queue.
+     * Parses a given message sent by the Client, putting a response on their
+     * message queue.
      * 
      * @param message
-     *            message to be parsed, received from the client
+     *            message, received from the Client, to be parsed
      */
     private void parse(String message) {
         ClientToServerMessage receivedMsg = ClientToServerMessage
@@ -162,9 +156,10 @@ class ServerThread extends Thread {
         ServerToClientMessage sentMsg;
         switch (receivedMsg) {
 
-        // NICK [nickname] : Sets client's nickname as the specified value.
-        // If no argument is given, returns client's nickname.
+        // NICK [nickname] : Set Client's nickname as the specified value.
+        // If no argument is given, return Client's nickname.
         case NICK:
+            // No argument given; return Client's nickname
             if (arg.isEmpty()) {
                 if (nick == null) {
                     sentMsg = ServerToClientMessage.ERR_NICKNAME_IS_UNDEFINED;
@@ -175,9 +170,10 @@ class ServerThread extends Thread {
                 queueMessage(socket, sentMsg);
                 return;
             }
+
             String newNickname = arg;
-            // Nickname must contain 3 to 10 alphanumeric characters, the first
-            // one strictly being a letter
+            // Nickname must contain 3 to 10 alphanumeric characters;
+            // the first one must be a letter
             if (!newNickname.matches("^[a-zA-Z]\\w{2,9}$")) {
                 sentMsg = ServerToClientMessage.ERR_NICKNAME_IS_INVALID;
                 sentMsg.setArgument(newNickname);
@@ -186,7 +182,7 @@ class ServerThread extends Thread {
             }
 
             // Nickname already exists
-            if (users.containsKey(newNickname)) {
+            if (nicksToSocks.containsKey(newNickname)) {
                 sentMsg = ServerToClientMessage.ERR_NICKNAME_IS_IN_USE;
                 sentMsg.setArgument(newNickname);
                 queueMessage(socket, sentMsg);
@@ -194,24 +190,24 @@ class ServerThread extends Thread {
             }
 
             // After changing the nickname, the old one is deleted
-            if (nick != null && users.containsKey(nick))
-                users.remove(nick);
+            if (nick != null && nicksToSocks.containsKey(nick))
+                nicksToSocks.remove(nick);
 
-            // Changes user's nickname in the room they are hosting, if any
-            if (nick != null && rooms.containsKey(nick)) {
-                String map = rooms.remove(nick);
-                rooms.put(newNickname, map);
+            // Change user's nickname in the room they are hosting, if any
+            if (nick != null && hostRooms.containsKey(nick)) {
+                String map = hostRooms.remove(nick);
+                hostRooms.put(newNickname, map);
             }
 
-            // Sets client's nickname
+            // Set Client's nickname
             nick = newNickname;
-            users.put(nick, socket);
+            nicksToSocks.put(nick, socket);
             sentMsg = ServerToClientMessage.SUCC_NICKNAME_CHANGED;
             sentMsg.setArgument(newNickname);
             queueMessage(socket, sentMsg);
             break;
 
-        // MAPS : Returns all available maps
+        // MAPS : Return all available maps
         case MAPS:
             String maps = "";
             URL url = ServerThread.class.getResource("/kindred/data/map");
@@ -230,11 +226,11 @@ class ServerThread extends Thread {
             queueMessage(socket, sentMsg);
             break;
 
-        // ROOMS : Shows all valid rooms in the server
+        // ROOMS : Show all valid rooms in the server
         case ROOMS:
             String roomStr = "";
-            for (String r : rooms.keySet()) {
-                roomStr += "|" + r + ">" + rooms.get(r);
+            for (String r : hostRooms.keySet()) {
+                roomStr += "|" + r + ">" + hostRooms.get(r);
             }
             sentMsg = ServerToClientMessage.INFO_AVAILABLE_ROOMS;
             if (roomStr.length() >= 1)
@@ -242,17 +238,22 @@ class ServerThread extends Thread {
             queueMessage(socket, sentMsg);
             break;
 
-        // HOST <map> : Creates a room to play on the specified map
+        // HOST <map> : Create a room to play on the specified map
         case HOST:
+            // User must be registered
             if (nick == null) {
                 queueMessage(socket, ServerToClientMessage.ERR_UNREGISTERED_USER);
                 return;
             }
+
             String mapName = arg;
+            // Disallow path controlling chars
             if (mapName.contains("..") || mapName.contains("/"))
                 return;
-            url = ServerThread.class.getResource("/kindred/data/map/" + mapName
-                    + ".txt");
+
+            url = ServerThread.class
+                    .getResource("/kindred/data/map/" + mapName + ".txt");
+            // Check if map exists
             if (url == null) {
                 sentMsg = ServerToClientMessage.ERR_MAP_NOT_FOUND;
                 sentMsg.setArgument(mapName);
@@ -260,23 +261,24 @@ class ServerThread extends Thread {
                 return;
             }
 
-            // Creates a new room!
-            rooms.put(nick, mapName);
+            // Create a new room!
+            hostRooms.put(nick, mapName);
             sentMsg = ServerToClientMessage.SUCC_HOST;
             sentMsg.setArgument(mapName);
             queueMessage(socket, sentMsg);
             break;
 
-        // UNHOST : Removes room if client is hosting one
+        // UNHOST : Remove room if Client is hosting one
         case UNHOST:
+            // User must be registered
             if (nick == null) {
                 queueMessage(socket, ServerToClientMessage.ERR_UNREGISTERED_USER);
                 return;
             }
 
-            // Removes room
-            if (rooms.containsKey(nick)) {
-                rooms.remove(nick);
+            // Remove room if it exists
+            if (hostRooms.containsKey(nick)) {
+                hostRooms.remove(nick);
                 queueMessage(socket, ServerToClientMessage.SUCC_UNHOST);
             } else {
                 queueMessage(socket,
@@ -284,7 +286,7 @@ class ServerThread extends Thread {
             }
             break;
 
-        // JOIN <nickname> : Connects to a room hosted by the specified user
+        // JOIN <nickname> : Connect to a room hosted by the specified user
         case JOIN:
             // Unregistered user cannot join a room
             if (nick == null) {
@@ -294,30 +296,31 @@ class ServerThread extends Thread {
 
             String host = arg;
 
-            // Non-existent room
-            if (!rooms.containsKey(host)) {
+            // Nonexistent room
+            if (!hostRooms.containsKey(host)) {
                 sentMsg = ServerToClientMessage.ERR_ROOM_NOT_FOUND;
                 sentMsg.setArgument(host);
                 queueMessage(socket, sentMsg);
                 return;
             }
 
-            // Own room
+            // Disallow entering in own room
             if (nick.equals(host)) {
-                queueMessage(socket, ServerToClientMessage.ERR_CANNOT_ENTER_OWN_ROOM);
+                queueMessage(socket,
+                        ServerToClientMessage.ERR_CANNOT_ENTER_OWN_ROOM);
                 return;
             }
 
             // Entering another user's room => leaving their own room (if it
             // exists)
-            if (rooms.containsKey(nick))
+            if (hostRooms.containsKey(nick))
                 queueMessage(socket, ServerToClientMessage.INFO_LEAVE_HOSTED_ROOM);
 
-            // Lets the guest user know that they have successfully entered a
+            // Let the guest user know that they have successfully entered a
             // room, that they will be the second player, and inform the map
             // name
             sentMsg = ServerToClientMessage.SUCC_JOIN;
-            mapName = rooms.get(host);
+            mapName = hostRooms.get(host);
             sentMsg.setArgument(host + "|2|" + mapName);
             queueMessage(socket, sentMsg);
 
@@ -325,32 +328,32 @@ class ServerThread extends Thread {
             // they will be the first player, and inform the map name
             sentMsg = ServerToClientMessage.INFO_SOMEONE_ENTERED_ROOM;
             sentMsg.setArgument(nick + "|1|" + mapName);
-            queueMessage(users.get(host), sentMsg);
+            queueMessage(nicksToSocks.get(host), sentMsg);
 
             // Create the room
             Room room = new Room(host, nick);
 
             // Remove room from the list of the available rooms
-            rooms.remove(host);
+            hostRooms.remove(host);
 
             // Add this room to the list of games
             currentGames.add(room);
             break;
 
-        // QUIT : Makes client leave the server
+        // QUIT : Make client leave the server
         case QUIT:
             queueMessage(socket, ServerToClientMessage.SUCC_LEAVE);
             quitServer = true;
             break;
 
-        // GAME_ACTION: Just pass forwards the message
+        // GAME_ACTION: Just pass forward the message
         case GAME_ACTION:
             ServerToClientMessage msgToSend = ServerToClientMessage.GAME_ACTION;
             msgToSend.setArgument(arg);
             for (Room r : currentGames)
                 if (r.hasNick(nick)) {
                     host = r.getOtherNick(nick);
-                    queueMessage(users.get(host), msgToSend);
+                    queueMessage(nicksToSocks.get(host), msgToSend);
                     break;
                 }
             break;
@@ -365,11 +368,11 @@ class ServerThread extends Thread {
 
     /**
      * Inserts a message in the queue of the corresponding socket which will
-     * receive it. Escapes backslashes and newline characters.
+     * receive it. Escapes backslashes and newline characters in the message.
      * 
      * @param socket
-     *            socket whose message queue will receive the message to be
-     *            sent.
+     *            Client's socket whose message queue will receive the message
+     *            to be sent
      * @param message
      *            message to be queued
      */

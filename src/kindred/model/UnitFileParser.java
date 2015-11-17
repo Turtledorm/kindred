@@ -37,8 +37,9 @@ public class UnitFileParser {
      */
     public static HashMap<String, Attribute> parseFile(String filename)
             throws FileNotFoundException {
-        File f = new File(UnitFileParser.class.getResource(filename).getPath());
         HashMap<String, Attribute> unitTypes = new HashMap<String, Attribute>();
+
+        File f = new File(UnitFileParser.class.getResource(filename).getPath());
         Scanner scanner = new Scanner(f);
         Pattern p = Pattern.compile("\\s*\\w");
 
@@ -64,6 +65,7 @@ public class UnitFileParser {
             if (scanner.hasNext(p))
                 System.err.format("Warning: Extra information in '%s'\n", filename);
 
+            // Adds the new Unit type to the HashMap
             Attribute attribute = new Attribute(hp, atk, def, agi, mov, rng);
             unitTypes.put(name, attribute);
         }

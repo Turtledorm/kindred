@@ -42,8 +42,8 @@ public class Battle {
      * @param defender
      *            Tile containing the defending Unit
      * 
-     * @return damage received by the defending unit if the attack succeeded, or
-     *         -1 otherwise
+     * @return damage received by the defending unit if the attack hit, or 0
+     *         otherwise
      */
     public int execute(Tile attacker, Tile defender) {
         Unit attackUnit = attacker.getUnit();
@@ -76,16 +76,17 @@ public class Battle {
 
     /**
      * Checks if an attack will hit by comparing the attacker's agility with the
-     * defender's. Returns true if attack will happen or false otherwise.
+     * defender's. Returns {@code true} if attack will happen or {@code false}
+     * otherwise.
      * 
      * @param attackerAgi
-     *            agility of the attacking Unit, already considering all
-     *            possible modifiers (Terrain, Class...)
+     *            agility of the attacking Unit, already considering the Terrain
+     *            modifier
      * @param defenderAgi
-     *            agility of the defending Unit, already considering all
-     *            possible modifiers (Terrain, Class...)
+     *            agility of the defending Unit, already considering the Terrain
+     *            modifier
      * 
-     * @return true if the attack succeeded, or false otherwise
+     * @return{@code true} if the attack succeeded, or{@code false} otherwise
      */
     private boolean checkHit(double attackerAgi, double defenderAgi) {
         if (attackerAgi >= 2 * defenderAgi)

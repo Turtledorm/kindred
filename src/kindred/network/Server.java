@@ -5,11 +5,16 @@ import java.net.ServerSocket;
 import java.util.Scanner;
 
 /**
- * Implements the main loop of a TCP listening socket server.
+ * Implements the main loop of a TCP listening socket Server.
  * 
  * @author Kindred Team
  */
 public class Server implements Runnable {
+
+    /**
+     * Default port used by the Server.
+     */
+    public static final int DEFAULT_PORT = 8000;
 
     /**
      * Server's listening TCP socket.
@@ -17,11 +22,13 @@ public class Server implements Runnable {
     private ServerSocket serverSocket;
 
     /**
-     * Initializes the server's socket and accepts connections from clients,
+     * Initializes this Server's socket and accepts connections from Clients,
      * creating a new socket and thread to treat each connected user.
      */
     public void loop() {
-        int port = NetworkConstants.KINDRED_PORT;
+        int port = DEFAULT_PORT;
+
+        // Tries to initialize the Server's socket
         try {
             serverSocket = new ServerSocket(port);
         } catch (IOException e) {
@@ -32,6 +39,7 @@ public class Server implements Runnable {
         System.out.println("Server successfully opened on port " + port);
         while (!serverSocket.isClosed()) {
             try {
+                // Creates a thread for each accepted connection
                 new ServerThread(serverSocket.accept()).start();
             } catch (IOException e) {
                 if (!serverSocket.isClosed()) {
@@ -43,7 +51,7 @@ public class Server implements Runnable {
     }
 
     /**
-     * Thread used for verifying if server must be closed (this happens when
+     * Thread used for verifying if Server must be closed (this happens when
      * "CLOSED" is typed).
      */
     public void run() {
@@ -65,7 +73,7 @@ public class Server implements Runnable {
     }
 
     /**
-     * Starts the server.
+     * Starts a Server.
      */
     public static void main(String args[]) {
         try {

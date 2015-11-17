@@ -1,38 +1,63 @@
 package kindred.model;
 
 /**
- * Class that defines a Unit's overall attributes and a UnitClass' attribute
- * modifiers
+ * Class that defines a Unit's overall attributes that influence their
+ * performance during the game.
  * 
  * @author Kindred Team
  */
 
 public class Attribute {
     /**
-     * All the attributes that a Unit needs, including currentHP, which will
-     * keep tabs on a Unit's Hit Points during a game session.
+     * Indicates a Unit's total and current hit points. When it reaches zero,
+     * the Unit is considered dead.
      */
-    private int currentHp, hitPoints;
-    private int attack, defense, agility;
-    private int movement, range;
+    private int totalHp, currentHp;
 
     /**
-     * Constructs an Attribute
+     * Raises damage caused by a Unit.
+     */
+    private int attack;
+
+    /**
+     * Reduces damage received by a Unit.
+     */
+    private int defense;
+
+    /**
+     * Raises chance of evading an enemy Unit's attack.
+     */
+    private int agility;
+
+    /**
+     * Indicates the maximum number of Tiles a Unit can move during each turn.
+     */
+    private int movement;
+
+    /**
+     * Indicates the maximum distance, in Tiles, that the Unit has to attack the
+     * opponent's Units.
+     */
+    private int range;
+
+    /**
+     * Constructs an Attribute.
      * 
      * @param hp
-     *            The Unit's hitPoints
+     *            the Unit's total hit points
      * @param atk
-     *            The Unit's attack
+     *            the Unit's attack points
      * @param def
-     *            The Unit's defense
+     *            the Unit's defense points
      * @param agi
-     *            The Unit's agility
+     *            the Unit's agility points
      * @param mov
-     *            The Unit's movement, in other words, the maximum amount of
-     *            tiles it can move past during a turn
+     *            the Unit's maximum movement per turn
+     * @param rng
+     *            the Unit's maximum range
      */
     public Attribute(int hp, int atk, int def, int agi, int mov, int rng) {
-        this.hitPoints = hp;
+        this.totalHp = this.currentHp = hp;
         this.attack = atk;
         this.defense = def;
         this.agility = agi;
@@ -41,74 +66,76 @@ public class Attribute {
     }
 
     /**
-     * Returns the current HP a Unit has left
+     * Returns the Unit's maximum hit points.
      * 
-     * @return currentHP
+     * @return the Unit's total hit points
+     */
+    public int getTotalHp() {
+        return totalHp;
+    }
+
+    /**
+     * Returns the number of hit points remaining for the Unit.
+     * 
+     * @return the Unit's current hit points
      */
     public int getCurrentHp() {
         return currentHp;
     }
 
     /**
-     * Returns the Unit's total hitPoints
+     * Reduces the Unit's current hit points according to the specified amount
+     * of damage.
      * 
-     * @return hitPoints
+     * @param damage
+     *            value to be subtracted from the Unit's current hit points
      */
-    public int getHitPoints() {
-        return hitPoints;
+    public void loseHp(int damage) {
+        this.currentHp -= damage;
     }
 
     /**
-     * Returns the Unit's attack
+     * Returns the Unit's attack value.
      * 
-     * @return attack
+     * @return the Unit's attack
      */
     public int getAttack() {
         return attack;
     }
 
     /**
-     * Returns the Unit's defense
+     * Returns the Unit's defense value.
      * 
-     * @return defense
+     * @return the Unit's defense
      */
     public int getDefense() {
         return defense;
     }
 
     /**
-     * Returns the Unit's agility
+     * Returns the Unit's agility value.
      * 
-     * @return agility
+     * @return the Unit's agility
      */
     public int getAgility() {
         return agility;
     }
 
     /**
-     * Returns the Unit's movement
+     * Returns the Unit's maximum movement per turn.
      * 
-     * @return movement
+     * @return the Unit's movement
      */
     public int getMovement() {
         return movement;
     }
 
     /**
-     * Returns the Unit's range of attack
+     * Returns the Unit's maximum range of attack.
      * 
-     * @return range
+     * @return the Unit's range
      */
     public int getRange() {
         return range;
-    }
-
-    /**
-     * Updates currentHP according to a certain damage the Unit took
-     * 
-     * @param damage
-     */
-    public void loseHp(int damage) {
-        this.currentHp -= damage;
     }
 }

@@ -34,12 +34,12 @@ public class UnitFactory {
 
     /**
      * Creates and returns a Unit according to the name given. Also sets the
-     * Unit's team.
+     * Unit's team with an identifier of the player the Unit will belong to.
      * 
      * @param name
      *            name of the type of Unit to be created
      * @param team
-     *            integer that identifies which team the created Unit belongs to
+     *            value that identifies which player the created Unit belongs to
      * @return a new Unit, complete with name, attributes and team
      */
     public Unit getNewUnit(String name, int team) {
