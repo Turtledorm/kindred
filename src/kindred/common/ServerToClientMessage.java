@@ -129,7 +129,7 @@ public enum ServerToClientMessage {
 
     /**
      * Game-related command that the Server only passes forward to the Client.
-     * See {@link kindred.client.model.GameAction} class for more info.
+     * See {@link kindred.client.network.GameAction} class for more info.
      */
     GAME_ACTION;
 
