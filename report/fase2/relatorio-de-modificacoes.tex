@@ -1,1 +1,33 @@
 \section{Relatório de modificações}
+
+\subsection{Introdução}
+    Abaixo encontram-se observações sobre mudanças feitas em relação à fase anterior, bem como outras informações sobre a implementação do projeto.
+
+\subsection{Sobre a parte gráfica}
+    A principal mudança a ser observada foi a ausência da prometida parte gráfica do jogo. Acreditávamos, na Fase 1, que seria possível implementá-la usando a biblioteca Pygame, da linguagem Python, a qual um dos integrantes do grupo possuía já uma boa experiência. Ligaríamos esta biblioteca ao projeto através da linguagem Jython. Infelizmente, devido à complexidade envolvida na mistura de duas linguagens diferentes, percebemos que tal tarefa seria complexa e demandaria muito tempo. \par
+
+    Foi considerada a possibilidade de montar uma interface gráfica por meio de alguma ferramenta em Java. Esta iniciativa pode ser vista no próprio código, através da criação de uma classe abstrata \emph{AbstractView.java} para generalizar a interface com o usuário (CLI ou GUI). Havíamos criado uma classe \emph{GUI.java}, mas devido à falta de tempo não foi possível implementá-la, apesar de que já existe compatibilidade atual no projeto para isso ser feito. \par
+
+    Com isso, acabamos nos concentrando em fazer primeiro uma CLI através do Terminal dos sistemas Unix. Fez-se uso de cores de fundo para diferentes \emph{terrenos}, uso de cores de fonte para diferenciar as \emph{unidades} dos jogadores e o caractere para diferentes \emph{unidades}. Ficamos um pouco limitados às possibilidades oferecidas pelo Terminal, mas a adaptação ficou boa. A jogabilidade acabou ficando limitada a digitar comandos e esperar uma mensagem de resposta. Não muito confortável, mas era a opção disponível para a CLI feita.
+
+\subsection{Adaptações e simplificações}
+    Outro problema foi decorrido de um dos integrantes do grupo ter se afastado da disciplina por problemas de saúde, reduzindo a eficiência e aumentando o tempo necessário para realizar as tarefas, pois ficamos com apenas 3 integrantes no grupo.\par
+
+    O próprio jogo acabou ficando bem complexo, com aproximadamente 4000 linhas de código ao total. Infelizmente, por falta de tempo, não foi possível realizar muitos testes no código. Pretendemos, se possível e tivermos tempo, realizar algumas correções para a Fase 3 (fase de testes). \par
+
+    Por consenso entre o grupo, decidimos fazer o código em Inglês. Por isso, pode haver uma pequena estranheza entre os nomes em Português na Fase 1 e os nomes em Inglês da Fase 2, mas na grande maioria dos casos só houve tradução dos termos. Neste relatório, o uso de termos em Português refere-se à fase anterior, enquanto o uso de Inglês refere-se à fase atual.\par
+
+    Simplificações, que serão explicadas um pouco abaixo, foram feitas para não tomar tempo demais no código fonte. \par
+
+    Em relação às classes a serem implementadas no jogo, as mudanças principais ocorridas foram:
+    \begin{enumerate}
+        \item Junção de \emph{Unidade}, \emph{Classe} e \emph{Arma} numa classe só, \textbf{Unit}, para simplificação. Como o jogo não ficaria muito sofisticado, o desenvolvimento de uma \emph{Classe} e \emph{Arma} para a \emph{unidade} só levaria a complicações desnecessárias; foi decidido que \emph{Classe} iria se referir ao tipo a qual a \emph{unidade} pertence (dando exemplos do próprio jogo: \emph{Archer} e \emph{Knight}). A ideia geral do jogo, no entanto, permaneceu inalterada: atributos para \emph{unidades}, o mapa e a ideia de um jogo por turnos permaneceram.
+        \item Especificação melhor da parte Online do jogo. Por causa disso, do lado do cliente, as antigas classes Online e Jogador foram juntadas numa só, \textbf{Client}. A junção fez sentido, uma vez que estipulamos que o jogo seria somente online desde a Fase 0.
+        \item Definição melhor do servidor e do que ele deveria guardar dos clientes. Decidimos que o servidor iria trocar mensagens com o cliente quando este estivesse fora de uma partida. Durante um jogo, o servidor apenas passaria o comando feito pelo usuário para seu adversário, sem executar nada. Ou seja, o servidor não guarda estado das partidas, servindo apenas como um intermediador de informações que não realiza nenhuma verificação sobre comandos ligados ao jogo.
+        \item Simplificação do servidor, pois este śó possui um comando para interagir diretamente com quem está controlando-o ("CLOSE", que fecha o servidor com segurança). Por falta de tempo, o servidor não produz arquivos de log informando tudo que ocorre, apesar de ele imprimir na saída padrão quando um cliente se conecta ou se disconecta.
+    \end{enumerate}
+
+    Sobre a máquina de estados, melhor retratada no \emph{Diagrama de Atividades} da Fase anterior, a principal mudança foi:
+    \begin{enumerate}
+        \item Simplificação no início de uma partida: primeiramente, quando um usuário se conecta a uma sala, não há pedido de confirmação entre ambos os lados; os dois jogadores já iniciam a partida. Em segundo lugar, os jogadores não posicionam suas \emph{unidades} no início da partida; estes estão pré-configurados no mapa, ou seja, a quantidade, a \emph{Classe} e a posição de cada \emph{unidade} estão fixos e independem dos jogadores.
+    \end{enumerate}
