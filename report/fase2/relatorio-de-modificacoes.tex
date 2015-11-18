@@ -11,9 +11,7 @@
     Com isso, acabamos nos concentrando em fazer primeiro uma CLI através do Terminal dos sistemas Unix. Fez-se uso de cores de fundo para diferentes \emph{terrenos}, uso de cores de fonte para diferenciar as \emph{unidades} dos jogadores e o caractere para diferentes \emph{unidades}. Ficamos um pouco limitados às possibilidades oferecidas pelo Terminal, mas a adaptação ficou boa. A jogabilidade acabou ficando limitada a digitar comandos e esperar uma mensagem de resposta. Não muito confortável, mas era a opção disponível para a CLI feita.
 
 \subsection{Adaptações e simplificações}
-    Outro problema foi decorrido de um dos integrantes do grupo ter se afastado da disciplina por problemas de saúde, reduzindo a eficiência e aumentando o tempo necessário para realizar as tarefas, pois ficamos com apenas 3 integrantes no grupo.\par
-
-    O próprio jogo acabou ficando bem complexo, com aproximadamente 4000 linhas de código ao total. Infelizmente, por falta de tempo, não foi possível realizar muitos testes no código. Pretendemos, se possível e tivermos tempo, realizar algumas correções para a Fase 3 (fase de testes). \par
+    Outro problema foi decorrido de um dos integrantes do grupo ter se afastado da disciplina por problemas de saúde, reduzindo a eficiência e aumentando o tempo necessário para realizar as tarefas, pois ficamos com apenas 3 integrantes no grupo. \par
 
     Por consenso entre o grupo, decidimos fazer o código em Inglês. Por isso, pode haver uma pequena estranheza entre os nomes em Português na Fase 1 e os nomes em Inglês da Fase 2, mas na grande maioria dos casos só houve tradução dos termos. Neste relatório, o uso de termos em Português refere-se à fase anterior, enquanto o uso de Inglês refere-se à fase atual.\par
 
@@ -31,3 +29,8 @@
     \begin{enumerate}
         \item Simplificação no início de uma partida: primeiramente, quando um usuário se conecta a uma sala, não há pedido de confirmação entre ambos os lados; os dois jogadores já iniciam a partida. Em segundo lugar, os jogadores não posicionam suas \emph{unidades} no início da partida; estes estão pré-configurados no mapa, ou seja, a quantidade, a \emph{Classe} e a posição de cada \emph{unidade} estão fixos e independem dos jogadores.
     \end{enumerate}
+
+\subsection{Bugs e correções futuras}
+    O código fonte do jogo acabou ficando bem complexo, com aproximadamente 4000 linhas de código ao total, e é possível que haja alguns bugs.\par
+    Infelizmente, por falta de tempo, não foi possível realizar muitos testes no código. Pretendemos, se possível, realizar algumas correções na Fase 3 (fase de testes). \par
+    Alguns bugs incluem: possíveis problemas no loop principal durante a partida e a necessidade do usuário digitar algum comando do menu do servidor se um outro jogador entrar na sala (só assim o usuário irá para o loop do jogo).
