@@ -30,14 +30,6 @@
         </jar>
     </target>
 
-    <target name="run-server" depends="release">
-        <java jar="release/jar/KindredServer.jar" fork="true"/>
-    </target>
-    
-    <target name="run-client" depends="release">
-        <java jar="release/jar/KindredClient.jar" fork="true"/>
-    </target>
-    
     <target name="doc">
         <javadoc access="private" additionalparam="-nohelp -noqualifier java.lang:java.io:java.util -link http://docs.oracle.com/javase/7/docs/api/" author="true" classpath="." destdir="doc" doctitle="Kindred" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false"  source="1.7" sourcepath="src" splitindex="true" use="true" version="true"/>
     </target>

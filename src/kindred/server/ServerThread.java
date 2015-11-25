@@ -1,12 +1,13 @@
 package kindred.server;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.URL;
+import java.util.Scanner;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -121,8 +122,8 @@ class ServerThread extends Thread {
                 }
             }
         } catch (IOException e) {
-            System.out.println(
-                    "'" + addr + "' error: Received null when reading socket");
+            System.out.println("'" + addr
+                    + "' error: Received null when reading socket");
         }
 
         // Close connection
@@ -209,20 +210,18 @@ class ServerThread extends Thread {
 
         // MAPS : Return all available maps
         case MAPS:
-            String maps = "";
-            URL url = ServerThread.class.getResource("/kindred/common/data/map");
-            File folder = new File(url.getPath());
-            for (File f : folder.listFiles()) {
-                if (f.isFile()) {
-                    String name = f.getName();
-                    // Removes '.txt' from end of filename
-                    name = name.substring(0, name.length() - 4);
-                    maps += "|" + name;
-                }
+            InputStream is = ServerThread.class
+                    .getResourceAsStream("/kindred/common/data/map/list.txt");
+            Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+            String maps = s.next();
+            try {
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
             sentMsg = ServerToClientMessage.INFO_AVAILABLE_MAPS;
             if (maps.length() >= 1)
-                sentMsg.setArgument(maps.substring(1)); // remove initial '|'
+                sentMsg.setArgument(maps);
             queueMessage(socket, sentMsg);
             break;
 
@@ -251,8 +250,8 @@ class ServerThread extends Thread {
             if (mapName.contains("..") || mapName.contains("/"))
                 return;
 
-            url = ServerThread.class
-                    .getResource("/kindred/common/data/map/" + mapName + ".txt");
+            URL url = ServerThread.class.getResource("/kindred/common/data/map/"
+                    + mapName + ".txt");
             // Check if map exists
             if (url == null) {
                 sentMsg = ServerToClientMessage.ERR_MAP_NOT_FOUND;
@@ -306,8 +305,7 @@ class ServerThread extends Thread {
 
             // Disallow entering in own room
             if (nick.equals(host)) {
-                queueMessage(socket,
-                        ServerToClientMessage.ERR_CANNOT_ENTER_OWN_ROOM);
+                queueMessage(socket, ServerToClientMessage.ERR_CANNOT_ENTER_OWN_ROOM);
                 return;
             }
 

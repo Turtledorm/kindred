@@ -24,10 +24,15 @@ function uso {
     echo -e $BOLD"OPÇÕES"$NORMAL
     echo -e "\tSepare cada opção com um espaço.\n"
 
-    echo -e "\t"$BOLD"-c"$NORMAL"\tExecuta o jogo Kindred como cliente."
+    echo -e "\t"$BOLD"-c"$NORMAL"\tExecuta o jogo Kindred como cliente (usando bin/)."
     echo -e "\t\tOpcionalmente, pode receber o IP do servidor a qual se conecta.\n"
 
-    echo -e "\t"$BOLD"-s"$NORMAL"\tExecuta o jogo Kindred como servidor.\n"
+    echo -e "\t"$BOLD"-s"$NORMAL"\tExecuta o jogo Kindred como servidor (usando bin/).\n"
+    
+    echo -e "\t"$BOLD"-C"$NORMAL"\tExecuta o jogo Kindred como cliente (usando release/)."
+    echo -e "\t\tOpcionalmente, pode receber o IP do servidor a qual se conecta.\n"
+
+    echo -e "\t"$BOLD"-S"$NORMAL"\tExecuta o jogo Kindred como servidor (usando release/).\n"
 
     echo -e "\t"$BOLD"-h"$NORMAL"\tMostra como usar o script, além de abandoná-lo."
 
@@ -47,6 +52,10 @@ case $1 in
         java -cp bin/ kindred.server.Server;;
     -c)
         java -cp bin/ kindred.client.network.Client $2;;
+    -S)
+        java -jar release/jar/KindredServer.jar;;
+    -C)
+        java -jar release/jar/KindredClient.jar;;
     *)
         echo "Argumento '$arg' não reconhecido!"
         uso;;
