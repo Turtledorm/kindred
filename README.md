@@ -1,5 +1,5 @@
 # Kindred
-## MAC0332 - Engenharia de Software - Profª Ana C. V. de Melo
+## MAC0332 - Engenharia de Software
 
 Integrantes do Grupo:
 
