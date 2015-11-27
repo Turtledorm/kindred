@@ -2,7 +2,7 @@
 <project basedir="." default="build" name="Kindred">
     <target name="clean">
         <delete dir="bin"/>
-        <delete dir="jar"/>
+        <delete dir="release"/>
         <delete dir="doc"/>
     </target>
 

@@ -211,10 +211,11 @@ class ServerThread extends Thread {
         // MAPS : Return all available maps
         case MAPS:
             InputStream is = ServerThread.class
-                    .getResourceAsStream("/kindred/common/data/map/list.txt");
-            Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+                    .getResourceAsStream("/kindred/common/data/map/list.info");
+            Scanner s = new java.util.Scanner(is).useDelimiter("\\Z");
             String maps = s.next();
             try {
+                s.close();
                 is.close();
             } catch (IOException e) {
                 e.printStackTrace();

@@ -1,4 +1,4 @@
-<< KINDRED SERVER >>
+<< KINDRED - MENU COMMANDS >>
 Supported commands:
 
 NICK [nickname]
@@ -32,7 +32,7 @@ JOIN <nickname>
  - Returns error if room doesn't exist.
 
 HELP
- - Shows the server's supported commands.
+ - Shows the supported commands.
 
 QUIT/EXIT
  - Disconnects from the server.

@@ -16,7 +16,8 @@ public final class TerminalColourHelper {
 
     /**
      * Returns a formatted ANSI escape sequence to change background and
-     * foreground colours.
+     * foreground colours. If a colour is {@code null}, it is ignored. If both
+     * colours are {@code null}, returns an empty string.
      * 
      * @param bg
      *            the background colour
@@ -25,8 +26,15 @@ public final class TerminalColourHelper {
      * @return an ANSI escape string that changes the colours in a terminal
      */
     public static String getEscapeSequence(Colour bg, Colour fg) {
-        return String.format("\u001B[%s;%sm", fg.getValueAsForeground(),
-                bg.getValueAsBackground());
+        if (bg == null && fg == null)
+            return "";
+
+        String str = "\u001B[";
+        if (fg != null)
+            str += fg.getValueAsForeground();
+        if (bg != null)
+            str += ";" + bg.getValueAsBackground();
+        return str + "m";
     }
 
     /**

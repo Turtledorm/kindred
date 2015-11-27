@@ -1,13 +1,12 @@
 package kindred.client.view.cli;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.net.URL;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 import java.util.Scanner;
-
 
 import kindred.client.model.Game;
 import kindred.client.model.Map;
@@ -54,6 +53,16 @@ public class CLI extends AbstractView {
      * The scanner object to get user's input from the command-line interface.
      */
     private final Scanner scanner;
+
+    /**
+     * Path to the file containing information on how to interact with the menu.
+     */
+    private static final String MENU_HELP_FILE_PATH = "/kindred/client/view/cli/menuHelp.txt";
+
+    /**
+     * Path to the file containing information on how to interact with the game.
+     */
+    private static final String GAME_HELP_FILE_PATH = "/kindred/client/view/cli/gameHelp.txt";
 
     /**
      * Creates a command-line user interface for the game.
@@ -172,7 +181,7 @@ public class CLI extends AbstractView {
                             .getString("invalid_argument_for_command"));
                     continue;
                 }
-                if (!printFileContent("/kindred/view/cli/menuHelp.txt"))
+                if (!printFileContent(MENU_HELP_FILE_PATH))
                     System.err.println(menuMsgBundle.getString("help_not_found"));
                 continue;
 
@@ -304,7 +313,7 @@ public class CLI extends AbstractView {
                 continue;
 
             case "HELP":
-                if (!printFileContent("/kindred/view/cli/gameHelp.txt"))
+                if (!printFileContent(GAME_HELP_FILE_PATH))
                     System.err.println(gameMsgBundle.getString("help_not_found"));
                 continue;
 
@@ -538,20 +547,25 @@ public class CLI extends AbstractView {
      * @return {@code true} if successful, or {@code false} otherwise
      */
     private boolean printFileContent(String filename) {
-        URL url = CLI.class.getResource(filename);
-        if (url == null)
-            return false;
-        File file = new File(url.getPath());
-        Scanner sc;
-        try {
-            sc = new Scanner(file);
-        } catch (FileNotFoundException e) {
+        System.out.print(TerminalColourHelper.getEscapeSequence(null, Colour.GREEN));
+        InputStream url = CLI.class.getResourceAsStream(filename);
+        if (url == null) {
+            TerminalColourHelper.resetColours();
             return false;
         }
+        Scanner sc;
+        sc = new Scanner(url);
         while (sc.hasNextLine()) {
             System.out.println(sc.nextLine());
         }
-        sc.close();
+        try {
+            sc.close();
+            url.close();
+        } catch (IOException e) {
+            return false;
+        } finally {
+            TerminalColourHelper.resetColours();
+        }
         return true;
     }
 
