@@ -436,14 +436,22 @@ public class CLI extends AbstractView {
             switch (action) {
             case ATTACK:
                 k = "opponent_attacked";
-                o = values.split("\\|");
+                String[] coord = values.split("\\|");
+                o = new Object[] { Integer.parseInt(coord[0]) + 1,
+                        Integer.parseInt(coord[1]) + 1,
+                        Integer.parseInt(coord[2]) + 1,
+                        Integer.parseInt(coord[3]) + 1, Integer.parseInt(coord[4]) };
                 break;
             case END_TURN:
                 k = "opponent_ended";
                 break;
             case MOVE:
                 k = "opponent_moved";
-                o = values.split("\\|");
+                coord = values.split("\\|");
+                o = new Object[] { Integer.parseInt(coord[0]) + 1,
+                        Integer.parseInt(coord[1]) + 1,
+                        Integer.parseInt(coord[2]) + 1,
+                        Integer.parseInt(coord[3]) + 1 };
                 break;
             case SURRENDER:
                 k = "opponent_surrendered";
