@@ -129,7 +129,8 @@ public class Map {
             return false;
 
         Unit unit = tiles[xi][yi].getUnit();
-        if (unit == null || unit.getTeam() != team)
+        // TODO? Check team!
+        if (unit == null) // || unit.getTeam() != team)
             return false;
 
         int move = unit.getMove() - tiles[xi][yi].getTerrain().getMovePenalty();
@@ -181,8 +182,11 @@ public class Map {
 
         // Checks if Units exists on specified Tiles
         // and disallows friendly fire
-        if (attacker == null || defender == null || attacker.getTeam() != team
-                || defender.getTeam() == team)
+
+        // TODO: Check team!
+        if (attacker == null || defender == null)// || attacker.getTeam() !=
+                                                 // team
+            // || defender.getTeam() == team)
             return -1;
 
         int range = attacker.getRange();

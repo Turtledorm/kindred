@@ -99,16 +99,16 @@ public class Game {
      *         otherwise
      */
     public boolean move(int xi, int yi, int xf, int yf) {
-        if (getTurn() == team) {
-            Unit unit = map.getTile(xi, yi).getUnit();
-            if (unit == null)
-                return false;
-            if (!unitsThatMoved.contains(unit) && !unitsThatAttacked.contains(unit)
-                    && map.move(team, xi, yi, xf, yf)) {
-                unitsThatMoved.add(unit);
-                return true;
-            }
+        Unit unit = map.getTile(xi, yi).getUnit();
+
+        if (unit == null)
+            return false;
+        if (!unitsThatMoved.contains(unit) && !unitsThatAttacked.contains(unit)
+                && map.move(team, xi, yi, xf, yf)) {
+            unitsThatMoved.add(unit);
+            return true;
         }
+
         return false;
     }
 
@@ -134,16 +134,15 @@ public class Game {
      *         -1 otherwise
      */
     public int attack(int xi, int yi, int xf, int yf) {
-        if (getTurn() == team) {
-            Unit unit = map.getTile(xi, yi).getUnit();
-            if (unit == null)
-                return -1;
-            if (!unitsThatAttacked.contains(unit)) {
-                int damage = map.attack(team, xi, yi, xf, yf);
-                if (damage >= 0)
-                    unitsThatAttacked.add(unit);
-                return map.attack(team, xi, yi, xf, yf);
-            }
+        Unit unit = map.getTile(xi, yi).getUnit();
+
+        if (unit == null)
+            return -1;
+        if (!unitsThatAttacked.contains(unit)) {
+            int damage = map.attack(team, xi, yi, xf, yf);
+            if (damage >= 0)
+                unitsThatAttacked.add(unit);
+            return map.attack(team, xi, yi, xf, yf);
         }
 
         return -1;
@@ -185,11 +184,8 @@ public class Game {
      * @return {@code true}, if the command succeeded, of {@code false}
      *         otherwise
      */
-    public boolean surrender() {
-        if (team == getTurn()) {
-            isOver = true;
-        }
-        return isOver;
+    public void surrender() {
+        isOver = true;
     }
 
     /**
