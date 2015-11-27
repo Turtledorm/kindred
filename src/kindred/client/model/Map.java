@@ -129,7 +129,7 @@ public class Map {
             return false;
 
         Unit unit = tiles[xi][yi].getUnit();
-        // TODO? Check team!
+        // TODO: Check team!
         if (unit == null) // || unit.getTeam() != team)
             return false;
 
@@ -225,6 +225,7 @@ public class Map {
         unit.loseHp(damage);
         boolean isDead = unit.getCurrentHp() <= 0;
         if (isDead) {
+            getTile(x, y).removeUnit();
             if (unit.getTeam() == 1)
                 numUnitsA--;
             else

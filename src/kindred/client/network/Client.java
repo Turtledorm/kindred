@@ -78,7 +78,10 @@ public class Client implements Runnable {
      */
     private int team;
 
-    private ClientQueue sendingThread;
+    /**
+     * Special queue-related class that controls messages sent to the Server.
+     */
+    private ClientMessageSender messageSender;
 
     /**
      * Constructs a Client.
@@ -118,10 +121,10 @@ public class Client implements Runnable {
             System.exit(1);
         }
 
-        sendingThread = new ClientQueue(socketOut);
+        messageSender = new ClientMessageSender(socketOut);
 
         Timer timer = new Timer();
-        timer.schedule(sendingThread, 1000, 1000);
+        timer.schedule(messageSender, 1000, 1000);
     }
 
     /**
@@ -242,7 +245,7 @@ public class Client implements Runnable {
      */
     public void send(ClientToServerMessage msg) {
         try {
-            sendingThread.enqueueMessage(msg);
+            messageSender.enqueueMessage(msg);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -347,18 +350,23 @@ public class Client implements Runnable {
 
     /**
      * Sends a game ATTACK command to the Server. Makes the opponent's Unit on
-     * (x, y) suffer the specified amount of damage.
+     * {@code positions[2]}, {@code positions[3]} suffer the specified amount of
+     * damage caused by the player's Unit on {@code positions[0]},
+     * {@code positions[1]}.
      * 
-     * @param x
-     *            x coordinate of the opponent's Unit
-     * @param y
-     *            y coordinate of the opponent's Unit
+     * @param positions
+     *            array containing the first two values as the (x, y) position
+     *            of the user's Unit. The third and fourth values are the (x, y)
+     *            position of the Unit that will receive damage
      * @param damage
      *            damage caused to the opponent's Unit
      */
-    public void attack(int x, int y, int damage) {
+    public void attack(int[] positions, int damage) {
         GameAction cmd = GameAction.ATTACK;
-        String arg = x + "|" + y + "|" + damage;
+        String arg = "";
+        for (int i = 0; i < positions.length; i++)
+            arg += "|" + positions[i];
+        arg += "|" + damage;
         cmd.setArgument(arg.substring(1));
 
         ClientToServerMessage msg = ClientToServerMessage.GAME_ACTION;
@@ -409,7 +417,7 @@ public class Client implements Runnable {
 
         // ATTACK: x y damage
         case ATTACK:
-            game.causeDamage(parts[0], parts[1], parts[2]);
+            game.causeDamage(parts[2], parts[3], parts[4]);
             break;
 
         // END_TURN

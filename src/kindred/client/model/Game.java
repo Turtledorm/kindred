@@ -140,9 +140,14 @@ public class Game {
             return -1;
         if (!unitsThatAttacked.contains(unit)) {
             int damage = map.attack(team, xi, yi, xf, yf);
-            if (damage >= 0)
+            if (damage >= 0) {
                 unitsThatAttacked.add(unit);
-            return map.attack(team, xi, yi, xf, yf);
+                Tile targetTile = map.getTile(xf, yf);
+                targetTile.getUnit().loseHp(damage);
+                if (targetTile.getUnit().getCurrentHp() <= 0)
+                    targetTile.removeUnit();
+            }
+            return damage;
         }
 
         return -1;
@@ -179,10 +184,7 @@ public class Game {
     }
 
     /**
-     * Makes the Game end with one of the players forfeiting the match.
-     * 
-     * @return {@code true}, if the command succeeded, of {@code false}
-     *         otherwise
+     * Makes the current player forfeit the match.
      */
     public void surrender() {
         isOver = true;
