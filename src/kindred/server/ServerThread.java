@@ -356,8 +356,8 @@ class ServerThread extends Thread {
             msgToSend.setArgument(arg);
             for (Room r : currentGames)
                 if (r.hasNick(nick)) {
-                    host = r.getOtherNick(nick);
-                    queueMessage(nicksToSocks.get(host), msgToSend);
+                    String opponent = r.getOtherNick(nick);
+                    queueMessage(nicksToSocks.get(opponent), msgToSend);
                     break;
                 }
             break;

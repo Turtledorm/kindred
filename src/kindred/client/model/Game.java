@@ -99,7 +99,7 @@ public class Game {
      *         otherwise
      */
     public boolean move(int xi, int yi, int xf, int yf) {
-        if (turn == team) {
+        if (getTurn() == team) {
             Unit unit = map.getTile(xi, yi).getUnit();
             if (unit == null)
                 return false;
@@ -134,7 +134,7 @@ public class Game {
      *         -1 otherwise
      */
     public int attack(int xi, int yi, int xf, int yf) {
-        if (turn == team) {
+        if (getTurn() == team) {
             Unit unit = map.getTile(xi, yi).getUnit();
             if (unit == null)
                 return -1;
@@ -186,7 +186,7 @@ public class Game {
      *         otherwise
      */
     public boolean surrender() {
-        if (team == turn) {
+        if (team == getTurn()) {
             isOver = true;
         }
         return isOver;
@@ -199,7 +199,7 @@ public class Game {
      *         otherwise
      */
     public boolean endTurn() {
-        if (team == turn) {
+        if (team == getTurn()) {
             turn ^= 0x03; // 1 <-> 2
             unitsThatMoved.clear();
             unitsThatAttacked.clear();
@@ -216,5 +216,14 @@ public class Game {
      */
     public boolean isOver() {
         return isOver;
+    }
+
+    /**
+     * Returns the identifier of the current player's turn.
+     * 
+     * @return identifier of the current player's turn
+     */
+    public int getTurn() {
+        return turn;
     }
 }

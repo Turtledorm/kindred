@@ -133,7 +133,16 @@ public class Client implements Runnable {
                 }
             } else if (!game.isOver()) {
                 view.displayMap();
-                view.promptForGameAction(this);
+                if (game.getTurn() == team)
+                    view.promptForGameAction(this);
+                else {
+                    try {
+                        synchronized (view) {
+                            view.wait();
+                        }
+                    } catch (InterruptedException e) {
+                    }
+                }
             } else
                 game = null;
         }
@@ -401,6 +410,12 @@ public class Client implements Runnable {
         case SURRENDER:
             game.surrender();
             break;
+        }
+
+        if (message == GameAction.END_TURN || message == GameAction.SURRENDER) {
+            synchronized (view) {
+                view.notify();
+            }
         }
     }
 
