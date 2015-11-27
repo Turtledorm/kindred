@@ -284,8 +284,29 @@ public class CLI extends AbstractView {
                 }
                 positions = parsePosition(separate);
                 if (positions != null) {
-                    String message = game.getMap().getTileInfo(positions[0],
-                            positions[1]);
+                    String message = "";
+                    String[] info = game.getMap()
+                            .getTileInfo(positions[0], positions[1]).split(";");
+                    if (info.length == 2) { // with unit
+                        Object[] args = new Object[7];
+                        String[] parts = info[1].split(",");
+                        args[0] = parts[0];
+                        for (int i = 1; i <= 6; i++)
+                            args[i] = Integer.parseInt(parts[i]);
+                        message += format(gameMsgBundle, "unit_info", args);
+                    } else { // without unit
+                        message += format(gameMsgBundle, "no_unit_info",
+                                new Object[] {});
+                    }
+                    String[] terrainInfo = info[0].split(",");
+                    message += "\n"
+                            + format(
+                                    gameMsgBundle,
+                                    "terrain_info",
+                                    new Object[] { terrainInfo[0],
+                                            Integer.parseInt(terrainInfo[1]),
+                                            Integer.parseInt(terrainInfo[2]),
+                                            Integer.parseInt(terrainInfo[3]) });
                     System.out.println(message);
                 }
                 break;

@@ -316,24 +316,22 @@ public class Map {
     public String getTileInfo(int x, int y) {
         String message = "";
         Tile tile = tiles[x][y];
-        Unit unit;
-        // TODO: Change this to a syntax
-        if ((unit = tile.getUnit()) == null)
-            message += "[No unit]";
-        else {
-            message += unit.getName() + " [" + unit.getCurrentHp() + "/"
-                    + unit.getTotalHp() + " HP]";
-            message += "\n Mov: " + unit.getMove();
-            message += "\n Rng: " + unit.getRange();
-            message += "\n Atk: " + unit.getAtk();
-            message += "\n Def: " + unit.getDef();
-            message += "\n Agi: " + unit.getAgi();
-        }
-        message += "\n" + tile.getTerrain().getName();
-        message += String.format(" (%+d%% Def, %+d%% Agi, -%d Move)", tile
-                .getTerrain().getDefenseModifier(), tile.getTerrain()
-                .getAgilityModifier(), tile.getTerrain().getMovePenalty());
-
+        Terrain terrain = tile.getTerrain();
+        message += terrain.getName() + ",";
+        message += terrain.getDefenseModifier() + ",";
+        message += terrain.getAgilityModifier() + ",";
+        message += terrain.getMovePenalty();
+        Unit unit = tile.getUnit();
+        message += ";";
+        message += unit.getName() + ",";
+        message += unit.getCurrentHp() + ",";
+        message += unit.getTotalHp() + ",";
+        message += unit.getMove() + ",";
+        message += unit.getRange() + ",";
+        message += unit.getAtk() + ",";
+        message += unit.getDef() + ",";
+        message += unit.getAgi();
+        message += "";
         return message;
     }
 }
