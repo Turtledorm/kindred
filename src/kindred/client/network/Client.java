@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-
 import kindred.client.model.Game;
 import kindred.client.view.AbstractView;
 import kindred.client.view.cli.CLI;
@@ -24,7 +23,7 @@ public class Client implements Runnable {
     /**
      * Default port used by the kindred.server.
      */
-    public static final int DEFAULT_PORT = 8000;
+    public static final int DEFAULT_PORT = 60001;
 
     /**
      * Client's TCP socket, used for connecting to the Server.

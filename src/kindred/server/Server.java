@@ -14,7 +14,7 @@ public class Server implements Runnable {
     /**
      * Default port used by the Server.
      */
-    public static final int DEFAULT_PORT = 8000;
+    public static final int DEFAULT_PORT = 60001;
 
     /**
      * Server's listening TCP socket.

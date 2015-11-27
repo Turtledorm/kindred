@@ -16,7 +16,12 @@ BOLD="\e[1m"
 
 function uso {
     echo -e $BOLD"USO"$NORMAL
-    echo -e "\t./`basename $0` ["$BOLD"-c"$NORMAL" [IP]] ["$BOLD"-s"$NORMAL"] ["$BOLD"-h"$NORMAL"]\n"
+
+    ARGS="["$BOLD"-c"$NORMAL" [IP]] ["$BOLD"-s"$NORMAL"]"
+    ARGS=$ARGS" ["$BOLD"-C"$NORMAL" [IP]] ["$BOLD"-S"$NORMAL"]"
+    ARGS=$ARGS" ["$BOLD"-h"$NORMAL"]"
+
+    echo -e "\t./`basename $0` $ARGS\n"
 
     echo -e $BOLD"DESCRIÇÃO"$NORMAL
     echo -e "\tExecuta o jogo Kindred de acordo com o argumento dado.\n"
@@ -55,7 +60,7 @@ case $1 in
     -S)
         java -jar release/jar/KindredServer.jar;;
     -C)
-        java -jar release/jar/KindredClient.jar;;
+        java -jar release/jar/KindredClient.jar $2;;
     *)
         echo "Argumento '$arg' não reconhecido!"
         uso;;

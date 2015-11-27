@@ -223,6 +223,9 @@ class ServerThread extends Thread {
             sentMsg = ServerToClientMessage.INFO_AVAILABLE_MAPS;
             if (maps.length() >= 1)
                 sentMsg.setArgument(maps);
+            else
+                sentMsg.setArgument("");
+
             queueMessage(socket, sentMsg);
             break;
 
@@ -235,6 +238,8 @@ class ServerThread extends Thread {
             sentMsg = ServerToClientMessage.INFO_AVAILABLE_ROOMS;
             if (roomStr.length() >= 1)
                 sentMsg.setArgument(roomStr.substring(1)); // remove initial '|'
+            else
+                sentMsg.setArgument("");
             queueMessage(socket, sentMsg);
             break;
 
