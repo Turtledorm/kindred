@@ -183,6 +183,7 @@ public class Client implements Runnable {
                     game = new Game(nickname, opponent, "/kindred/common/data/map/"
                             + mapFilename + ".txt", team);
                     view.setGame(game);
+                    send(ClientToServerMessage.EMPTY);
                     break;
                 case SUCC_LEAVE:
                     System.exit(0);
@@ -336,7 +337,7 @@ public class Client implements Runnable {
         GameAction cmd = GameAction.MOVE;
         String arg = "";
         for (int i = 0; i < positions.length; i++)
-            arg = "|" + positions[i];
+            arg += "|" + positions[i];
         cmd.setArgument(arg.substring(1));
 
         ClientToServerMessage msg = ClientToServerMessage.GAME_ACTION;
@@ -404,6 +405,8 @@ public class Client implements Runnable {
         // MOVE: xi yi xf yf
         case MOVE:
             game.move(parts[0], parts[1], parts[2], parts[3]);
+            System.out.printf("Move (%d, %d) to (%d, %d)\n", parts[0], parts[1],
+                    parts[2], parts[3]);
             break;
 
         // ATTACK: x y damage
