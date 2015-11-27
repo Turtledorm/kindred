@@ -294,11 +294,9 @@ public class CLI extends AbstractView {
                             .getString("invalid_argument_for_command"));
                     continue;
                 }
-                if (game.endTurn()) {
-                    client.endTurn();
-                    return true;
-                }
-                continue;
+                game.endTurn();
+                client.endTurn();
+                return true;
 
             case "SURRENDER":
                 if (separate.length != 1) {

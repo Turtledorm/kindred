@@ -49,7 +49,9 @@ public enum ClientToServerMessage {
      * Sends an action-related to the game being played. The action is forwarded
      * by the Server to the user's opponent in the game.
      */
-    GAME_ACTION;
+    GAME_ACTION,
+
+    EMPTY;
 
     /**
      * Contains the corresponding enum value of each possible

@@ -116,6 +116,7 @@ class ServerThread extends Thread {
                 if (inputLine.trim().equals(""))
                     continue;
                 parse(inputLine);
+                // Send all messages in the queue
                 while (!clientQueue.get(socket).isEmpty()) {
                     String msg = clientQueue.get(socket).remove();
                     out.println(msg);
@@ -360,6 +361,10 @@ class ServerThread extends Thread {
                     queueMessage(nicksToSocks.get(opponent), msgToSend);
                     break;
                 }
+            break;
+
+        // EMPTY: Do nothing
+        case EMPTY:
             break;
 
         // Something not understood

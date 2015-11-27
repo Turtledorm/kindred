@@ -195,17 +195,11 @@ public class Game {
     /**
      * Ends the current player's turn, letting the next user take action.
      * 
-     * @return {@code true}, if the command succeeded, of {@code false}
-     *         otherwise
      */
-    public boolean endTurn() {
-        if (team == getTurn()) {
-            turn ^= 0x03; // 1 <-> 2
-            unitsThatMoved.clear();
-            unitsThatAttacked.clear();
-            return true;
-        }
-        return false;
+    public void endTurn() {
+        turn ^= 0x03; // 1 <-> 2
+        unitsThatMoved.clear();
+        unitsThatAttacked.clear();
     }
 
     /**

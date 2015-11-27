@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Timer;
 
 import kindred.client.model.Game;
 import kindred.client.view.AbstractView;
@@ -77,6 +78,8 @@ public class Client implements Runnable {
      */
     private int team;
 
+    private ClientQueue sendingThread;
+
     /**
      * Constructs a Client.
      * 
@@ -115,6 +118,10 @@ public class Client implements Runnable {
             System.exit(1);
         }
 
+        sendingThread = new ClientQueue(socketOut);
+
+        Timer timer = new Timer();
+        timer.schedule(sendingThread, 1000, 1000);
     }
 
     /**
@@ -160,7 +167,6 @@ public class Client implements Runnable {
                         "\\\\");
                 ServerToClientMessage msg = ServerToClientMessage
                         .fromEncodedString(response);
-
                 // Analyse message
                 String arg = msg.getArgument();
                 switch (msg) {
@@ -234,7 +240,11 @@ public class Client implements Runnable {
      *            message to be sent to the Server
      */
     public void send(ClientToServerMessage msg) {
-        socketOut.println(msg.toEncodedString());
+        try {
+            sendingThread.enqueueMessage(msg);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -387,9 +397,9 @@ public class Client implements Runnable {
     private void receiveGameAction(GameAction message) {
         String[] partsString = message.getArgument().split("\\|");
         Integer[] parts = new Integer[partsString.length];
-        for (int i = 0; i < parts.length; i++)
-            parts[i] = Integer.parseInt(partsString[i]);
-
+        if (message == GameAction.ATTACK || message == GameAction.MOVE)
+            for (int i = 0; i < parts.length; i++)
+                parts[i] = Integer.parseInt(partsString[i]);
         switch (message) {
         // MOVE: xi yi xf yf
         case MOVE:
