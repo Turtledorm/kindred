@@ -250,6 +250,7 @@ public class CLI extends AbstractView {
                     if (game.move(positions[0], positions[1], positions[2],
                             positions[3])) {
                         client.move(positions);
+                        displayMap();
                     } else
                         continue;
                 }
@@ -267,9 +268,10 @@ public class CLI extends AbstractView {
                     int damage = game.attack(positions[0], positions[1],
                             positions[2], positions[3]);
                     // Attack missed if damage = 0, and hit if damage > 0
-                    if (damage >= 0)
+                    if (damage >= 0) {
                         client.attack(positions[2], positions[3], damage);
-                    else
+                        displayMap();
+                    } else
                         continue;
                 }
                 break;
@@ -304,11 +306,9 @@ public class CLI extends AbstractView {
                             .getString("invalid_argument_for_command"));
                     continue;
                 }
-                if (game.surrender()) {
-                    client.surrender();
-                    return true;
-                }
-                continue;
+                game.surrender();
+                client.surrender();
+                return true;
 
             case "HELP":
                 if (!printFileContent(GAME_HELP_FILE_PATH))
