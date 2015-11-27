@@ -405,8 +405,6 @@ public class Client implements Runnable {
         // MOVE: xi yi xf yf
         case MOVE:
             game.move(parts[0], parts[1], parts[2], parts[3]);
-            System.out.printf("Move (%d, %d) to (%d, %d)\n", parts[0], parts[1],
-                    parts[2], parts[3]);
             break;
 
         // ATTACK: x y damage
