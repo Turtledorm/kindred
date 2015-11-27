@@ -51,6 +51,9 @@ public enum ClientToServerMessage {
      */
     GAME_ACTION,
 
+    /**
+     * Dummy message used mainly for pinging the server.
+     */
     EMPTY;
 
     /**

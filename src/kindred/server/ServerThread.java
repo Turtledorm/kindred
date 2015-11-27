@@ -94,8 +94,6 @@ class ServerThread extends Thread {
      */
     @Override
     public void run() {
-        // TODO: Separate producer and consumer
-
         // Initialize socket input/output objects
         PrintWriter out = null;
         BufferedReader in = null;

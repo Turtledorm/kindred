@@ -269,7 +269,7 @@ public class CLI extends AbstractView {
                             positions[2], positions[3]);
                     // Attack missed if damage = 0, and hit if damage > 0
                     if (damage >= 0) {
-                        client.attack(positions[2], positions[3], damage);
+                        client.attack(positions, damage);
                         displayMap();
                     } else
                         continue;
@@ -288,6 +288,24 @@ public class CLI extends AbstractView {
                             positions[1]);
                     System.out.println(message);
                 }
+                break;
+
+            case "MYTEAM":
+                if (separate.length != 1) {
+                    System.out.println(gameMsgBundle
+                            .getString("invalid_argument_for_command"));
+                    continue;
+                }
+                // TODO: Check how INFO string was done
+                break;
+
+            case "OPPTEAM":
+                if (separate.length != 1) {
+                    System.out.println(gameMsgBundle
+                            .getString("invalid_argument_for_command"));
+                    continue;
+                }
+                // TODO: Check how INFO string was done
                 break;
 
             case "END":
