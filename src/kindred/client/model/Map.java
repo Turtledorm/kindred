@@ -102,8 +102,7 @@ public class Map {
 
     /**
      * Moves Unit from the specified team on Tile (xi, yi) to Tile (xf, yf) on
-     * this Map. Supposes that all given coordinates are valid, i.e., not
-     * outside borders of this Map.
+     * this Map.
      * <p>
      * Returns {@code true} if movement was successful or {@code false}
      * otherwise.
@@ -124,6 +123,10 @@ public class Map {
      *         otherwise
      */
     public boolean move(int team, int xi, int yi, int xf, int yf) {
+        // Verify if coordinates are out of bounds
+        if (!validPosition(xi, yi) || !validPosition(xf, yf))
+            return false;
+
         // Tile already occupied
         if (tiles[xf][yf].getUnit() != null)
             return false;
@@ -141,8 +144,8 @@ public class Map {
         int dx = Math.abs(xf - xi);
         int dy = Math.abs(yf - yi);
 
-        // Disallow movement to a tile further than Unit's 'move'
-        if (dx + dy > move)
+        // Disallow movement to own Tile or to a Tile further than Unit's 'move'
+        if (dx + dy == 0 || dx + dy > move)
             return false;
 
         // Successfully moves unit
@@ -177,6 +180,10 @@ public class Map {
      *         -1 otherwise
      */
     public int attack(int team, int xi, int yi, int xf, int yf) {
+        // Verify if coordinates are out of bounds
+        if (!validPosition(xi, yi) || !validPosition(xf, yf))
+            return -1;
+
         Unit attacker = tiles[xi][yi].getUnit();
         Unit defender = tiles[xf][yf].getUnit();
 

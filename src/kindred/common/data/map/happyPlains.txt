@@ -1,6 +1,0 @@
-2 2
-125 125
-P P
-P P
-1 Knight 0 0
-2 Knight 1 1

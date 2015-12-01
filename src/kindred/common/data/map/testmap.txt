@@ -1,0 +1,9 @@
+2 8
+125 125
+P P P P P P P P
+P P P P P P P P
+1 Knight 0 0
+1 Archer 0 1
+1 Archer 0 7
+2 Lancer 1 1
+2 Rogue 1 2

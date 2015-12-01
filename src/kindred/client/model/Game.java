@@ -99,6 +99,9 @@ public class Game {
      *         otherwise
      */
     public boolean move(int xi, int yi, int xf, int yf) {
+        if (!map.validPosition(xi, yi))
+            return false;
+
         Unit unit = map.getTile(xi, yi).getUnit();
 
         if (unit == null)
@@ -134,6 +137,9 @@ public class Game {
      *         -1 otherwise
      */
     public int attack(int xi, int yi, int xf, int yf) {
+        if (!map.validPosition(xi, yi))
+            return -1;
+
         Unit unit = map.getTile(xi, yi).getUnit();
 
         if (unit == null)
