@@ -9,12 +9,16 @@ doc/fase1/aux/
 *.fdb_latexmk
 
 # Arquivos gerados pelo Java
-bin/
 *.class
+bin/
 doc/
+
+# Arquivos gerados por scripts
+kindred-fase*/
 
 # Outros
 *~
+*#
 *.dropbox.attr
 .nfs*
-*#
+*.tar.gz
