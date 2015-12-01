@@ -149,6 +149,7 @@ public class ClientTest {
         client.host("thisIsFake");
         wait(500);
         assertFalse(client.isHostingRoom());
+
         // Disconnect
         client.disconnect();
     }
@@ -166,6 +167,7 @@ public class ClientTest {
         client.host("happyPlains");
         wait(500);
         assertTrue(client.isHostingRoom());
+
         // Disconnect
         client.disconnect();
     }
@@ -183,6 +185,7 @@ public class ClientTest {
         client.unhost();
         wait(500);
         assertFalse(client.isHostingRoom());
+
         // Disconnect
         client.disconnect();
     }
@@ -196,6 +199,7 @@ public class ClientTest {
         client.unhost();
         wait(1000);
         assertFalse(client.isHostingRoom());
+
         // Disconnect
         client.disconnect();
     }
@@ -219,6 +223,7 @@ public class ClientTest {
         assertFalse(host.isHostingRoom());
         assertTrue(guest.isPlaying());
         assertTrue(host.isPlaying());
+
         // Disconnect
         guest.disconnect();
         host.disconnect();
@@ -241,6 +246,7 @@ public class ClientTest {
         wait(400);
         assertFalse(host.isPlaying());
         assertFalse(guest.isPlaying());
+
         // Disconnect
         host.disconnect();
         guest.disconnect();
@@ -252,23 +258,23 @@ public class ClientTest {
         Client guest = new Client("localhost", view);
         host.start();
         guest.start();
-        host.nick("hostSur");
-        guest.nick("guestSur");
+        host.nick("hostEnd");
+        guest.nick("guestEnd");
         wait(400);
         host.host("simpleMap");
         wait(400);
         assertEquals(-1, host.getGameTurn());
         assertEquals(-1, guest.getGameTurn());
-        guest.join("hostSur");
-        wait(600);
+        guest.join("hostEnd");
+        wait(400);
         assertEquals(1, host.getGameTurn());
         assertEquals(1, guest.getGameTurn());
         host.endTurn();
-        wait(600);
+        wait(400);
         assertEquals(2, host.getGameTurn());
         assertEquals(2, guest.getGameTurn());
-        host.endTurn();
-        wait(600);
+        guest.endTurn();
+        wait(400);
         assertEquals(1, host.getGameTurn());
         assertEquals(1, guest.getGameTurn());
 
