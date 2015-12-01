@@ -44,10 +44,27 @@
             notree="false"
             source="1.7"
             sourcepath="src"
-        	excludepackagenames="test/*"
+            excludepackagenames="test/*"
             splitindex="true"
             use="true"
             version="true"/>
     </target>
+    
+    <path id="_classpath">
+        <pathelement path="/test/jUnit/*.jar"/>
+        <pathelement path="bin"/>
+    </path>
+    
+    <target name="test" depends="build">
+        <junit printsummary="yes">
+            <classpath refid="_classpath"/>
+            <batchtest>
+                <fileset dir="${test}">
+                    <include name="**/*Test*" />
+                </fileset>
+            </batchtest>
+            <formatter type="brief" usefile="false"/>
+        </junit>
+    </target> 
 
 </project>
