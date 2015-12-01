@@ -1,0 +1,8 @@
+kindred.client.model
+kindred.client.network
+kindred.client.parsing
+kindred.client.view
+kindred.client.view.cli
+kindred.client.view.gui
+kindred.common
+kindred.server
