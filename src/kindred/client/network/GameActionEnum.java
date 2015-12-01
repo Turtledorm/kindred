@@ -2,12 +2,11 @@ package kindred.client.network;
 
 /**
  * Contains an enum number for every type of game-related message the Client can
- * send to the Server. Can also encode and decode these values to shorten and
- * simplify Client to Server messages.
+ * send to the Server.
  * 
  * @author Kindred Team
  */
-public enum GameAction {
+public enum GameActionEnum {
     /**
      * Moves a Unit the player controls to a different Tile, if possible.
      */
@@ -31,11 +30,11 @@ public enum GameAction {
     SURRENDER;
 
     /**
-     * Contains the corresponding enum value of each possible GameAction type.
-     * Stored in a static variable to save time from calling {@code values()}
-     * many times.
+     * Contains the corresponding enum value of each possible GameActionEnum
+     * type. Stored in a static variable to save time from calling
+     * {@code values()} many times.
      */
-    private static final GameAction[] values = values();
+    private static final GameActionEnum[] values = values();
 
     /**
      * Message argument. If more than one, they have to be separated with the
@@ -44,9 +43,9 @@ public enum GameAction {
     private String argument;
 
     /**
-     * Initially sets all GameAction messages to have no arguments.
+     * Initially sets all GameActionEnum messages to have no arguments.
      */
-    GameAction() {
+    GameActionEnum() {
         setArgument("");
     }
 
@@ -73,22 +72,23 @@ public enum GameAction {
      * Encodes the message in a single String containing its enum number and
      * argument, these two separated with the char '|'.
      * 
-     * @return an encoded GameAction message
+     * @return an encoded GameActionEnum message
      */
     public String toEncodedString() {
         return ordinal() + "|" + argument;
     }
 
     /**
-     * Decodes a String, converting it to its corresponding GameAction format.
+     * Decodes a String, converting it to its corresponding GameActionEnum
+     * format.
      * 
      * @param str
      *            argument contained in the message
-     * @return a decoded GameAction message
+     * @return a decoded GameActionEnum message
      */
-    public static GameAction fromEncodedString(String str) {
+    public static GameActionEnum fromEncodedString(String str) {
         String[] parts = str.split("\\|", 2);
-        GameAction msg = values[Integer.parseInt(parts[0])];
+        GameActionEnum msg = values[Integer.parseInt(parts[0])];
         msg.setArgument(parts[1]);
         return msg;
     }
