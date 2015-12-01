@@ -52,7 +52,7 @@ public class Server implements Runnable {
 
     /**
      * Thread used for verifying if Server must be closed (this happens when
-     * "CLOSED" is typed).
+     * "CLOSE" is typed).
      */
     public void run() {
         Scanner input = new Scanner(System.in);
@@ -70,6 +70,20 @@ public class Server implements Runnable {
         input.close();
         System.out.println("Until next time!");
         System.exit(0);
+    }
+
+    /**
+     * Runs the method run() in a new thread.
+     */
+    public void runLoopInNewThread() {
+
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                loop();
+            }
+        };
+        new Thread(r).start();
     }
 
     /**

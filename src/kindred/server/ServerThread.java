@@ -153,6 +153,8 @@ class ServerThread extends Thread {
         ClientToServerMessage receivedMsg = ClientToServerMessage
                 .fromEncodedString(message);
         String arg = receivedMsg.getArgument();
+        if (receivedMsg != ClientToServerMessage.EMPTY)
+            System.out.println(receivedMsg + ": " + arg);
         ServerToClientMessage sentMsg;
         switch (receivedMsg) {
 
@@ -183,6 +185,8 @@ class ServerThread extends Thread {
 
             // Nickname already exists
             if (nicksToSocks.containsKey(newNickname)) {
+                System.out.println(newNickname);
+                System.out.println(nicksToSocks);
                 sentMsg = ServerToClientMessage.ERR_NICKNAME_IS_IN_USE;
                 sentMsg.setArgument(newNickname);
                 queueMessage(socket, sentMsg);
@@ -346,7 +350,7 @@ class ServerThread extends Thread {
         // QUIT : Make kindred.client leave the kindred.server
         case QUIT:
             queueMessage(socket, ServerToClientMessage.SUCC_LEAVE);
-            quitServer = true;
+            // quitServer = true;
             break;
 
         // GAME_ACTION: Just pass forward the message
@@ -375,7 +379,7 @@ class ServerThread extends Thread {
 
     /**
      * Inserts a message in the queue of the corresponding socket which will
-     * receive it. Escapes backslashes and newline characters in the message.
+     * receive it.
      * 
      * @param socket
      *            Client's socket whose message queue will receive the message
@@ -385,7 +389,6 @@ class ServerThread extends Thread {
      */
     private void queueMessage(Socket socket, ServerToClientMessage msg) {
         String message = msg.toEncodedString();
-        message = message.replaceAll("\\\\", "\\\\\\\\").replaceAll("\n", "\\\\n");
         clientQueue.get(socket).add(message);
     }
 

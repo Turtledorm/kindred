@@ -1,0 +1,100 @@
+% language and encoding
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+
+% fonts: normal and monospaced
+\usepackage[charter]{mathdesign}
+%\usepackage{mathpazo}
+%\usepackage{newtxtext, newtxmath}
+%\usepackage[scaled]{ulgothic}
+\usepackage{inconsolata}
+
+% page format
+\ifdefined\RELEASEDOCUMENT
+\usepackage[a4paper, margin=2cm]{geometry}
+\else
+\usepackage[a5paper, margin=0.7cm]{geometry}
+\fi
+
+% additional commands to math mode
+\usepackage{amsmath}
+
+% indent first line of first paragraph
+\usepackage{indentfirst}
+
+% page numbering
+\pagestyle{empty}
+
+% automatically format quotes (no need to write as ``'')
+\usepackage{csquotes}
+\MakeOuterQuote{"}
+
+
+% support coloured links, PDF bookmarks, etc.
+%\usepackage[colorlinks=false, pdfstartview=FitH, pdfpagelayout=OneColumn]{hyperref}
+
+% remove space after a comma when it acts like a decimal separator
+\usepackage{icomma}
+
+% "cancel" terms with a slash
+%\usepackage{cancel}
+
+% enable use of colours
+%\usepackage{xcolor}
+
+% show customised enumerate 
+%\usepackage{enumerate}
+
+% support graphics
+\usepackage{graphicx}
+
+% input raw text
+%\usepackage{verbatim}
+
+% add cells that span more than one row or column
+%\usepackage{multirow, multicol}
+
+% include external raw PDF pages
+\usepackage{pdfpages}
+
+% allow forcing force a figure to be displayed "here"
+\usepackage{float}
+
+% input code
+%\usepackage{listings} \lstset{basicstyle=\ttfamily}
+
+% add "lorem ipsum" text
+%\usepackage{blindtext} \blindmathtrue
+
+% add questions and answers
+\usepackage[]{exercise}
+\renewcommand{\ExerciseName}{Questão}
+\renewcommand{\ExerciseListName}{Q\!\!}
+\renewcommand{\AnswerName}{Resposta}
+\renewcommand{\AnswerListName}{Resposta}
+\renewcommand{\ExePartName}{Item}
+\renewcommand{\ExerciseHeader}{\hrule~\par\noindent{\textbf{\large
+            \ExerciseName~\ExerciseHeaderNB\ExerciseHeaderTitle
+            \ExerciseHeaderOrigin. \medskip}}}
+\renewcommand{\ExePartHeader}{~\par\noindent{\textit{\large
+            (\ExePartHeaderNB)
+            \smallskip}}}
+\renewcommand{\theExePart}{\alph{ExePart}}
+\renewcommand{\ExePartHeaderNB}{\theExePart}
+
+
+
+% add Portuguese trig functions
+\DeclareMathOperator{\sen}{sen}
+\DeclareMathOperator{\tg}{tg}
+\DeclareMathOperator{\cotg}{cotg}
+\DeclareMathOperator{\cossec}{cossec}
+\DeclareMathOperator{\arcsen}{arcsen}
+\DeclareMathOperator{\arctg}{arctg}
+\DeclareMathOperator{\arccotg}{arccotg}
+\DeclareMathOperator{\arccossec}{arccossec}
+
+% add British commands and environments
+\newenvironment{centre}[0]{\begin{center}}{\end{center}}
+\newenvironment{itemise}[0]{\begin{itemize}}{\end{itemize}}

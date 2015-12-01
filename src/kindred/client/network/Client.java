@@ -27,6 +27,11 @@ public class Client implements Runnable {
     public static final int DEFAULT_PORT = 60001;
 
     /**
+     * Interval between each sent message in milliseconds.
+     */
+    private static final int SEND_INTERVAL = 200;
+
+    /**
      * Client's TCP socket, used for connecting to the Server.
      */
     private Socket socket;
@@ -45,12 +50,6 @@ public class Client implements Runnable {
      * Socket input, used for reading from the Server.
      */
     private BufferedReader socketIn;
-
-    /**
-     * If {@code true}, then the Client's socket will close the connection to
-     * the Server.
-     */
-    private boolean quitClient;
 
     /**
      * Client's interaction with the program (CLI or GUI).
@@ -84,6 +83,17 @@ public class Client implements Runnable {
     private ClientMessageSender messageSender;
 
     /**
+     * If {@code false}, then this Client's socket is not connected to the
+     * server.
+     */
+    private boolean connected;
+
+    /**
+     * If {@code true}, then this client is hosting a room.
+     */
+    public boolean isHostingRoom;
+
+    /**
      * Constructs a Client.
      * 
      * @param serverIP
@@ -93,9 +103,10 @@ public class Client implements Runnable {
      *            AbstractView to be used by the Client (a CLI or GUI)
      */
     public Client(String serverIP, AbstractView view) {
+        connected = false;
+        isHostingRoom = false;
         this.serverIP = serverIP;
         this.view = view;
-        quitClient = false;
 
         if (serverIP == null)
             serverIP = view.promptForIP();
@@ -107,7 +118,7 @@ public class Client implements Runnable {
             socket = new Socket(serverIP, DEFAULT_PORT);
         } catch (IOException e) {
             view.connectionResult(false, serverIP);
-            System.exit(1);
+            throw new RuntimeException();
         }
         view.connectionResult(true, serverIP);
 
@@ -118,13 +129,13 @@ public class Client implements Runnable {
                     socket.getInputStream()));
         } catch (IOException e) {
             view.connectionResult(false, serverIP);
-            System.exit(1);
+            throw new RuntimeException();
         }
-
+        connected = true;
         messageSender = new ClientMessageSender(socketOut);
 
         Timer timer = new Timer();
-        timer.schedule(messageSender, 1000, 1000);
+        timer.schedule(messageSender, SEND_INTERVAL, SEND_INTERVAL);
     }
 
     /**
@@ -132,7 +143,7 @@ public class Client implements Runnable {
      * Server.
      */
     public void mainLoop() {
-        while (!quitClient) {
+        while (isConnected()) {
             if (game == null) {
                 view.promptForMenuAction(this);
                 try {
@@ -166,8 +177,6 @@ public class Client implements Runnable {
 
         try {
             while ((response = socketIn.readLine()) != null) {
-                response = response.replaceAll("\\\\n", "\n").replaceAll("\\\\\\\\",
-                        "\\\\");
                 ServerToClientMessage msg = ServerToClientMessage
                         .fromEncodedString(response);
                 // Analyse message
@@ -185,19 +194,23 @@ public class Client implements Runnable {
                     String mapFilename = parts[2];
                     game = new Game(nickname, opponent, "/kindred/common/data/map/"
                             + mapFilename + ".txt", team);
+                    System.err.println("Entrou. " + (game != null));
                     view.setGame(game);
                     send(ClientToServerMessage.EMPTY);
                     break;
                 case SUCC_LEAVE:
-                    System.exit(0);
-                    socket.close();
+                    disconnect();
                     return;
                 case GAME_ACTION:
                     receiveGameAction(GameAction.fromEncodedString(arg));
                     break;
-                // Nothing to do here in the following cases
                 case SUCC_HOST:
+                    isHostingRoom = true;
+                    break;
                 case SUCC_UNHOST:
+                    isHostingRoom = false;
+                    break;
+                // Nothing to do here in the following cases
                 case INFO_AVAILABLE_MAPS:
                 case INFO_AVAILABLE_ROOMS:
                 case INFO_LEAVE_HOSTED_ROOM:
@@ -220,20 +233,13 @@ public class Client implements Runnable {
             }
         } catch (IOException e) {
             view.connectionResult(false, serverIP);
-            quitClient = true;
-            System.exit(1);
+            connected = false;
         }
 
         // Unexpected 'null' from socket; kindred.server suddenly closed
         if (!socket.isClosed()) {
-            try {
-                socket.close();
-                view.connectionLost();
-                quitClient = true;
-                System.exit(1);
-            } catch (IOException e) {
-                ; // Ignore if socket couldn't be closed
-            }
+            disconnect();
+            view.connectionLost();
         }
     }
 
@@ -244,11 +250,7 @@ public class Client implements Runnable {
      *            message to be sent to the Server
      */
     public void send(ClientToServerMessage msg) {
-        try {
-            messageSender.enqueueMessage(msg);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        messageSender.enqueueMessage(msg);
     }
 
     /**
@@ -322,7 +324,6 @@ public class Client implements Runnable {
      * Sends a QUIT message to the Server and prepares to close this Client.
      */
     public void quit() {
-        quitClient = true;
         send(ClientToServerMessage.QUIT);
     }
 
@@ -439,6 +440,64 @@ public class Client implements Runnable {
     }
 
     /**
+     * Forces disconnection from the server.
+     */
+    public void disconnect() {
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        connected = false;
+    }
+
+    /**
+     * Checks if the client is connected to the server.
+     * 
+     * @return {@code true} if connected, {@code false} otherwise
+     */
+    public boolean isConnected() {
+        return connected;
+    }
+
+    /**
+     * Starts the client thread that receives messages from the server.
+     */
+    public void start() {
+        Thread thread = new Thread(this);
+        thread.start();
+    }
+
+    /**
+     * Returns the nickname of this player.
+     * 
+     * @return this player's nickname
+     */
+    public String getNickname() {
+        return nickname;
+    }
+
+    /**
+     * Checks if this client is hosting a room.
+     * 
+     * @return {@code true} if this client is hosting a room, or {@code false}
+     *         otherwise
+     */
+    public boolean isHostingRoom() {
+        return isHostingRoom;
+    }
+
+    /**
+     * Checks if this client is participating in a game.
+     * 
+     * @return {@code true} if this client is in a game room, or {@code false}
+     *         otherwise
+     */
+    public boolean isPlaying() {
+        return game != null;
+    }
+
+    /**
      * Starts a Client. Connects to the Server with IP equal to {@code args[0]},
      * if given; otherwise, later prompts the Client for the Server's IP.
      * 
@@ -449,8 +508,7 @@ public class Client implements Runnable {
         String IP = args.length < 1 ? null : args[0];
         AbstractView view = new CLI();
         Client client = new Client(IP, view);
-        Thread thread = new Thread(client);
-        thread.start();
+        client.start();
         client.mainLoop();
     }
 }
