@@ -12,7 +12,7 @@ import kindred.client.model.Game;
 import kindred.client.model.Map;
 import kindred.client.model.Unit;
 import kindred.client.network.Client;
-import kindred.client.network.GameAction;
+import kindred.client.network.GameActionEnum;
 import kindred.client.view.AbstractView;
 import kindred.common.ServerToClientMessage;
 
@@ -468,7 +468,7 @@ public class CLI extends AbstractView {
             arg = new Object[] {};
             break;
         case GAME_ACTION:
-            GameAction action = GameAction.fromEncodedString(argument);
+            GameActionEnum action = GameActionEnum.fromEncodedString(argument);
             String values = action.getArgument();
             String k = null; // key
             Object[] o = new Object[] {}; // objects

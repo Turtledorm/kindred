@@ -202,7 +202,7 @@ public class Client implements Runnable {
                     disconnect();
                     return;
                 case GAME_ACTION:
-                    receiveGameAction(GameAction.fromEncodedString(arg));
+                    receiveGameAction(GameActionEnum.fromEncodedString(arg));
                     break;
                 case SUCC_HOST:
                     isHostingRoom = true;
@@ -338,7 +338,7 @@ public class Client implements Runnable {
      *            position of the Tile that the Unit will move to.
      */
     public void move(int[] positions) {
-        GameAction cmd = GameAction.MOVE;
+        GameActionEnum cmd = GameActionEnum.MOVE;
         String arg = "";
         for (int i = 0; i < positions.length; i++)
             arg += "|" + positions[i];
@@ -363,7 +363,7 @@ public class Client implements Runnable {
      *            damage caused to the opponent's Unit
      */
     public void attack(int[] positions, int damage) {
-        GameAction cmd = GameAction.ATTACK;
+        GameActionEnum cmd = GameActionEnum.ATTACK;
         String arg = "";
         for (int i = 0; i < positions.length; i++)
             arg += "|" + positions[i];
@@ -380,7 +380,7 @@ public class Client implements Runnable {
      * ended their current turn.
      */
     public void endTurn() {
-        GameAction cmd = GameAction.END_TURN;
+        GameActionEnum cmd = GameActionEnum.END_TURN;
         ClientToServerMessage msg = new ClientToServerMessage(
                 ClientToServerEnum.GAME_ACTION, cmd.toEncodedString());
         send(msg);
@@ -391,7 +391,7 @@ public class Client implements Runnable {
      * has forfeited the match.
      */
     public void surrender() {
-        GameAction cmd = GameAction.SURRENDER;
+        GameActionEnum cmd = GameActionEnum.SURRENDER;
         ClientToServerMessage msg = new ClientToServerMessage(
                 ClientToServerEnum.GAME_ACTION, cmd.toEncodedString());
         game = null;
@@ -399,16 +399,16 @@ public class Client implements Runnable {
     }
 
     /**
-     * Parses a GameAction message sent by the opponent, resulting in an action
+     * Parses a GameActionEnum message sent by the opponent, resulting in an action
      * in the user's Game.
      * 
      * @param message
-     *            GameAction message sent by the opponent
+     *            GameActionEnum message sent by the opponent
      */
-    private void receiveGameAction(GameAction message) {
+    private void receiveGameAction(GameActionEnum message) {
         String[] partsString = message.getArgument().split("\\|");
         Integer[] parts = new Integer[partsString.length];
-        if (message == GameAction.ATTACK || message == GameAction.MOVE)
+        if (message == GameActionEnum.ATTACK || message == GameActionEnum.MOVE)
             for (int i = 0; i < parts.length; i++)
                 parts[i] = Integer.parseInt(partsString[i]);
         switch (message) {
@@ -434,7 +434,7 @@ public class Client implements Runnable {
             break;
         }
 
-        if (message == GameAction.END_TURN || message == GameAction.SURRENDER) {
+        if (message == GameActionEnum.END_TURN || message == GameActionEnum.SURRENDER) {
             synchronized (view) {
                 view.notify();
             }

@@ -128,7 +128,7 @@ public enum ServerToClientEnum {
 
     /**
      * Game-related command that the Server only passes forward to the Client.
-     * See {@link kindred.client.network.GameAction} class for more info.
+     * See {@link kindred.client.network.GameActionEnum} class for more info.
      */
     GAME_ACTION;
 
