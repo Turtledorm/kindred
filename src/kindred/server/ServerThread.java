@@ -185,8 +185,6 @@ class ServerThread extends Thread {
 
             // Nickname already exists
             if (nicksToSocks.containsKey(newNickname)) {
-                System.out.println(newNickname);
-                System.out.println(nicksToSocks);
                 sentMsg = new ServerToClientMessage(
                         ServerToClientEnum.ERR_NICKNAME_IS_IN_USE, newNickname);
                 queueMessage(socket, sentMsg);

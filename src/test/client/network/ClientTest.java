@@ -75,6 +75,7 @@ public class ClientTest {
 
     @AfterClass
     public static void tearDownAfterClass() throws Exception {
+        server.close();
     }
 
     @Before
@@ -87,127 +88,14 @@ public class ClientTest {
 
     @Test(expected = RuntimeException.class)
     public void testClient_WrongIP() {
+        @SuppressWarnings("unused")
         Client client = new Client("fakehost", view);
     }
 
     @Test
     public void testClient_CorrectIP() {
-        // Client client = new Client("localhost", view);
-        // client.disconnect();
-    }
-
-    @Test
-    public void testNick_Invalid() {
         Client client = new Client("localhost", view);
-        client.start();
-        for (String s : new String[] { "aa", "34444", "abc%", "inválido" }) {
-            client.nick(s);
-            wait(500);
-            assertNull(client.getNickname());
-        }
         client.disconnect();
-    }
-
-    @Test
-    public void testNick_Valid() {
-        Client client = new Client("localhost", view);
-        client.start();
-        for (String s : new String[] { "nickValido" }) {
-            client.nick(s);
-            wait(500);
-            assertEquals(client.getNickname(), "nickValido");
-        }
-        client.disconnect();
-    }
-
-    @Test
-    public void testHost_Invalid() {
-        Client client = new Client("localhost", view);
-        client.start();
-        // no nickname, invalid map
-        client.host("thisIsFake");
-        wait(500);
-        assertFalse(client.isHostingRoom());
-        // no nickname, valid map
-        client.host("simpleMap");
-        wait(500);
-        assertFalse(client.isHostingRoom());
-        // valid nickname, invalid map
-        client.nick("mynickname");
-        client.host("thisIsFake");
-        wait(500);
-        assertFalse(client.isHostingRoom());
-        // disconnect
-        client.disconnect();
-    }
-
-    @Test
-    public void testHost_Valid() {
-        Client client = new Client("localhost", view);
-        client.start();
-        client.nick("mynickname");
-        // first map
-        client.host("simpleMap");
-        wait(500);
-        assertTrue(client.isHostingRoom());
-        // after changing map (discards previous one)
-        client.host("happyPlains");
-        wait(500);
-        assertTrue(client.isHostingRoom());
-        // disconnect
-        client.disconnect();
-    }
-
-    @Test
-    public void testUnhost_Invalid() {
-        Client client = new Client("localhost", view);
-        client.start();
-        // without nickname
-        client.unhost();
-        wait(500);
-        assertFalse(client.isHostingRoom());
-        // with nickname
-        client.nick("mynickname");
-        client.unhost();
-        wait(500);
-        assertFalse(client.isHostingRoom());
-        // disconnect
-        client.disconnect();
-    }
-
-    @Test
-    public void testUnhost_Valid() {
-        Client client = new Client("localhost", view);
-        client.start();
-        client.nick("mynickname");
-        client.host("simpleMap");
-        client.unhost();
-        wait(1000);
-        assertFalse(client.isHostingRoom());
-        // disconnect
-        client.disconnect();
-    }
-
-    @Test
-    public void testJoin_Valid() {
-        Client host = new Client("localhost", view);
-        Client guest = new Client("localhost", view);
-        host.start();
-        guest.start();
-        host.nick("host_");
-        guest.nick("guest__");
-        wait(400);
-        host.host("simpleMap");
-        wait(400);
-        assertTrue(host.isHostingRoom());
-        assertFalse(host.isPlaying());
-        assertFalse(guest.isPlaying());
-        guest.join("host_");
-        wait(800);
-        assertTrue(guest.isPlaying());
-        assertTrue(host.isPlaying());
-        guest.disconnect();
-        host.disconnect();
     }
 
     @Test
@@ -220,13 +108,120 @@ public class ClientTest {
     }
 
     @Test
-    public void testMove() {
-        fail("Not yet implemented"); // TODO
+    public void testNick_Invalid() {
+        Client client = new Client("localhost", view);
+        client.start();
+        for (String s : new String[] { "aa", "33444", "abc%", "inválido",
+                "a1234567890" }) {
+            client.nick(s);
+            wait(500);
+            assertNull(client.getNickname());
+        }
+        client.disconnect();
     }
 
     @Test
-    public void testAttack() {
-        fail("Not yet implemented"); // TODO
+    public void testNick_Valid() {
+        Client client = new Client("localhost", view);
+        client.start();
+        for (String s : new String[] { "niceNick" }) {
+            client.nick(s);
+            wait(500);
+            assertEquals(client.getNickname(), "niceNick");
+        }
+        client.disconnect();
+    }
+
+    @Test
+    public void testHost_Invalid() {
+        Client client = new Client("localhost", view);
+        client.start();
+        // No nickname, invalid map
+        client.host("thisIsFake");
+        wait(500);
+        assertFalse(client.isHostingRoom());
+        // No nickname, valid map
+        client.host("simpleMap");
+        wait(500);
+        assertFalse(client.isHostingRoom());
+        // Valid nickname, invalid map
+        client.nick("hostInvalid");
+        client.host("thisIsFake");
+        wait(500);
+        assertFalse(client.isHostingRoom());
+        // Disconnect
+        client.disconnect();
+    }
+
+    @Test
+    public void testHost_Valid() {
+        Client client = new Client("localhost", view);
+        client.start();
+        client.nick("hostValid");
+        // First map
+        client.host("simpleMap");
+        wait(500);
+        assertTrue(client.isHostingRoom());
+        // After changing map (discards previous one)
+        client.host("happyPlains");
+        wait(500);
+        assertTrue(client.isHostingRoom());
+        // Disconnect
+        client.disconnect();
+    }
+
+    @Test
+    public void testUnhost_Invalid() {
+        Client client = new Client("localhost", view);
+        client.start();
+        // Without nickname
+        client.unhost();
+        wait(500);
+        assertFalse(client.isHostingRoom());
+        // With nickname
+        client.nick("unhostInv");
+        client.unhost();
+        wait(500);
+        assertFalse(client.isHostingRoom());
+        // Disconnect
+        client.disconnect();
+    }
+
+    @Test
+    public void testUnhost_Valid() {
+        Client client = new Client("localhost", view);
+        client.start();
+        client.nick("unhostVal");
+        client.host("simpleMap");
+        client.unhost();
+        wait(1000);
+        assertFalse(client.isHostingRoom());
+        // Disconnect
+        client.disconnect();
+    }
+
+    @Test
+    public void testJoin_Valid() {
+        Client host = new Client("localhost", view);
+        Client guest = new Client("localhost", view);
+        host.start();
+        guest.start();
+        host.nick("hostJoin");
+        guest.nick("guestJoin");
+        wait(500);
+        host.host("simpleMap");
+        wait(800);
+        assertTrue(host.isHostingRoom());
+        assertFalse(host.isPlaying());
+        assertFalse(guest.isPlaying());
+        guest.join("hostJoin");
+        wait(800);
+        assertFalse(host.isHostingRoom());
+        assertTrue(guest.isPlaying());
+        assertTrue(host.isPlaying());
+        // Disconnect
+        guest.disconnect();
+        host.disconnect();
     }
 
     @Test
@@ -235,20 +230,61 @@ public class ClientTest {
         Client guest = new Client("localhost", view);
         host.start();
         guest.start();
-        host.nick("host_");
-        guest.nick("guest__");
+        host.nick("hostSur");
+        guest.nick("guestSur");
         wait(400);
         host.host("simpleMap");
         wait(400);
-        guest.join("host_");
-        wait(800);
+        guest.join("hostSur");
+        wait(400);
         host.surrender();
-        wait(800);
+        wait(400);
         assertFalse(host.isPlaying());
         assertFalse(guest.isPlaying());
-        // disconnect
+        // Disconnect
         host.disconnect();
         guest.disconnect();
+    }
+
+    @Test
+    public void testEndTurn() {
+        Client host = new Client("localhost", view);
+        Client guest = new Client("localhost", view);
+        host.start();
+        guest.start();
+        host.nick("hostSur");
+        guest.nick("guestSur");
+        wait(400);
+        host.host("simpleMap");
+        wait(400);
+        assertEquals(-1, host.getGameTurn());
+        assertEquals(-1, guest.getGameTurn());
+        guest.join("hostSur");
+        wait(600);
+        assertEquals(1, host.getGameTurn());
+        assertEquals(1, guest.getGameTurn());
+        host.endTurn();
+        wait(600);
+        assertEquals(2, host.getGameTurn());
+        assertEquals(2, guest.getGameTurn());
+        host.endTurn();
+        wait(600);
+        assertEquals(1, host.getGameTurn());
+        assertEquals(1, guest.getGameTurn());
+
+        // Disconnect
+        host.disconnect();
+        guest.disconnect();
+    }
+
+    @Test
+    public void testMove() {
+        fail("Not yet implemented"); // TODO
+    }
+
+    @Test
+    public void testAttack() {
+        fail("Not yet implemented"); // TODO
     }
 
     private void wait(int ms) {

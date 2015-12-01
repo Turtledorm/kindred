@@ -153,7 +153,7 @@ public class Client implements Runnable {
                     }
                 } catch (InterruptedException e) {
                 }
-            } else if (!game.isOver()) {
+            } else {
                 view.displayMap();
                 if (game.getTurn() == team)
                     view.promptForGameAction(this);
@@ -165,8 +165,7 @@ public class Client implements Runnable {
                     } catch (InterruptedException e) {
                     }
                 }
-            } else
-                game = null;
+            }
         }
     }
 
@@ -189,6 +188,7 @@ public class Client implements Runnable {
                     break;
                 case SUCC_JOIN:
                 case INFO_SOMEONE_ENTERED_ROOM:
+                    isHostingRoom = false;
                     String[] parts = arg.split("\\|");
                     opponent = parts[0];
                     team = Integer.parseInt(parts[1]);
@@ -394,6 +394,7 @@ public class Client implements Runnable {
         GameAction cmd = GameAction.SURRENDER;
         ClientToServerMessage msg = new ClientToServerMessage(
                 ClientToServerEnum.GAME_ACTION, cmd.toEncodedString());
+        game = null;
         send(msg);
     }
 
@@ -429,6 +430,7 @@ public class Client implements Runnable {
         // SURRENDER
         case SURRENDER:
             game.surrender();
+            game = null;
             break;
         }
 
@@ -495,6 +497,17 @@ public class Client implements Runnable {
      */
     public boolean isPlaying() {
         return game != null;
+    }
+
+    /**
+     * If this client is participating in a game, returns the identifier of the
+     * current player's turn. Otherwise, returns -1.
+     * 
+     * @return the ID of the current player's turn, if this client is
+     *         participating in a game, or -1 otherwise
+     */
+    public int getGameTurn() {
+        return game == null ? -1 : game.getTurn();
     }
 
     /**

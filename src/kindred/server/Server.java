@@ -61,15 +61,9 @@ public class Server implements Runnable {
             ; // Do nothing!
         }
 
-        try {
-            serverSocket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        close();
         input.close();
         System.out.println("Until next time!");
-        System.exit(0);
     }
 
     /**
@@ -84,6 +78,16 @@ public class Server implements Runnable {
             }
         };
         new Thread(r).start();
+    }
+
+    /**
+     * Closes the server.
+     */
+    public void close() {
+        try {
+            serverSocket.close();
+        } catch (IOException e) {
+        }
     }
 
     /**
