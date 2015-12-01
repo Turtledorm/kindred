@@ -241,7 +241,7 @@ public class ClientTest {
         host.host("simpleMap");
         wait(400);
         guest.join("hostSur");
-        wait(400);
+        wait(800);
         host.surrender();
         wait(400);
         assertFalse(host.isPlaying());
@@ -266,7 +266,7 @@ public class ClientTest {
         assertEquals(-1, host.getGameTurn());
         assertEquals(-1, guest.getGameTurn());
         guest.join("hostEnd");
-        wait(400);
+        wait(800);
         assertEquals(1, host.getGameTurn());
         assertEquals(1, guest.getGameTurn());
         host.endTurn();

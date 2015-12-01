@@ -230,6 +230,9 @@ public class Client implements Runnable {
                 synchronized (view) {
                     view.notify();
                 }
+
+                if (game != null && game.isOver())
+                    game = null;
             }
         } catch (IOException e) {
             view.connectionResult(false, serverIP);
@@ -328,16 +331,23 @@ public class Client implements Runnable {
     }
 
     /**
-     * Sends a game MOVE command to the Server. Makes the user's Unit on (
-     * {@code positions[0]}, {@code positions[1]}) move to Tile
-     * {@code positions[2]}, {@code positions[3]}).
+     * Tries to move the Unit on {@code positions[0]}, {@code positions[1]}) to
+     * Tile {@code positions[2]}, {@code positions[3]}). If successful, sends a
+     * game MOVE command to the Server and returns {@code true}. Otherwise, only
+     * returns {@code false}.
      * 
      * @param positions
      *            array containing the first two values as the (x, y) position
-     *            of the user's Unit. The third and fourth values are the (x, y)
-     *            position of the Tile that the Unit will move to.
+     *            of a Unit. The third and fourth values are the (x, y) position
+     *            of the Tile that the Unit will move to
+     * 
+     * @return {@code true}, if the movement was successful, or {@code false}
+     *         otherwise
      */
-    public void move(int[] positions) {
+    public boolean move(int[] positions) {
+        if (!game.move(positions[0], positions[1], positions[2], positions[3]))
+            return false;
+
         GameActionEnum cmd = GameActionEnum.MOVE;
         String arg = "";
         for (int i = 0; i < positions.length; i++)
@@ -347,22 +357,34 @@ public class Client implements Runnable {
         ClientToServerMessage msg = new ClientToServerMessage(
                 ClientToServerEnum.GAME_ACTION, cmd.toEncodedString());
         send(msg);
+
+        return true;
     }
 
     /**
-     * Sends a game ATTACK command to the Server. Makes the opponent's Unit on
-     * {@code positions[2]}, {@code positions[3]} suffer the specified amount of
-     * damage caused by the player's Unit on {@code positions[0]},
-     * {@code positions[1]}.
+     * Tries to attack the Unit on {@code positions[2]}, {@code positions[3]})
+     * with the Unit on Tile {@code positions[0]}, {@code positions[1]}). If
+     * successful, sends a game ATTACK command to the Server and returns
+     * {@code true}. Otherwise, only returns {@code false}.
      * 
      * @param positions
      *            array containing the first two values as the (x, y) position
-     *            of the user's Unit. The third and fourth values are the (x, y)
-     *            position of the Unit that will receive damage
-     * @param damage
-     *            damage caused to the opponent's Unit
+     *            of the attacking Unit. The third and fourth values are the (x,
+     *            y) position of the defending Unit
+     * 
+     * @return {@code true}, if the attack was successful, or {@code false}
+     *         otherwise
      */
-    public void attack(int[] positions, int damage) {
+    public boolean attack(int[] positions) {
+        int damage = game.attack(positions[0], positions[1], positions[2],
+                positions[3]);
+
+        if (damage < 0)
+            return false;
+
+        // Attack missed if damage = 0, and hit if damage > 0
+        game.causeDamage(positions[2], positions[3], damage);
+
         GameActionEnum cmd = GameActionEnum.ATTACK;
         String arg = "";
         for (int i = 0; i < positions.length; i++)
@@ -373,6 +395,8 @@ public class Client implements Runnable {
         ClientToServerMessage msg = new ClientToServerMessage(
                 ClientToServerEnum.GAME_ACTION, cmd.toEncodedString());
         send(msg);
+
+        return true;
     }
 
     /**
@@ -383,6 +407,7 @@ public class Client implements Runnable {
         GameActionEnum cmd = GameActionEnum.END_TURN;
         ClientToServerMessage msg = new ClientToServerMessage(
                 ClientToServerEnum.GAME_ACTION, cmd.toEncodedString());
+        game.endTurn();
         send(msg);
     }
 
@@ -394,13 +419,14 @@ public class Client implements Runnable {
         GameActionEnum cmd = GameActionEnum.SURRENDER;
         ClientToServerMessage msg = new ClientToServerMessage(
                 ClientToServerEnum.GAME_ACTION, cmd.toEncodedString());
+        game.surrender();
         game = null;
         send(msg);
     }
 
     /**
-     * Parses a GameActionEnum message sent by the opponent, resulting in an action
-     * in the user's Game.
+     * Parses a GameActionEnum message sent by the opponent, resulting in an
+     * action in the user's Game.
      * 
      * @param message
      *            GameActionEnum message sent by the opponent
@@ -434,7 +460,8 @@ public class Client implements Runnable {
             break;
         }
 
-        if (message == GameActionEnum.END_TURN || message == GameActionEnum.SURRENDER) {
+        if (message == GameActionEnum.END_TURN
+                || message == GameActionEnum.SURRENDER) {
             synchronized (view) {
                 view.notify();
             }

@@ -246,14 +246,10 @@ public class CLI extends AbstractView {
                     continue;
                 }
                 positions = parsePosition(separate);
-                if (positions != null) {
-                    if (game.move(positions[0], positions[1], positions[2],
-                            positions[3])) {
-                        client.move(positions);
-                        displayMap();
-                    } else
-                        continue;
-                }
+                if (positions != null && client.move(positions))
+                    displayMap();
+                else
+                    continue;
                 break;
 
             case "ATTACK":
@@ -264,16 +260,10 @@ public class CLI extends AbstractView {
                     continue;
                 }
                 positions = parsePosition(separate);
-                if (positions != null) {
-                    int damage = game.attack(positions[0], positions[1],
-                            positions[2], positions[3]);
-                    // Attack missed if damage = 0, and hit if damage > 0
-                    if (damage >= 0) {
-                        client.attack(positions, damage);
-                        displayMap();
-                    } else
-                        continue;
-                }
+                if (positions != null && client.attack(positions))
+                    displayMap();
+                else
+                    continue;
                 break;
 
             case "INFO":
@@ -287,14 +277,14 @@ public class CLI extends AbstractView {
                     String message = "";
                     String[] info = game.getMap()
                             .getTileInfo(positions[0], positions[1]).split(";");
-                    if (info.length == 2) { // with unit
+                    if (info.length == 2) { // With unit
                         Object[] args = new Object[7];
                         String[] parts = info[1].split(",");
                         args[0] = parts[0];
                         for (int i = 1; i <= 6; i++)
                             args[i] = Integer.parseInt(parts[i]);
                         message += format(gameMsgBundle, "unit_info", args);
-                    } else { // without unit
+                    } else { // Without unit
                         message += format(gameMsgBundle, "no_unit_info",
                                 new Object[] {});
                     }
@@ -335,7 +325,7 @@ public class CLI extends AbstractView {
                             .getString("invalid_argument_for_command"));
                     continue;
                 }
-                game.endTurn();
+
                 client.endTurn();
                 return true;
 
@@ -345,7 +335,6 @@ public class CLI extends AbstractView {
                             .getString("invalid_argument_for_command"));
                     continue;
                 }
-                game.surrender();
                 client.surrender();
                 return true;
 
