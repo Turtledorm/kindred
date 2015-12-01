@@ -1,0 +1,25 @@
+MENU
+====
+1 - Entrar e sair do servidor
+2 - Registrar nick
+3 - Criar sala
+4 - Buscar e entrar numa sala
+5 - Desfazer sala
+
+JOGO
+====
+6 - Mover unidade
+7 - Atacar com unidade
+8 - Desistir da partida
+
+
+
+1) Comando QUIT fazia com que todos os testes parassem. Foi devido a comandos System.exit() no cliente.
+
+   SOLUÇÃO: Retirada de uns System.exit() no cliente, deixando-o mais limpo.
+
+2) Comando NICK, sendo usado simultaneamente por 2 clientes, fazia com que o segundo tivesse um erro de nickname
+   já definido. Isso ocorre devido à estrutura static nas ClientToServerMessages.
+
+   SOLUÇAO: Nickname in use com clientes simultâneos: refatoração nas mensagens client-server
+
