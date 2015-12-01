@@ -126,8 +126,8 @@ public class Client implements Runnable {
         // Define socket I/O
         try {
             socketOut = new PrintWriter(socket.getOutputStream(), true);
-            socketIn = new BufferedReader(new InputStreamReader(
-                    socket.getInputStream()));
+            socketIn = new BufferedReader(
+                    new InputStreamReader(socket.getInputStream()));
         } catch (IOException e) {
             view.connectionResult(false, serverIP);
             throw new RuntimeException();
@@ -193,8 +193,9 @@ public class Client implements Runnable {
                     opponent = parts[0];
                     team = Integer.parseInt(parts[1]);
                     String mapFilename = parts[2];
-                    game = new Game(nickname, opponent, "/kindred/common/data/map/"
-                            + mapFilename + ".txt", team);
+                    game = new Game(nickname, opponent,
+                            "/kindred/common/data/map/" + mapFilename + ".txt",
+                            team);
                     view.setGame(game);
                     send(new ClientToServerMessage(ClientToServerEnum.EMPTY));
                     break;
@@ -394,6 +395,10 @@ public class Client implements Runnable {
 
         ClientToServerMessage msg = new ClientToServerMessage(
                 ClientToServerEnum.GAME_ACTION, cmd.toEncodedString());
+
+        if (game.isOver())
+            game = null;
+
         send(msg);
 
         return true;
@@ -440,12 +445,14 @@ public class Client implements Runnable {
         switch (message) {
         // MOVE: xi yi xf yf
         case MOVE:
-            game.move(parts[0], parts[1], parts[2], parts[3]);
+            game.forceMovement(parts[0], parts[1], parts[2], parts[3]);
             break;
 
         // ATTACK: x y damage
         case ATTACK:
             game.causeDamage(parts[2], parts[3], parts[4]);
+            if (game.isOver())
+                game = null;
             break;
 
         // END_TURN

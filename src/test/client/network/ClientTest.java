@@ -261,9 +261,9 @@ public class ClientTest {
         guest.start();
         host.nick("hostEnd");
         guest.nick("guestEnd");
-        wait(400);
+        wait(500);
         host.host("testmap");
-        wait(400);
+        wait(800);
         assertEquals(-1, host.getGameTurn());
         assertEquals(-1, guest.getGameTurn());
         guest.join("hostEnd");
@@ -436,8 +436,42 @@ public class ClientTest {
         wait(600);
         guest.endTurn();
         wait(400);
+
+        // Move Unit that was used on player's last turn
         assertTrue(host.move(new int[] { 1, 0, 0, 0 }));
         assertTrue(host.attack(new int[] { 0, 1, 1, 1 }));
+
+        // Move Unit that wasn't used on player's last turn
+        assertTrue(host.move(new int[] { 0, 7, 0, 6 }));
+
+        // Disconnect
+        host.disconnect();
+        guest.disconnect();
+    }
+
+    @Test
+    public void testMatch() {
+        Client host = new Client("localhost", view);
+        Client guest = new Client("localhost", view);
+        host.start();
+        guest.start();
+        host.nick("hostMth");
+        guest.nick("guestMth");
+        wait(400);
+        host.host("testmatch");
+        wait(400);
+        guest.join("hostMth");
+        wait(800);
+
+        assertTrue(host.isPlaying());
+        assertTrue(guest.isPlaying());
+
+        // Check if match ends when a player's army is defeated
+        host.attack(new int[] { 0, 0, 0, 1 });
+        wait(700);
+
+        assertFalse(host.isPlaying());
+        assertFalse(guest.isPlaying());
 
         // Disconnect
         host.disconnect();

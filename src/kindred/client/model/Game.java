@@ -24,11 +24,6 @@ public class Game {
     private Map map;
 
     /**
-     * ID for the user, identifies which Units are under their control.
-     */
-    private final int team;
-
-    /**
      * HashSet for all Units that have moved this turn.
      */
     private HashSet<Unit> unitsThatMoved;
@@ -62,8 +57,6 @@ public class Game {
      *            user's ID representing which team he will play on
      */
     public Game(String nameA, String nameB, String mapFile, int team) {
-        this.team = team;
-
         try {
             map = MapFileParser.parseFile(mapFile,
                     TerrainFileParser.parseFile(terrainFile));
@@ -104,15 +97,32 @@ public class Game {
 
         Unit unit = map.getTile(xi, yi).getUnit();
 
-        if (unit == null)
+        if (unit == null || unit.getTeam() != turn)
             return false;
         if (!unitsThatMoved.contains(unit) && !unitsThatAttacked.contains(unit)
-                && map.move(team, xi, yi, xf, yf)) {
+                && map.move(xi, yi, xf, yf)) {
             unitsThatMoved.add(unit);
             return true;
         }
 
         return false;
+    }
+
+    /**
+     * Moves a Unit from Tile (xi, yi) to Tile (xf, yf) without making any
+     * assumption, i.e., checking if the Unit exists, its team, etc.
+     * 
+     * @param xi
+     *            x coordinate of the Unit to be moved
+     * @param yi
+     *            y coordinate of the Unit to be moved
+     * @param xf
+     *            x coordinate of the destination Tile
+     * @param yf
+     *            y coordinate of the destination Tile
+     */
+    public void forceMovement(int xi, int yi, int xf, int yf) {
+        map.move(xi, yi, xf, yf);
     }
 
     /**
@@ -137,21 +147,22 @@ public class Game {
      *         -1 otherwise
      */
     public int attack(int xi, int yi, int xf, int yf) {
-        if (!map.validPosition(xi, yi))
+        if (!map.validPosition(xi, yi) || !map.validPosition(xf, yf))
             return -1;
 
-        Unit unit = map.getTile(xi, yi).getUnit();
+        Unit attacker = map.getTile(xi, yi).getUnit();
+        Unit defender = map.getTile(xf, yf).getUnit();
 
-        if (unit == null)
+        if (attacker == null || attacker.getTeam() != turn || defender == null
+                || defender.getTeam() == turn)
             return -1;
-        if (!unitsThatAttacked.contains(unit)) {
-            int damage = map.attack(team, xi, yi, xf, yf);
+        if (!unitsThatAttacked.contains(attacker)) {
+            int damage = map.attack(xi, yi, xf, yf);
             if (damage >= 0) {
-                unitsThatAttacked.add(unit);
-                Tile targetTile = map.getTile(xf, yf);
-                targetTile.getUnit().loseHp(damage);
-                if (targetTile.getUnit().getCurrentHp() <= 0)
-                    targetTile.removeUnit();
+                unitsThatAttacked.add(attacker);
+                map.causeDamage(xf, yf, damage);
+                if (Math.min(map.getNumUnitsA(), map.getNumUnitsB()) <= 0)
+                    isOver = true;
             }
             return damage;
         }

@@ -4,3 +4,4 @@ Lancer    L
 Rogue     R
 Swordsman S
 Wizard    W
+Master    *

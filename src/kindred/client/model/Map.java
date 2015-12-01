@@ -107,10 +107,6 @@ public class Map {
      * Returns {@code true} if movement was successful or {@code false}
      * otherwise.
      * 
-     * @param team
-     *            number identifier of the player whose turn the game is
-     *            currently on
-     * 
      * @param xi
      *            x coordinate of the Unit to be moved
      * @param yi
@@ -122,7 +118,7 @@ public class Map {
      * @return {@code true}, if movement was successful, or {@code false}
      *         otherwise
      */
-    public boolean move(int team, int xi, int yi, int xf, int yf) {
+    public boolean move(int xi, int yi, int xf, int yf) {
         // Verify if coordinates are out of bounds
         if (!validPosition(xi, yi) || !validPosition(xf, yf))
             return false;
@@ -132,8 +128,8 @@ public class Map {
             return false;
 
         Unit unit = tiles[xi][yi].getUnit();
-        // TODO: Check team!
-        if (unit == null) // || unit.getTeam() != team)
+
+        if (unit == null)
             return false;
 
         int move = unit.getMove() - tiles[xi][yi].getTerrain().getMovePenalty();
@@ -156,17 +152,13 @@ public class Map {
     }
 
     /**
-     * Makes the Unit on Tile (xi, yi) attack the Unit on Tile (xf, yf) during
-     * the specified team's turn. Returns an integer representing damage:
+     * Makes the Unit on Tile (xi, yi) attack the Unit on Tile (xf, yf). Returns
+     * an integer representing damage:
      * <ul>
      * <li>If damage = -1, then the attack missed.</li>
      * <li>If damage &ge; 0, then it represents the damage received by the
      * defending Unit.</li>
      * </ul>
-     * 
-     * @param team
-     *            number identifier of the player whose turn the game is
-     *            currently on
      * 
      * @param xi
      *            x coordinate of the attacker
@@ -179,7 +171,7 @@ public class Map {
      * @return damage received by the defending unit if the attack succeeded, or
      *         -1 otherwise
      */
-    public int attack(int team, int xi, int yi, int xf, int yf) {
+    public int attack(int xi, int yi, int xf, int yf) {
         // Verify if coordinates are out of bounds
         if (!validPosition(xi, yi) || !validPosition(xf, yf))
             return -1;
@@ -187,13 +179,7 @@ public class Map {
         Unit attacker = tiles[xi][yi].getUnit();
         Unit defender = tiles[xf][yf].getUnit();
 
-        // Checks if Units exists on specified Tiles
-        // and disallows friendly fire
-
-        // TODO: Check team!
-        if (attacker == null || defender == null)// || attacker.getTeam() !=
-                                                 // team
-            // || defender.getTeam() == team)
+        if (attacker == null || defender == null)
             return -1;
 
         int range = attacker.getRange();
