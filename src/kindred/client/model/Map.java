@@ -316,16 +316,18 @@ public class Map {
         message += terrain.getAgilityModifier() + ",";
         message += terrain.getMovePenalty();
         Unit unit = tile.getUnit();
-        message += ";";
-        message += unit.getName() + ",";
-        message += unit.getCurrentHp() + ",";
-        message += unit.getTotalHp() + ",";
-        message += unit.getMove() + ",";
-        message += unit.getRange() + ",";
-        message += unit.getAtk() + ",";
-        message += unit.getDef() + ",";
-        message += unit.getAgi();
-        message += "";
+        if (unit != null) {
+            message += ";";
+            message += unit.getName() + ",";
+            message += unit.getCurrentHp() + ",";
+            message += unit.getTotalHp() + ",";
+            message += unit.getMove() + ",";
+            message += unit.getRange() + ",";
+            message += unit.getAtk() + ",";
+            message += unit.getDef() + ",";
+            message += unit.getAgi();
+            message += "";
+        }
         return message;
     }
 }
