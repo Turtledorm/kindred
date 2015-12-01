@@ -1,9 +1,8 @@
 package kindred.common;
 
 /**
- * Contains an enum number for every type of menu-related message the Client can
- * send to the Server. Can also encode and decode these values to shorten and
- * simplify Client to Server messages.
+ * Contains an enum number for every type of message that a Client can send to
+ * the Server.
  * 
  * @author Kindred Team
  */

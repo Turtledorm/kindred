@@ -1,23 +1,52 @@
 package kindred.common;
 
+/**
+ * Represents a message from a client to the server. Contains a
+ * ClientToServerEnum object (representing the type of the message) and a String
+ * argument, optionally empty. Can also encode and decode these values to
+ * shorten and simplify Client to Server messages.
+ * 
+ * @author Kindred Team
+ */
 public class ClientToServerMessage {
 
+    /**
+     * The type of the message.
+     */
     public final ClientToServerEnum msg;
 
+    /**
+     * The argument of the message (optionally empty).
+     */
     public final String argument;
 
     /**
      * Contains the corresponding enum value of each possible ClientToServerEnum
-     * type. Stored in a static variable to save time from calling
+     * type. Stored in a static variable to save time, avoiding calling
      * {@code values()} many times.
      */
     private static final ClientToServerEnum[] values = ClientToServerEnum.values();
 
+    /**
+     * Creates a new ClientToServerMessage of type {@code msg} without argument.
+     * 
+     * @param msg
+     *            the type of the message
+     */
     public ClientToServerMessage(ClientToServerEnum msg) {
         this.msg = msg;
         this.argument = "";
     }
 
+    /**
+     * Creates a new ClientToServerMessage of type {@code msg} with argument
+     * {@code argument}.
+     * 
+     * @param msg
+     *            the type of the message
+     * @param argument
+     *            the argument of the message
+     */
     public ClientToServerMessage(ClientToServerEnum msg, String argument) {
         this.msg = msg;
         this.argument = argument;
