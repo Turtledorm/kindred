@@ -27,7 +27,6 @@ public class ClientTest {
 
             @Override
             public void remoteEvent(ServerToClientMessage msg) {
-                System.err.println(msg);
             }
 
             @Override
@@ -197,14 +196,14 @@ public class ClientTest {
         guest.start();
         host.nick("host_");
         guest.nick("guest__");
-        wait(2000);
+        wait(400);
         host.host("simpleMap");
-        wait(2000);
+        wait(400);
         assertTrue(host.isHostingRoom());
         assertFalse(host.isPlaying());
         assertFalse(guest.isPlaying());
         guest.join("host_");
-        wait(2000);
+        wait(800);
         assertTrue(guest.isPlaying());
         assertTrue(host.isPlaying());
         guest.disconnect();
@@ -232,7 +231,24 @@ public class ClientTest {
 
     @Test
     public void testSurrender() {
-        fail("Not yet implemented"); // TODO
+        Client host = new Client("localhost", view);
+        Client guest = new Client("localhost", view);
+        host.start();
+        guest.start();
+        host.nick("host_");
+        guest.nick("guest__");
+        wait(400);
+        host.host("simpleMap");
+        wait(400);
+        guest.join("host_");
+        wait(800);
+        host.surrender();
+        wait(800);
+        assertFalse(host.isPlaying());
+        assertFalse(guest.isPlaying());
+        // disconnect
+        host.disconnect();
+        guest.disconnect();
     }
 
     private void wait(int ms) {

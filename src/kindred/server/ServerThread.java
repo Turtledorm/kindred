@@ -13,6 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import kindred.common.ClientToServerMessage;
+import kindred.common.ServerToClientEnum;
 import kindred.common.ServerToClientMessage;
 
 /**
@@ -152,11 +153,9 @@ class ServerThread extends Thread {
     private void parse(String message) {
         ClientToServerMessage receivedMsg = ClientToServerMessage
                 .fromEncodedString(message);
-        String arg = receivedMsg.getArgument();
-        if (receivedMsg != ClientToServerMessage.EMPTY)
-            System.out.println(receivedMsg + ": " + arg);
+        String arg = receivedMsg.argument;
         ServerToClientMessage sentMsg;
-        switch (receivedMsg) {
+        switch (receivedMsg.msg) {
 
         // NICK [nickname] : Set Client's nickname as the specified value.
         // If no argument is given, return Client's nickname.
@@ -164,10 +163,11 @@ class ServerThread extends Thread {
             // No argument given; return Client's nickname
             if (arg.isEmpty()) {
                 if (nick == null) {
-                    sentMsg = ServerToClientMessage.ERR_NICKNAME_IS_UNDEFINED;
+                    sentMsg = new ServerToClientMessage(
+                            ServerToClientEnum.ERR_NICKNAME_IS_UNDEFINED);
                 } else {
-                    sentMsg = ServerToClientMessage.INFO_NICKNAME;
-                    sentMsg.setArgument(nick);
+                    sentMsg = new ServerToClientMessage(
+                            ServerToClientEnum.INFO_NICKNAME, nick);
                 }
                 queueMessage(socket, sentMsg);
                 return;
@@ -177,8 +177,8 @@ class ServerThread extends Thread {
             // Nickname must contain 3 to 10 alphanumeric characters;
             // the first one must be a letter
             if (!newNickname.matches("^[a-zA-Z]\\w{2,9}$")) {
-                sentMsg = ServerToClientMessage.ERR_NICKNAME_IS_INVALID;
-                sentMsg.setArgument(newNickname);
+                sentMsg = new ServerToClientMessage(
+                        ServerToClientEnum.ERR_NICKNAME_IS_INVALID, newNickname);
                 queueMessage(socket, sentMsg);
                 return;
             }
@@ -187,8 +187,8 @@ class ServerThread extends Thread {
             if (nicksToSocks.containsKey(newNickname)) {
                 System.out.println(newNickname);
                 System.out.println(nicksToSocks);
-                sentMsg = ServerToClientMessage.ERR_NICKNAME_IS_IN_USE;
-                sentMsg.setArgument(newNickname);
+                sentMsg = new ServerToClientMessage(
+                        ServerToClientEnum.ERR_NICKNAME_IS_IN_USE, newNickname);
                 queueMessage(socket, sentMsg);
                 return;
             }
@@ -206,8 +206,8 @@ class ServerThread extends Thread {
             // Set Client's nickname
             nick = newNickname;
             nicksToSocks.put(nick, socket);
-            sentMsg = ServerToClientMessage.SUCC_NICKNAME_CHANGED;
-            sentMsg.setArgument(newNickname);
+            sentMsg = new ServerToClientMessage(
+                    ServerToClientEnum.SUCC_NICKNAME_CHANGED, newNickname);
             queueMessage(socket, sentMsg);
             break;
 
@@ -223,12 +223,12 @@ class ServerThread extends Thread {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            sentMsg = ServerToClientMessage.INFO_AVAILABLE_MAPS;
             if (maps.length() >= 1)
-                sentMsg.setArgument(maps);
+                sentMsg = new ServerToClientMessage(
+                        ServerToClientEnum.INFO_AVAILABLE_MAPS, maps);
             else
-                sentMsg.setArgument("");
-
+                sentMsg = new ServerToClientMessage(
+                        ServerToClientEnum.INFO_AVAILABLE_MAPS);
             queueMessage(socket, sentMsg);
             break;
 
@@ -238,11 +238,13 @@ class ServerThread extends Thread {
             for (String r : hostRooms.keySet()) {
                 roomStr += "|" + r + ">" + hostRooms.get(r);
             }
-            sentMsg = ServerToClientMessage.INFO_AVAILABLE_ROOMS;
             if (roomStr.length() >= 1)
-                sentMsg.setArgument(roomStr.substring(1)); // remove initial '|'
+                sentMsg = new ServerToClientMessage(
+                        ServerToClientEnum.INFO_AVAILABLE_ROOMS,
+                        roomStr.substring(1)); // remove initial '|'
             else
-                sentMsg.setArgument("");
+                sentMsg = new ServerToClientMessage(
+                        ServerToClientEnum.INFO_AVAILABLE_ROOMS);
             queueMessage(socket, sentMsg);
             break;
 
@@ -250,7 +252,8 @@ class ServerThread extends Thread {
         case HOST:
             // User must be registered
             if (nick == null) {
-                queueMessage(socket, ServerToClientMessage.ERR_UNREGISTERED_USER);
+                queueMessage(socket, new ServerToClientMessage(
+                        ServerToClientEnum.ERR_UNREGISTERED_USER));
                 return;
             }
 
@@ -263,16 +266,16 @@ class ServerThread extends Thread {
                     + mapName + ".txt");
             // Check if map exists
             if (url == null) {
-                sentMsg = ServerToClientMessage.ERR_MAP_NOT_FOUND;
-                sentMsg.setArgument(mapName);
+                sentMsg = new ServerToClientMessage(
+                        ServerToClientEnum.ERR_MAP_NOT_FOUND, mapName);
                 queueMessage(socket, sentMsg);
                 return;
             }
 
             // Create a new room!
             hostRooms.put(nick, mapName);
-            sentMsg = ServerToClientMessage.SUCC_HOST;
-            sentMsg.setArgument(mapName);
+            sentMsg = new ServerToClientMessage(ServerToClientEnum.SUCC_HOST,
+                    mapName);
             queueMessage(socket, sentMsg);
             break;
 
@@ -280,17 +283,19 @@ class ServerThread extends Thread {
         case UNHOST:
             // User must be registered
             if (nick == null) {
-                queueMessage(socket, ServerToClientMessage.ERR_UNREGISTERED_USER);
+                queueMessage(socket, new ServerToClientMessage(
+                        ServerToClientEnum.ERR_UNREGISTERED_USER));
                 return;
             }
 
             // Remove room if it exists
             if (hostRooms.containsKey(nick)) {
                 hostRooms.remove(nick);
-                queueMessage(socket, ServerToClientMessage.SUCC_UNHOST);
+                queueMessage(socket, new ServerToClientMessage(
+                        ServerToClientEnum.SUCC_UNHOST));
             } else {
-                queueMessage(socket,
-                        ServerToClientMessage.ERR_CANNOT_UNHOST_WITHOUT_HOST);
+                queueMessage(socket, new ServerToClientMessage(
+                        ServerToClientEnum.ERR_CANNOT_UNHOST_WITHOUT_HOST));
             }
             break;
 
@@ -298,7 +303,8 @@ class ServerThread extends Thread {
         case JOIN:
             // Unregistered user cannot join a room
             if (nick == null) {
-                queueMessage(socket, ServerToClientMessage.ERR_UNREGISTERED_USER);
+                queueMessage(socket, new ServerToClientMessage(
+                        ServerToClientEnum.ERR_UNREGISTERED_USER));
                 return;
             }
 
@@ -306,35 +312,38 @@ class ServerThread extends Thread {
 
             // Nonexistent room
             if (!hostRooms.containsKey(host)) {
-                sentMsg = ServerToClientMessage.ERR_ROOM_NOT_FOUND;
-                sentMsg.setArgument(host);
+                sentMsg = new ServerToClientMessage(
+                        ServerToClientEnum.ERR_ROOM_NOT_FOUND, host);
                 queueMessage(socket, sentMsg);
                 return;
             }
 
             // Disallow entering in own room
             if (nick.equals(host)) {
-                queueMessage(socket, ServerToClientMessage.ERR_CANNOT_ENTER_OWN_ROOM);
+                queueMessage(socket, new ServerToClientMessage(
+                        ServerToClientEnum.ERR_CANNOT_ENTER_OWN_ROOM));
                 return;
             }
 
             // Entering another user's room => leaving their own room (if it
             // exists)
             if (hostRooms.containsKey(nick))
-                queueMessage(socket, ServerToClientMessage.INFO_LEAVE_HOSTED_ROOM);
+                queueMessage(socket, new ServerToClientMessage(
+                        ServerToClientEnum.INFO_LEAVE_HOSTED_ROOM));
 
             // Let the guest user know that they have successfully entered a
             // room, that they will be the second player, and inform the map
             // name
-            sentMsg = ServerToClientMessage.SUCC_JOIN;
             mapName = hostRooms.get(host);
-            sentMsg.setArgument(host + "|2|" + mapName);
+            sentMsg = new ServerToClientMessage(ServerToClientEnum.SUCC_JOIN, host
+                    + "|2|" + mapName);
             queueMessage(socket, sentMsg);
 
             // Let the host user know that someone has entered their room, that
             // they will be the first player, and inform the map name
-            sentMsg = ServerToClientMessage.INFO_SOMEONE_ENTERED_ROOM;
-            sentMsg.setArgument(nick + "|1|" + mapName);
+            sentMsg = new ServerToClientMessage(
+                    ServerToClientEnum.INFO_SOMEONE_ENTERED_ROOM, nick + "|1|"
+                            + mapName);
             queueMessage(nicksToSocks.get(host), sentMsg);
 
             // Create the room
@@ -349,18 +358,18 @@ class ServerThread extends Thread {
 
         // QUIT : Make kindred.client leave the kindred.server
         case QUIT:
-            queueMessage(socket, ServerToClientMessage.SUCC_LEAVE);
+            queueMessage(socket, new ServerToClientMessage(
+                    ServerToClientEnum.SUCC_LEAVE));
             // quitServer = true;
             break;
 
         // GAME_ACTION: Just pass forward the message
         case GAME_ACTION:
-            ServerToClientMessage msgToSend = ServerToClientMessage.GAME_ACTION;
-            msgToSend.setArgument(arg);
+            sentMsg = new ServerToClientMessage(ServerToClientEnum.GAME_ACTION, arg);
             for (Room r : currentGames)
                 if (r.hasNick(nick)) {
                     String opponent = r.getOtherNick(nick);
-                    queueMessage(nicksToSocks.get(opponent), msgToSend);
+                    queueMessage(nicksToSocks.get(opponent), sentMsg);
                     break;
                 }
             break;
@@ -371,8 +380,8 @@ class ServerThread extends Thread {
 
         // Something not understood
         default:
-            queueMessage(socket,
-                    ServerToClientMessage.ERR_INVALID_COMMAND_OR_ARGUMENTS);
+            queueMessage(socket, new ServerToClientMessage(
+                    ServerToClientEnum.ERR_INVALID_COMMAND_OR_ARGUMENTS));
             break;
         }
     }

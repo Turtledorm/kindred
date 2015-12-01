@@ -364,11 +364,11 @@ public class CLI extends AbstractView {
 
     @Override
     public void remoteEvent(ServerToClientMessage msg) {
-        String argument = msg.getArgument();
+        String argument = msg.argument;
         Object[] arg = null;
         String key = "";
         String complement = "";
-        switch (msg) {
+        switch (msg.msg) {
         case ERR_CANNOT_ENTER_OWN_ROOM:
             key = "cannot_enter_own_room";
             arg = new Object[] {};

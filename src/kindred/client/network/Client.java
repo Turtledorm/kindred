@@ -10,6 +10,7 @@ import java.util.Timer;
 import kindred.client.model.Game;
 import kindred.client.view.AbstractView;
 import kindred.client.view.cli.CLI;
+import kindred.common.ClientToServerEnum;
 import kindred.common.ClientToServerMessage;
 import kindred.common.ServerToClientMessage;
 
@@ -180,8 +181,8 @@ public class Client implements Runnable {
                 ServerToClientMessage msg = ServerToClientMessage
                         .fromEncodedString(response);
                 // Analyse message
-                String arg = msg.getArgument();
-                switch (msg) {
+                String arg = msg.argument;
+                switch (msg.msg) {
                 case INFO_NICKNAME:
                 case SUCC_NICKNAME_CHANGED:
                     nickname = arg;
@@ -194,9 +195,8 @@ public class Client implements Runnable {
                     String mapFilename = parts[2];
                     game = new Game(nickname, opponent, "/kindred/common/data/map/"
                             + mapFilename + ".txt", team);
-                    System.err.println("Entrou. " + (game != null));
                     view.setGame(game);
-                    send(ClientToServerMessage.EMPTY);
+                    send(new ClientToServerMessage(ClientToServerEnum.EMPTY));
                     break;
                 case SUCC_LEAVE:
                     disconnect();
@@ -257,8 +257,8 @@ public class Client implements Runnable {
      * Sends a NICK message with no argument to the Server.
      */
     public void nick() {
-        ClientToServerMessage msg = ClientToServerMessage.NICK;
-        msg.setArgument("");
+        ClientToServerMessage msg = new ClientToServerMessage(
+                ClientToServerEnum.NICK);
         send(msg);
     }
 
@@ -269,8 +269,8 @@ public class Client implements Runnable {
      *            user's desired new nickname to be sent to the Server
      */
     public void nick(String nickname) {
-        ClientToServerMessage msg = ClientToServerMessage.NICK;
-        msg.setArgument(nickname);
+        ClientToServerMessage msg = new ClientToServerMessage(
+                ClientToServerEnum.NICK, nickname);
         send(msg);
     }
 
@@ -278,14 +278,14 @@ public class Client implements Runnable {
      * Sends a MAPS message to the Server.
      */
     public void maps() {
-        send(ClientToServerMessage.MAPS);
+        send(new ClientToServerMessage(ClientToServerEnum.MAPS));
     }
 
     /**
      * Sends a ROOMS message to the Server.
      */
     public void rooms() {
-        send(ClientToServerMessage.ROOMS);
+        send(new ClientToServerMessage(ClientToServerEnum.ROOMS));
     }
 
     /**
@@ -296,8 +296,8 @@ public class Client implements Runnable {
      *            user's desired map name to host a room on
      */
     public void host(String mapName) {
-        ClientToServerMessage msg = ClientToServerMessage.HOST;
-        msg.setArgument(mapName);
+        ClientToServerMessage msg = new ClientToServerMessage(
+                ClientToServerEnum.HOST, mapName);
         send(msg);
     }
 
@@ -305,7 +305,7 @@ public class Client implements Runnable {
      * Sends an UNHOST message to the Server.
      */
     public void unhost() {
-        send(ClientToServerMessage.UNHOST);
+        send(new ClientToServerMessage(ClientToServerEnum.UNHOST));
     }
 
     /**
@@ -315,8 +315,8 @@ public class Client implements Runnable {
      *            nickname of the player whose run the user wants to join
      */
     public void join(String host) {
-        ClientToServerMessage msg = ClientToServerMessage.JOIN;
-        msg.setArgument(host);
+        ClientToServerMessage msg = new ClientToServerMessage(
+                ClientToServerEnum.JOIN, host);
         send(msg);
     }
 
@@ -324,7 +324,7 @@ public class Client implements Runnable {
      * Sends a QUIT message to the Server and prepares to close this Client.
      */
     public void quit() {
-        send(ClientToServerMessage.QUIT);
+        send(new ClientToServerMessage(ClientToServerEnum.QUIT));
     }
 
     /**
@@ -344,8 +344,8 @@ public class Client implements Runnable {
             arg += "|" + positions[i];
         cmd.setArgument(arg.substring(1));
 
-        ClientToServerMessage msg = ClientToServerMessage.GAME_ACTION;
-        msg.setArgument(cmd.toEncodedString());
+        ClientToServerMessage msg = new ClientToServerMessage(
+                ClientToServerEnum.GAME_ACTION, cmd.toEncodedString());
         send(msg);
     }
 
@@ -370,8 +370,8 @@ public class Client implements Runnable {
         arg += "|" + damage;
         cmd.setArgument(arg.substring(1));
 
-        ClientToServerMessage msg = ClientToServerMessage.GAME_ACTION;
-        msg.setArgument(cmd.toEncodedString());
+        ClientToServerMessage msg = new ClientToServerMessage(
+                ClientToServerEnum.GAME_ACTION, cmd.toEncodedString());
         send(msg);
     }
 
@@ -381,8 +381,8 @@ public class Client implements Runnable {
      */
     public void endTurn() {
         GameAction cmd = GameAction.END_TURN;
-        ClientToServerMessage msg = ClientToServerMessage.GAME_ACTION;
-        msg.setArgument(cmd.toEncodedString());
+        ClientToServerMessage msg = new ClientToServerMessage(
+                ClientToServerEnum.GAME_ACTION, cmd.toEncodedString());
         send(msg);
     }
 
@@ -392,8 +392,8 @@ public class Client implements Runnable {
      */
     public void surrender() {
         GameAction cmd = GameAction.SURRENDER;
-        ClientToServerMessage msg = ClientToServerMessage.GAME_ACTION;
-        msg.setArgument(cmd.toEncodedString());
+        ClientToServerMessage msg = new ClientToServerMessage(
+                ClientToServerEnum.GAME_ACTION, cmd.toEncodedString());
         send(msg);
     }
 

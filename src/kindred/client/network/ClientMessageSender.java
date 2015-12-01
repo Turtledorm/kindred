@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import kindred.common.ClientToServerEnum;
 import kindred.common.ClientToServerMessage;
 
 /**
@@ -40,11 +41,11 @@ public class ClientMessageSender extends TimerTask {
     /**
      * Puts the specified message in the Client's queue.
      * 
-     * @param message
+     * @param msg
      *            message to be put in the Client's queue
      */
-    public void enqueueMessage(ClientToServerMessage message) {
-        queue.add(message);
+    public void enqueueMessage(ClientToServerMessage msg) {
+        queue.add(msg);
     }
 
     @Override
@@ -52,11 +53,12 @@ public class ClientMessageSender extends TimerTask {
         ClientToServerMessage msg;
         try {
             msg = queue.remove();
-
+            socketOut.println(msg.toEncodedString());
         } catch (NoSuchElementException e) {
-            msg = ClientToServerMessage.EMPTY;
+            socketOut.println(new ClientToServerMessage(ClientToServerEnum.EMPTY)
+                    .toEncodedString());
         }
-        socketOut.println(msg.toEncodedString());
+
     }
 
 }

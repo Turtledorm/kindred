@@ -88,7 +88,7 @@ enum Colour {
 
     /**
      * Contains the corresponding enum value of each possible
-     * ClientToServerMessage type. Stored in a static variable to save time from
+     * ClientToServerEnum type. Stored in a static variable to save time from
      * calling {@code values()} many times.
      */
     private static final Colour[] VALUES = values();
