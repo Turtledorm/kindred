@@ -1,0 +1,179 @@
+\section{Dados de teste}
+
+\newcommand{\teste}[3]{
+    \item\textbf{#1:}
+    \begin{itemise}
+        \item\textbf{Entrada: } #2
+        \item\textbf{Saída: }   #3
+    \end{itemise}
+}
+
+\begin{itemise}
+\teste
+    {testQuit}
+    {É criado e inicializado um Client, que logo envia um comando para sair.}
+    {A saída esperada seria receber uma afirmação positiva do \texttt{assertFalse},
+    ou seja, é falso que o Client esteja conectado após o comando \texttt{QUIT}.}
+    
+\teste
+    {testNick\_Invalid}
+    {Cliente envia \texttt{NICK} (comando de terminal) com os seguintes parâmetros,
+    todos inválidos::
+        \begin{itemise}
+            \item \texttt{aa}
+            \item \texttt{3444}
+            \item \texttt{abc\%}
+        \end{itemise}
+    }
+    {Espera-se que o \emph{nickname} do cliente não mude em nenhum dos casos. Ou
+    seja, que \texttt{client.getNickname()} seja \texttt{null} (valor para
+    \emph{nickname} indefinido) em todos os casos testados.}
+
+\teste
+    {testNick\_Valid}
+    {Cliente envia \texttt{NICK} com o seguinte parâmetro: \texttt{niceNick}, um
+    parâmetro válido.}
+    {Esperamos que o Cliente de fato recebe e guarde a \emph{string}
+    \texttt{niceNick} como seu \emph{nickname}, pois ela é válida.}
+
+
+\teste
+    {testHost\_Invalid}
+    {Um Cliente vira \emph{host} de uma partida. Temos três situações disponíveis:
+        \begin{enumerate}
+            \item Cliente sem \emph{nickname} usando um mapa que não existe. No caso,
+                os parâmetros são: \texttt{null} (\emph{nickname}) e
+            "\texttt{thisIsFake}" (nome do mapa).
+            \item Cliente sem \emph{nickname} usando um mapa válido. No caso, os
+                parâmetros são: \texttt{null} e "\texttt{simpleMap}".
+            \item Cliente com \emph{nickname} válido usando um mapa inválido. No
+                caso, os parâmetros são: "\texttt{hostInvalid}" (um \emph{nickname}
+                válido) e "\texttt{thisIsFake}".
+        \end{enumerate}
+    }
+    {Espera-se que os testes nos digam que:
+        \begin{itemise}
+            \item Em 1, \emph{nickname} e nome de mapa de fato não valem.
+            \item Em 2, \emph{nickname} não vale, mas nome do mapa vale.
+            \item Em 3, \emph{nickname} vale, mas nome do mapa não.
+        \end{itemise}
+    }
+    
+\teste
+    {testHost\_Valid}
+    {Cliente com \emph{nickname} válido vira \emph{host} de uma partida usando um
+    mapa válido. Após um tempo, ele muda para um outro mapa válido. Os parâmetros
+    usados são: "\texttt{hostValid}" (\emph{nickname} do \emph{host}),
+    "\texttt{simpleMap}" e "\texttt{happyPlains}" (nome dos mapas válidos).}
+    {Espera-se que o Cliente de fato sirva de \emph{host} para os mapas escolhidos,
+    mesmo após a mudança.}
+
+\teste
+    {testUnhost\_Invalid}
+    {Há dois casos:
+        \begin{enumerate}
+            \item Cliente com nickname inválido e sem ser um \emph{host} (não deu o
+            comando ou não escolheu um mapa válido) tenta dar \texttt{UNHOST}.
+            Neste caso, os parâmetros são nulos.
+            \item Cliente com nickname válido e sem ser um \emph{host} tenta dar
+            \texttt{UNHOST}. Neste caso, os parâmetros acabam sendo nulos, já que
+            não há sala.
+        \end{enumerate}
+    }
+    {Espera-se que, por o Cliente não ser \emph{host}, o comando \texttt{UNHOST} não
+    funcione.}
+
+\teste
+    {testeHost\_Valid}
+    {Cliente com nickname válido começa a ser \emph{host} de uma sala usando um mapa
+    válido. Após um tempo, ele dá o comando \emph{unhost}. Os parâmetros são:
+    "\texttt{unhostVal}" (nickname) e "\texttt{testmap}".}
+    {Espera-se que o Cliente possa se tornar \emph{host} e cancelar o comando sem
+    problemas.}
+
+\teste
+    {testJoin\_Valid}
+    {Dois Cliente são conectados ao servidor com nicknames válidos. Um será o
+    \emph{host} e o outro o \emph{guest}. O \emph{host} cria uma sala usando um mapa
+    válido e o \emph{guest} entra nela. Os parâmetros são: "\texttt{hostJoin}" e
+    "\texttt{guestJoin}" (nomes do \emph{host} e do \emph{guest}) e
+    "\texttt{testmap}" (nome do mapa). Em seguida, eles desconectam.}
+    {Espera-se que o servidor reconheça que os dois Clientes estão em jogo antes de
+    eles se desconectarem.}
+
+\teste
+    {testSurrender}
+    {Dois Clientes, um \emph{host} e um \emph{guest}, se conectam ao servidor e uma
+    sala é criada. O jogo começa e o \emph{host} (primeiro a jogar) dá o comando
+    \texttt{SURRENDER} para desistir da partida. Logo após os dois se desconectam.
+    Os parâmetros são "\texttt{hostSur}" e "\texttt{guestSur}" como nicknames do
+    \emph{host} e do \emph{guest} e "\texttt{testmap}" como mapa.}
+    {Espera-se que os dois Clientes sejam reconhecidos como "\texttt{isPlaying}"
+    até o momento em que o \emph{host} dá o comando \texttt{SURRENDER}. Na
+    averiguação subsequente, espera-se que nem o \emph{host} nem o \emph{guest}
+    sejam reconhecidos como "\texttt{isPlaying}".}
+
+\teste
+    {testEndTurn}
+    {Um Cliente é criado e vira um \emph{host}. É verificado o turno (-1). Então um
+    \emph{guest} entra na sala e o jogo começa. É verificado o turno (1-turno do
+    \emph{host}). O \emph{host} dá o comando endTurn. É verificado o turno (2-turno
+    do \emph{guest}). O \emph{guest} dá o comando endTurn. É verificado o turno
+    (1-turno do \emph{host}). Os parâmetros são "\texttt{hostEnd}",
+    "\texttt{guestEnd}" e "\texttt{testmap}". Além dos já mencionados -1, 1 e 2 para
+    as comparações de turno.}
+    {Espera-se que de fato os turnos mudem da forma descrita acima.}
+
+\teste
+    {testMove\_Valid}
+    {Um \emph{host} e um \emph{guest} estão em jogo. O \emph{host} manda na
+    localização 0 0 se mover para a localização 1 0. Após uma pausa ele tenta
+    movê-la de novo.}
+    {Espera-se que de fato o \emph{host} consiga mover a unidade da primeira vez,
+    mas que ele falhe na segunda tentativa.}
+
+\teste
+    {testMove\_Invalid}
+    {Durante uma partida, um \emph{host} tenta mover uma unidade usando diversos
+    comandos inválidos, seja tentando mover uma unidade em uma posição inválida,
+    seja tentando colocar uma unidade em uma posição inválida, ou partindo de uma
+    posição inválida para tentar posicionar em outra posição inválida. Também é
+    testado posicionar uma unidade em uma tile ocupada, ou posicionar em um lugar
+    que extrapole o movimento da unidade selecionada, assim como tentar mover
+    uma unidade inimiga.}
+    {Espera-se que nenhum dos comandos testados sejam aceitos, já que são todos
+    inválidos.}
+
+\teste
+    {testAttack\_Valid}
+    {Durante uma partida, o \emph{host} comanda uma unidade para atacar um inimigo.
+    É dada uma pausa e o \emph{host} tenta mover e atacar com a mesma unidade
+    novamente. Os parâmetros são "\texttt{hostAtkVl}", "\texttt{guestAtkVl}" e
+    "\texttt{testmap}".}
+    {Espera-se que a unidade selecionada ataque com sucesso na primeira vez.
+    Em seguida, é esperado que o \emph{host} falha em tentar movimentar ela e
+    atacar com ela.}
+
+\teste
+    {testAttack\_Invalid}
+    {Durante uma partida, o \emph{host} tenta atacar. São testadas diversas
+    coordenadas inválidas, tiles vazias como sendo alvo, atacar uma unidade além do
+    range da unidade sendo usada, atacar usando uma unidade inimiga e atacar uma
+    unidade aliada. Os parâmetros são "\texttt{hostAtkIn}", "\texttt{guestAtkIn}" e
+    "\texttt{testmap}".}
+    {Espera-se que nenhuma das entradas testadas seja bem-sucedida, já que são
+    inválidas.}
+
+\teste
+    {testUnitsNextTurn}
+    {Durante uma partida, um \emph{host} movimenta uma unidade e ataca uma unidade
+    inimiga, encerrando seu turno em seguida. O \emph{guest} então encerra seu turno,
+    passando a vez para o \emph{host}, que tenta mover uma unidade e atacar usando
+    ela. Os parâmetros são "\texttt{hostCtrl}", "\texttt{guestCtrl}" e
+    "\texttt{testmap}".}
+    {Espera-se que o \emph{host} possa usar suas unidades normalmente após o
+    \emph{guest} encerrar seu turno.}
+
+
+
+\end{itemise}

@@ -1,0 +1,30 @@
+\section{Erros encontrados nos testes}
+
+Tivemos alguns problemas para iniciar os testes. A parte que gerencia as trocas
+entre cliente e servidor não estava implementada de uma maneira que permitisse a
+produção de testes de uma maneira intuitiva e simples. Tivemos grandes dificuldades
+inicialmente, pois não sabíamos exatamente como proceder. Após um tempo, tivemos
+a ideia de fazer uma refatoração do código usando o método \emph{test-first}.
+Primeiro pensamos nos testes a serem feitos e então passamos a alterar o código
+com isso em mente. Com isso, foi muito mais simples retrabalhar o código e gerar
+os testes. A maioria foi feita sem grandes dificuldades, excetuando os casos abaixo:
+
+\begin{enumerate}
+    \item Comando \texttt{QUIT} fazia com que todos os testes parassem. Foi devido a
+        comandos \texttt{System.exit()} no cliente.
+
+       \textbf{SOLUÇÃO:} Retirada de uns \texttt{System.exit()} no cliente,
+            deixando-o mais limpo.
+
+    \item Comando \texttt{NICK}, sendo usado simultaneamente por 2 clientes, fazia
+        com que o segundo tivesse um erro de \emph{nickname} já definido. Isso
+        ocorria devido à estrutura \emph{static} nas \texttt{ClientToServerMessage}s.
+
+       \textbf{SOLUÇÃO:} Refatoração nas mensagens cliente-servidor.
+
+    \item Fim de Partida: Este é um caso à parte. Todos os testes feitos foram
+        aprovados, no entanto, ao se jogar o jogo, vemos que ele não tem fim.
+        Quando todas as unidades de um dos lados são destruídas, o laço do jogo não
+        se encerra, mesmo que seja detectado que não há mais unidades de um dos
+        Clientes. Ainda não foi encontrada uma solução para este problema.
+\end{enumerate}
