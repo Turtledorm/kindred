@@ -87,8 +87,8 @@ public class Map {
      *         otherwise
      */
     public boolean placeUnit(Unit unit, int x, int y) {
-        // Tile already occupied
-        if (tiles[x][y].getUnit() != null)
+        // Invalid unit/position or Tile already occupied
+        if (unit == null || !validPosition(x, y) || tiles[x][y].getUnit() != null)
             return false;
 
         tiles[x][y].setUnit(unit);
@@ -199,9 +199,8 @@ public class Map {
 
     /**
      * Directly causes the specified amount of damage to the Unit on Tile (x, y)
-     * of the Map. Supposes that a Unit exists on the specified Tile. Returns
-     * {@code true} if the Unit is dead, i.e., has no more hit points left, or
-     * {@code false} otherwise.
+     * of the Map. Returns {@code true} if the Unit is dead, i.e., has no more
+     * hit points left, or {@code false} otherwise.
      * 
      * @param x
      *            x coordinate of the Unit that will take damage
@@ -212,9 +211,13 @@ public class Map {
      * @return {@code true}, if the Unit is dead, or {@code false} otherwise
      */
     public boolean causeDamage(int x, int y, int damage) {
+        if (!validPosition(x, y))
+            return false;
+
         Unit unit = getTile(x, y).getUnit();
         if (unit == null)
             return false;
+
         unit.loseHp(damage);
         boolean isDead = unit.getCurrentHp() <= 0;
         if (isDead) {
@@ -224,6 +227,7 @@ public class Map {
             else
                 numUnitsB--;
         }
+
         return isDead;
     }
 
