@@ -9,6 +9,27 @@
 }
 
 \begin{itemise}
+
+\teste
+    {testClient\_WrongIP}
+    {Um client é criado e manipulado para se conectar a um servidor inexistente:
+    um que possui o nome\emph{fakehost}.}
+    {A saída esperada seria ocorrer um \texttt{RuntimeException}, mostrando que
+    houve erro na conexão com o servidor.}
+
+\teste
+    {testClient\_CorrectIP}
+    {Um client é criado e manipulado para se conectar a um servidor já previamente
+    rodando no \emph{localhost}.}
+    {A saída esperada seria não ocorrer um \texttt{RuntimeException}, visto que a
+    conexão foi feita com sucesso.}
+
+\teste
+    {testQuit}
+    {É criado e inicializado um Client, que logo envia um comando para sair.}
+    {A saída esperada seria receber uma afirmação positiva do \texttt{assertFalse},
+    ou seja, é falso que o Client esteja conectado após o comando \texttt{QUIT}.}
+
 \teste
     {testQuit}
     {É criado e inicializado um Client, que logo envia um comando para sair.}
@@ -18,7 +39,7 @@
 \teste
     {testNick\_Invalid}
     {Cliente envia \texttt{NICK} (comando de terminal) com os seguintes parâmetros,
-    todos inválidos::
+    todos inválidos:
         \begin{itemise}
             \item \texttt{aa}
             \item \texttt{3444}
@@ -101,6 +122,8 @@
     {Espera-se que o servidor reconheça que os dois Clientes estão em jogo antes de
     eles se desconectarem.}
 
+A partir daqui, temos os testes para partidas em si. Usaram-se mapas especialmente preparados para testes,  \emph{testmap} (para quase todos os casos) e \emph{testmatch} (para testar o fim da partida), além de uma unidade de debug chamada \emph{Master}.
+
 \teste
     {testSurrender}
     {Dois Clientes, um \emph{host} e um \emph{guest}, se conectam ao servidor e uma
@@ -126,7 +149,7 @@
 
 \teste
     {testMove\_Valid}
-    {Um \emph{host} e um \emph{guest} estão em jogo. O \emph{host} manda na
+    {Um \emph{host} e um \emph{guest} estão em jogo. O \emph{host} manda a unidade na
     localização 0 0 se mover para a localização 1 0. Após uma pausa ele tenta
     movê-la de novo.}
     {Espera-se que de fato o \emph{host} consiga mover a unidade da primeira vez,
@@ -174,6 +197,10 @@
     {Espera-se que o \emph{host} possa usar suas unidades normalmente após o
     \emph{guest} encerrar seu turno.}
 
+\teste
+    {testMatch}
+    {Durante uma partida, o \emph{host} destrói todas as unidades adversárias, efetivamente vencendo o oponente.}
+    {Espera-se que tanto o \emph{host} quanto o \emph{guest} automaticamente saiam da partida e voltem para o menu principal, onde podem interagir com o servidor e procurar novos oponentes. Curiosamente, o programa passa neste teste, mas notamos que os jogadores ficam travados na partida após o ataque final quando experimentamos com o projeto.}
 
 
 \end{itemise}
